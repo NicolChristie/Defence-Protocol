@@ -1,0 +1,6 @@
+Level 1:
+1M.L,2A.U,2B.R,5M.D
+
+Level 2:
+[1A.L,1B.U,1M.R,3M.D]
+
