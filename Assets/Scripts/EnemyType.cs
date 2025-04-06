@@ -1,12 +1,13 @@
 using UnityEngine;
 
-[System.Serializable] // Allows editing in the Unity Inspector
+[System.Serializable]
 public class EnemyType
 {
-    public string name;       // Example: "Archer"
-    public string identifier; // Example: "A"
-    public GameObject enemyPrefab; // The actual prefab to spawn
-    public float speed;
-    public int maxHP;
-    public int damage;
+    public string name;         // Name of the enemy type
+    public GameObject enemyPrefab; // The prefab to spawn
+    public float speed;         // Enemy movement speed
+    public int maxHP;           // Enemy max health
+    public int damage;          // Damage dealt to player
+    public int coinReward;      // Coins earned when this enemy is destroyed
+    public string identifier;   // Character used to represent this enemy in level files
 }

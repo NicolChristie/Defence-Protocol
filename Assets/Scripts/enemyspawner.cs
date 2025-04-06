@@ -23,6 +23,7 @@ public class EnemySpawner : MonoBehaviour
             enemyScript.speed = enemyType.speed;
             enemyScript.maxHP = enemyType.maxHP;
             enemyScript.damage = enemyType.damage;
+            enemyScript.coinAmount = enemyType.coinReward; // NEW: Assign coin reward
         }
     }
 

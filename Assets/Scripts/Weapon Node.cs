@@ -1,17 +1,35 @@
 using UnityEngine;
+using System.Collections;
 
 public class WeaponNode : MonoBehaviour
 {
-    public Transform carryLocation; // The player's weapon carry position (set in Inspector)
-    
-    private GameObject storedWeapon; // The weapon assigned to THIS node
-    private static GameObject playerWeapon; // The weapon the player is holding (shared across all nodes)
+    public Transform carryLocation;
+    public GameObject storedWeapon;
+    public static GameObject playerWeapon;
     private bool isPlayerInside = false;
-    private float originalFireRate;
-    private int originalProjectileDamage;
+    private bool recentlyPurchasedWeapon = false;
+    private bool boostApplied = false;
+
+    private void OnEnable()
+    {
+        ShopManager.OnWeaponPurchased += HandleWeaponPurchased;
+    }
+
+    private void OnDisable()
+    {
+        ShopManager.OnWeaponPurchased -= HandleWeaponPurchased;
+    }
+
+    private void HandleWeaponPurchased()
+    {
+        recentlyPurchasedWeapon = true;
+    }
 
     private void Update()
     {
+        if (ShopManager.Instance != null && ShopManager.Instance.shopPanel.activeSelf)
+            return;
+
         if (isPlayerInside && Input.GetKeyDown(KeyCode.E))
         {
             HandleWeaponPickupOrDrop();
@@ -27,25 +45,17 @@ public class WeaponNode : MonoBehaviour
             {
                 isPlayerInside = true;
 
-                float weaponMultiplier = player.GetWeaponMultiplier();
-                float damageMultiplier = player.GetDamageMultiplier();
-
-                Debug.Log("Player entered weapon node.");
-
-                // If this node has a weapon as its child, set it as storedWeapon
-                if (storedWeapon == null && transform.childCount > 0)
-                {
-                    storedWeapon = transform.GetChild(0).gameObject;
-                }
-
                 if (storedWeapon != null)
                 {
                     Weaponprefab weaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
-                    if (weaponPrefab != null)
+                    if (weaponPrefab != null && !boostApplied)
                     {
-                        originalFireRate = weaponPrefab.fireRate;
-                        originalProjectileDamage = weaponPrefab.projectileDamage;
-                        weaponPrefab.UpdateStats(weaponMultiplier, damageMultiplier, 1f, 1f, 0);
+                        weaponPrefab.ApplyBoost(
+                            player.GetWeaponMultiplier(),
+                            player.GetDamageMultiplier(),
+                            false
+                        );
+                        boostApplied = true;
                     }
                 }
             }
@@ -60,15 +70,17 @@ public class WeaponNode : MonoBehaviour
             if (player != null)
             {
                 isPlayerInside = false;
-                player.ResetWeaponBoost();
 
-                // Reset the weapon stats when the player leaves
                 if (storedWeapon != null)
                 {
                     Weaponprefab weaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
-                    if (weaponPrefab != null)
+                    if (weaponPrefab != null && boostApplied)
                     {
-                        weaponPrefab.UpdateStats(1f / player.GetWeaponMultiplier(), 1f / player.GetDamageMultiplier(), 1f, 1f, 0);
+                        weaponPrefab.RemoveBoost(
+                            player.GetWeaponMultiplier(),
+                            player.GetDamageMultiplier()
+                        );
+                        boostApplied = false;
                     }
                 }
             }
@@ -76,49 +88,106 @@ public class WeaponNode : MonoBehaviour
     }
 
     private void HandleWeaponPickupOrDrop()
+{
+    if (ShopManager.Instance != null && ShopManager.Instance.shopPanel.activeSelf)
     {
-        if (carryLocation == null)
+        Debug.Log("Shop is open. Cannot pick up or drop weapons.");
+        return;
+    }
+
+    if (carryLocation == null)
+    {
+        Debug.LogWarning("Carry Location not assigned in WeaponNode!");
+        return;
+    }
+
+    GameObject player = GameObject.FindGameObjectWithTag("Player");
+    if (player == null)
+    {
+        Debug.LogWarning("Player not found!");
+        return;
+    }
+
+    if (playerWeapon == null && storedWeapon != null)
+    {
+        playerWeapon = storedWeapon;
+        storedWeapon = null;
+
+        playerWeapon.transform.SetParent(player.transform);
+        playerWeapon.transform.position = carryLocation.position;
+        playerWeapon.transform.localRotation = Quaternion.identity;
+        playerWeapon.transform.localScale = Vector3.one * 0.66f;
+        return;
+    }
+    else if (playerWeapon != null && storedWeapon == null)
+    {
+        storedWeapon = playerWeapon;
+        playerWeapon = null;
+
+        storedWeapon.transform.SetParent(transform);
+        storedWeapon.transform.position = transform.position;
+        storedWeapon.transform.localRotation = Quaternion.identity;
+        storedWeapon.transform.localScale = Vector3.one;
+
+        CharacterManager currentPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterManager>();
+        if (currentPlayer != null && storedWeapon != null)
         {
-            Debug.LogWarning("Carry Location not assigned in WeaponNode!");
-            return;
+            Weaponprefab weaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
+            if (weaponPrefab != null)
+            {
+                weaponPrefab.ResetToBaseStats();
+            }
         }
 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player == null) return;
-
-        if (playerWeapon == null && storedWeapon != null)
+        WeaponNode weaponNode = storedWeapon.GetComponent<WeaponNode>();
+        if (weaponNode != null && weaponNode.recentlyPurchasedWeapon)
         {
-            // ✅ Pick up the weapon from this node
-            playerWeapon = storedWeapon;
-            playerWeapon.transform.position = carryLocation.position;
-            playerWeapon.transform.SetParent(player.transform);
-
-            // Save and reset the rotation when picking up
-            Quaternion weaponRotation = playerWeapon.transform.localRotation;
-            playerWeapon.transform.localRotation = Quaternion.identity; // Prevent weapon from rotating with the node
-
-            storedWeapon = null; // This node no longer holds a weapon
-            playerWeapon.transform.localRotation = weaponRotation; // Restore the original weapon rotation
-            Debug.Log("Weapon picked up.");
+            weaponNode.recentlyPurchasedWeapon = false;
+            StartCoroutine(ShowShopWithDelay(0.5f));
         }
-        else if (playerWeapon != null && storedWeapon == null)
+
+        return;
+    }
+    else if (playerWeapon != null && storedWeapon != null)
+    {
+        Weaponprefab playerWeaponPrefab = playerWeapon.GetComponent<Weaponprefab>();
+        Weaponprefab storedWeaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
+
+        if (playerWeaponPrefab != null && storedWeaponPrefab != null)
         {
-            // ✅ Place the weapon onto this node
-            storedWeapon = playerWeapon;
-            storedWeapon.transform.position = transform.position;
-            storedWeapon.transform.SetParent(transform);
+            if (playerWeaponPrefab.level == storedWeaponPrefab.level &&
+                playerWeaponPrefab.levelSprites[playerWeaponPrefab.level - 1] == storedWeaponPrefab.levelSprites[storedWeaponPrefab.level - 1])
+            {
+                Debug.Log("Merging weapons!");
 
-            // Save and reset the rotation when placing down
-            Quaternion weaponRotation = storedWeapon.transform.localRotation;
-            storedWeapon.transform.localRotation = Quaternion.identity; // Prevent weapon from rotating with the node
+                Destroy(playerWeapon);
+                playerWeapon = null;
 
-            playerWeapon = null; // Player no longer holding a weapon
-            storedWeapon.transform.localRotation = weaponRotation; // Restore the original weapon rotation
-            Debug.Log("Weapon placed down.");
+                storedWeaponPrefab.UpgradeWeapon(); // 👈 Merge logic and placeholder for future upgrades
+                WeaponNode weaponNode = storedWeapon.GetComponent<WeaponNode>();
+                if (weaponNode != null && weaponNode.recentlyPurchasedWeapon)
+                {
+                    weaponNode.recentlyPurchasedWeapon = false;
+                    StartCoroutine(ShowShopWithDelay(0.5f));
+                }
+                return;
+            }
         }
-        else
-        {
-            Debug.Log("No valid action to perform.");
-        }
+
+        Debug.Log("Already holding a weapon. Cannot pick up another one.");
+        return;
+    }
+}
+
+
+    private IEnumerator ShowShopWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ShopManager.Instance.ShowShop();
+    }
+
+    public void SetRecentlyPurchasedWeapon()
+    {
+        recentlyPurchasedWeapon = true;
     }
 }

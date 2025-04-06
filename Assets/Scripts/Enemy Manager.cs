@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -11,10 +12,14 @@ public class EnemyManager : MonoBehaviour
     private Rigidbody2D rb;
     public HealthBar healthBar;
     public int damage = 10; // Damage enemy deals when colliding with the ship
+    public int coinAmount = 0;
 
     private Vector3 spawnPosition;
     public float stopDistance = 200f;
     public float destroyDistance = 300f;
+
+    // Static list of all enemies in the game
+    private static List<EnemyManager> allEnemies = new List<EnemyManager>();
 
     void Start()
     {
@@ -25,10 +30,6 @@ public class EnemyManager : MonoBehaviour
         if (healthBar != null)
         {
             healthBar.UpdateHealthBar(currentHP, maxHP);
-        }
-        else
-        {
-            Debug.LogError("HealthBar script is not assigned!");
         }
 
         if (player == null)
@@ -45,6 +46,15 @@ public class EnemyManager : MonoBehaviour
         {
             Debug.LogError("ShipHealthBar script is not assigned in EnemyManager!");
         }
+
+        // Register this enemy in the static list of all enemies
+        allEnemies.Add(this);
+    }
+
+    void OnDestroy()
+    {
+        // Remove this enemy from the static list when it is destroyed
+        allEnemies.Remove(this);
     }
 
     void FixedUpdate()
@@ -82,7 +92,8 @@ public class EnemyManager : MonoBehaviour
 
         if (currentHP <= 0)
         {
-            Destroy(gameObject);
+            CoinManager.Instance.AddCoins(coinAmount);
+            Destroy(gameObject); // Calls OnDestroy and removes the enemy from the static list
         }
     }
 
@@ -94,7 +105,13 @@ public class EnemyManager : MonoBehaviour
             {
                 shipHealthBar.TakeDamage(damage); // Damage the ship's health bar
             }
-            Destroy(gameObject); // Destroy enemy upon impact
+            Destroy(gameObject); // Destroy enemy upon impact, also removes from allEnemies
         }
+    }
+
+    // Static method to get all active enemies
+    public static List<EnemyManager> GetAllEnemies()
+    {
+        return new List<EnemyManager>(allEnemies); // Return a copy of the list to avoid modification
     }
 }

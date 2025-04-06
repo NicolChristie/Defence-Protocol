@@ -5,7 +5,7 @@ public class ShipHealthBar : MonoBehaviour
     public GameObject healthBar; // Assign the Health Bar GameObject in the Inspector
     public int maxHP = 100;
     private int currentHP;
-    private Vector3 fullScale = new Vector3(20f, 0.2f, 1f); // Default size of 20 by 0.5
+    private Vector3 fullScale = new Vector3(13f, 0.2f, 1f);
 
     void Start()
     {
