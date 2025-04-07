@@ -1309,6 +1309,10 @@ MonoBehaviour:
   rotationSpeed: 100
   homing: 0
   homingSpeed: 5
+  level: 1
+  levelSprites:
+  - {fileID: 4711374544223704480, guid: 714e69676a9d4df4a883439b7ed32962, type: 3}
+  - {fileID: -5890828503606760369, guid: 45258834c4e9981418b6a0f6249a6d9c, type: 3}
 --- !u!1 &442083678
 GameObject:
   m_ObjectHideFlags: 0
@@ -2370,6 +2374,8 @@ MonoBehaviour:
   rotationSpeed: 250
   homing: 0
   homingSpeed: 5
+  level: 1
+  levelSprites: []
 --- !u!1 &647077269
 GameObject:
   m_ObjectHideFlags: 0
@@ -4834,6 +4840,8 @@ MonoBehaviour:
   rotationSpeed: 100
   homing: 0
   homingSpeed: 5
+  level: 1
+  levelSprites: []
 --- !u!1 &1021324245
 GameObject:
   m_ObjectHideFlags: 0
@@ -7252,6 +7260,8 @@ MonoBehaviour:
   rotationSpeed: 180
   homing: 1
   homingSpeed: 4
+  level: 1
+  levelSprites: []
 --- !u!1 &1589677981
 GameObject:
   m_ObjectHideFlags: 0
@@ -7364,6 +7374,8 @@ MonoBehaviour:
   rotationSpeed: 100
   homing: 0
   homingSpeed: 5
+  level: 1
+  levelSprites: []
 --- !u!1 &1597745043
 GameObject:
   m_ObjectHideFlags: 0
@@ -8057,6 +8069,8 @@ MonoBehaviour:
   rotationSpeed: 90
   homing: 0
   homingSpeed: 5
+  level: 1
+  levelSprites: []
 --- !u!1 &1812295582
 GameObject:
   m_ObjectHideFlags: 0
@@ -8169,6 +8183,8 @@ MonoBehaviour:
   rotationSpeed: 150
   homing: 0
   homingSpeed: 5
+  level: 1
+  levelSprites: []
 --- !u!1 &1868450367
 GameObject:
   m_ObjectHideFlags: 0
