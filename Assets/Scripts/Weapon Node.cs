@@ -9,6 +9,7 @@ public class WeaponNode : MonoBehaviour
     private bool isPlayerInside = false;
     private bool recentlyPurchasedWeapon = false;
     private bool boostApplied = false;
+    
 
     private void OnEnable()
     {
@@ -86,8 +87,7 @@ public class WeaponNode : MonoBehaviour
             }
         }
     }
-
-    private void HandleWeaponPickupOrDrop()
+private void HandleWeaponPickupOrDrop()
 {
     if (ShopManager.Instance != null && ShopManager.Instance.shopPanel.activeSelf)
     {
@@ -129,7 +129,7 @@ public class WeaponNode : MonoBehaviour
         storedWeapon.transform.localRotation = Quaternion.identity;
         storedWeapon.transform.localScale = Vector3.one;
 
-        CharacterManager currentPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterManager>();
+        CharacterManager currentPlayer = player.GetComponent<CharacterManager>();
         if (currentPlayer != null && storedWeapon != null)
         {
             Weaponprefab weaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
@@ -148,35 +148,115 @@ public class WeaponNode : MonoBehaviour
 
         return;
     }
-    else if (playerWeapon != null && storedWeapon != null)
+    
+else if (playerWeapon != null && storedWeapon != null)
+{
+    Weaponprefab playerWeaponPrefab = playerWeapon.GetComponent<Weaponprefab>();
+    Weaponprefab storedWeaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
+
+    if (playerWeaponPrefab != null && storedWeaponPrefab != null)
     {
-        Weaponprefab playerWeaponPrefab = playerWeapon.GetComponent<Weaponprefab>();
-        Weaponprefab storedWeaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
+        // Debug: Log the names of both weapons to confirm they are identical
+        Debug.Log($"Player Weapon: {playerWeaponPrefab.name}, Stored Weapon: {storedWeaponPrefab.name}");
 
-        if (playerWeaponPrefab != null && storedWeaponPrefab != null)
+        // Check if the names are identical before attempting to merge
+        if (playerWeaponPrefab.name == storedWeaponPrefab.name)
         {
-            if (playerWeaponPrefab.level == storedWeaponPrefab.level &&
-                playerWeaponPrefab.levelSprites[playerWeaponPrefab.level - 1] == storedWeaponPrefab.levelSprites[storedWeaponPrefab.level - 1])
+            Debug.Log("Weapons have the same name. Attempting to merge...");
+
+            Weaponprefab result = WeaponMergeManager.Instance.GetMergeResult(
+                playerWeaponPrefab,
+                storedWeaponPrefab
+            );
+
+            if (result != null)
             {
-                Debug.Log("Merging weapons!");
+                Debug.Log("Merging weapons from merge database!");
 
+                // Destroy the old weapons
                 Destroy(playerWeapon);
+                Destroy(storedWeapon);
                 playerWeapon = null;
+                storedWeapon = null;
 
-                storedWeaponPrefab.UpgradeWeapon(); // 👈 Merge logic and placeholder for future upgrades
-                WeaponNode weaponNode = storedWeapon.GetComponent<WeaponNode>();
-                if (weaponNode != null && weaponNode.recentlyPurchasedWeapon)
+                // Instantiate the merged weapon
+                GameObject newWeapon = Instantiate(result.gameObject, transform.position, Quaternion.identity, transform);
+                storedWeapon = newWeapon;
+
+                // Reset the relevant properties of the new weapon (such as removing any boosts or applying default stats)
+                Weaponprefab newWeaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
+                if (newWeaponPrefab != null)
                 {
-                    weaponNode.recentlyPurchasedWeapon = false;
-                    StartCoroutine(ShowShopWithDelay(0.5f));
+                    // Reset any boosts or stats here, if needed
+                    newWeaponPrefab.ResetToBaseStats();
                 }
+
+                // Optionally reset the WeaponNode of the new weapon
+                WeaponNode newWeaponNode = storedWeapon.GetComponent<WeaponNode>();
+                if (newWeaponNode != null)
+                {
+                    newWeaponNode.boostApplied = false; // Reset boost state for new weapon
+                }
+
+                return;
+            }
+            else
+            {
+                Debug.Log("No valid merge result found. Swapping weapons.");
+
+                // No valid merge, swap weapons
+                Debug.Log($"Swapping weapons: {playerWeaponPrefab.name} and {storedWeaponPrefab.name}");
+
+                // Swap the player and stored weapons
+                GameObject temp = storedWeapon;
+                storedWeapon = playerWeapon;
+                playerWeapon = temp;
+
+                // Reposition and reset the swapped weapons
+                storedWeapon.transform.SetParent(transform);
+                storedWeapon.transform.position = transform.position;
+                storedWeapon.transform.localRotation = Quaternion.identity;
+                storedWeapon.transform.localScale = Vector3.one;
+
+                playerWeapon.transform.SetParent(player.transform);
+                playerWeapon.transform.position = carryLocation.position;
+                playerWeapon.transform.localRotation = Quaternion.identity;
+                playerWeapon.transform.localScale = Vector3.one * 0.66f;
+
                 return;
             }
         }
+        else
+        {
+            Debug.Log("Weapons have different names. No merge attempt.");
+            // No merge attempt, just swap them
+            Debug.Log($"Swapping weapons: {playerWeaponPrefab.name} and {storedWeaponPrefab.name}");
 
-        Debug.Log("Already holding a weapon. Cannot pick up another one.");
-        return;
+            // Swap the player and stored weapons
+            GameObject temp = storedWeapon;
+            storedWeapon = playerWeapon;
+            playerWeapon = temp;
+
+            // Reposition and reset the swapped weapons
+            storedWeapon.transform.SetParent(transform);
+            storedWeapon.transform.position = transform.position;
+            storedWeapon.transform.localRotation = Quaternion.identity;
+            storedWeapon.transform.localScale = Vector3.one;
+
+            playerWeapon.transform.SetParent(player.transform);
+            playerWeapon.transform.position = carryLocation.position;
+            playerWeapon.transform.localRotation = Quaternion.identity;
+            playerWeapon.transform.localScale = Vector3.one * 0.66f;
+
+            return;
+        }
     }
+
+    Debug.LogWarning("Weaponprefab component not found on player or stored weapon!");
+    return;
+}
+
+
 }
 
 

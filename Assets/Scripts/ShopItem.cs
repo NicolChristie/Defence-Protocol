@@ -11,6 +11,7 @@ public class ShopItem
     public GameObject weaponPrefab; 
     public Texture2D itemImage;   
     public float upgradeValue;    
+    
 
     // New Rarity field
     public Rarity itemRarity;     

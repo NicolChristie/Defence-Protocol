@@ -31,6 +31,8 @@ public class Weaponprefab : MonoBehaviour
     private GameObject currentTarget;
     private float baseRotation;
     private bool isRotated = false;
+    public GameObject originalPrefab; // For prefab comparison in merge logic
+
 
     void Start()
     {
@@ -43,6 +45,9 @@ public class Weaponprefab : MonoBehaviour
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         UpdateAppearance();
+        if (originalPrefab == null)
+    originalPrefab = gameObject; // fallback if not manually assigned
+
     }
 
     public void UpgradeWeapon()

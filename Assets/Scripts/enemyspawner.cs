@@ -8,6 +8,8 @@ public class EnemySpawner : MonoBehaviour
     public float mapHeight = 6f;
     public float spawnBuffer = 1f; // Offset so enemies spawn slightly off-screen
     public GameObject player; // Reference to the player
+    public GameObject ship; // Reference to the ship GameObject
+    public ShipHealthBar shipHealthBar; // Reference to the ship's health bar
 
     // 🔄 Spawns an enemy at a specific location based on spawn direction
     public void SpawnEnemyAtSpecificLocation(EnemyType enemyType, string spawnDirection)
@@ -15,15 +17,24 @@ public class EnemySpawner : MonoBehaviour
         Vector2 spawnPos = GetPositionBasedOnDirection(spawnDirection);
         GameObject newEnemy = Instantiate(enemyType.enemyPrefab, spawnPos, Quaternion.identity);
 
+        // Assign the references dynamically after the enemy is instantiated
         EnemyManager enemyScript = newEnemy.GetComponent<EnemyManager>();
-        if (enemyScript != null && player != null)
+        if (enemyScript != null)
         {
-            // Assign the enemy's properties from the EnemyType
+            // Assign the necessary references to the enemy
             enemyScript.player = player;
+            enemyScript.ship = ship;
+            enemyScript.shipHealthBar = shipHealthBar; // Assign the ship's health bar
+
+            // Also assign specific enemy properties
             enemyScript.speed = enemyType.speed;
             enemyScript.maxHP = enemyType.maxHP;
             enemyScript.damage = enemyType.damage;
             enemyScript.coinAmount = enemyType.coinReward; // NEW: Assign coin reward
+        }
+        else
+        {
+            Debug.LogError("EnemyManager script not found on enemy prefab!");
         }
     }
 

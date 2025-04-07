@@ -281,7 +281,7 @@ public class LevelHandler : MonoBehaviour
         get
         {
             List<EnemyManager> activeEnemies = EnemyManager.GetAllEnemies(); // Get all the currently active enemies
-            return activeEnemies.Count <= 3; // Return true when only the 3 persistent enemies are left
+            return activeEnemies.Count <= 0; // Return true when only the 3 persistent enemies are left
         }
     }
 
