@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6346394211185617559
+--- !u!1 &7664392989864406320
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 123667734236815856}
-  - component: {fileID: 7376344861723316255}
-  - component: {fileID: 5521074128536461481}
+  - component: {fileID: 4892982792356481738}
+  - component: {fileID: 8033084898759726549}
+  - component: {fileID: 8669974778303914618}
   m_Layer: 0
-  m_Name: Cannon
+  m_Name: Cannon lvl 3
   m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &123667734236815856
+--- !u!4 &4892982792356481738
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6346394211185617559}
+  m_GameObject: {fileID: 7664392989864406320}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.36568916, w: 0.9307371}
   m_LocalPosition: {x: 18.1, y: -0.5625538, z: 0.06116049}
@@ -33,39 +33,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -42.9}
---- !u!114 &7376344861723316255
+--- !u!114 &8033084898759726549
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6346394211185617559}
+  m_GameObject: {fileID: 7664392989864406320}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d300609011ebde24a82e27485e805841, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 1731136525609824621, guid: 57a8daa976550544b9d8e13ad26bc514, type: 3}
-  firePoint: {fileID: 123667734236815856}
-  fireRate: 1
-  projectileDamage: 6
-  range: 7
-  aoeRadius: 0
+  firePoint: {fileID: 4892982792356481738}
+  fireRate: 2.5
+  projectileDamage: 8
+  range: 8
+  aoeRadius: 1
   aoeDamageMultiplier: 0.5
-  pierceCount: 0
+  pierceCount: 2
   deviation: 5
-  rotationSpeed: 100
-  homing: 0
+  rotationSpeed: 150
+  homing: 1
   homingSpeed: 5
   level: 1
-  originalPrefab: {fileID: 6346394211185617559}
---- !u!212 &5521074128536461481
+  originalPrefab: {fileID: 7664392989864406320}
+--- !u!212 &8669974778303914618
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6346394211185617559}
+  m_GameObject: {fileID: 7664392989864406320}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -103,7 +103,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 4711374544223704480, guid: 714e69676a9d4df4a883439b7ed32962, type: 3}
+  m_Sprite: {fileID: -3410384754025469392, guid: 71de3af46f2514743b4a7cbbf46b70c4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

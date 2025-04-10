@@ -19,7 +19,7 @@ public class Weaponprefab : MonoBehaviour
     public float homingSpeed = 5f;
     public int level = 1;
 
-    public Sprite[] levelSprites;
+
     private SpriteRenderer spriteRenderer;
 
     private float baseFireRate;
@@ -44,7 +44,7 @@ public class Weaponprefab : MonoBehaviour
         baseRotation = transform.eulerAngles.z;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
-        UpdateAppearance();
+    
         if (originalPrefab == null)
     originalPrefab = gameObject; // fallback if not manually assigned
 
@@ -52,23 +52,11 @@ public class Weaponprefab : MonoBehaviour
 
     public void UpgradeWeapon()
     {
-        level++;
+
         fireRate *= 1.25f;
         projectileDamage += 1;
 
-        // 📈 Placeholder for future stat upgrades
-        Debug.Log("Weapon upgraded to level " + level + " (Stat upgrade logic would trigger here)");
-
         UpdateStats();
-        UpdateAppearance();
-    }
-
-    private void UpdateAppearance()
-    {
-        if (levelSprites != null && levelSprites.Length >= level)
-        {
-            spriteRenderer.sprite = levelSprites[level - 1];
-        }
     }
 
     public void ApplyBoost(float speedMultiplier, float damageMultiplier, bool isFirstTime)

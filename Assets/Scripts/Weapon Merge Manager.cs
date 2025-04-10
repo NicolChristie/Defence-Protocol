@@ -32,6 +32,7 @@ public class WeaponMergeManager : MonoBehaviour
         {
             return entry.result;
         }
+        Debug.Log($"checking {entry.weaponA.originalPrefab} + {entry.weaponB.originalPrefab} = {entry.result.originalPrefab}");
     }
 
     Debug.Log($"❌ No merge found for: {weapon1.originalPrefab.name} + {weapon2.originalPrefab.name}");

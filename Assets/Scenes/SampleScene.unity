@@ -506,7 +506,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &216861013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4570,19 +4570,10 @@ MonoBehaviour:
   mergeCombinations:
   - weaponA: {fileID: 7376344861723316255, guid: c575034ee034f764ca2b7d5e602cbaf7, type: 3}
     weaponB: {fileID: 7376344861723316255, guid: c575034ee034f764ca2b7d5e602cbaf7, type: 3}
-    result: {fileID: 404536704878681430, guid: 15418428185ae994090bc42c2d8c6978, type: 3}
-  - weaponA: {fileID: 404536704878681430, guid: 15418428185ae994090bc42c2d8c6978, type: 3}
-    weaponB: {fileID: 404536704878681430, guid: 15418428185ae994090bc42c2d8c6978, type: 3}
-    result: {fileID: 5059943639132971836, guid: f980970b8c7e1954a8c8ce8525b055a9, type: 3}
-  - weaponA: {fileID: 5059943639132971836, guid: f980970b8c7e1954a8c8ce8525b055a9, type: 3}
-    weaponB: {fileID: 5059943639132971836, guid: f980970b8c7e1954a8c8ce8525b055a9, type: 3}
-    result: {fileID: 4203509784025093685, guid: 288f16fe3151bc042a7bbb0496da637f, type: 3}
-  - weaponA: {fileID: 4203509784025093685, guid: 288f16fe3151bc042a7bbb0496da637f, type: 3}
-    weaponB: {fileID: 4203509784025093685, guid: 288f16fe3151bc042a7bbb0496da637f, type: 3}
-    result: {fileID: 875770273844191229, guid: 5c5ff7f15b5d8b64bbfe314f63fd7aed, type: 3}
-  - weaponA: {fileID: 8277258223446924981, guid: b3b25602555d1464caab361a7b2656c4, type: 3}
-    weaponB: {fileID: 8277258223446924981, guid: b3b25602555d1464caab361a7b2656c4, type: 3}
-    result: {fileID: 404536704878681430, guid: 15418428185ae994090bc42c2d8c6978, type: 3}
+    result: {fileID: 4876531211846631151, guid: 00cc9f3d882c6614eb603dd912ed452a, type: 3}
+  - weaponA: {fileID: 4876531211846631151, guid: 00cc9f3d882c6614eb603dd912ed452a, type: 3}
+    weaponB: {fileID: 4876531211846631151, guid: 00cc9f3d882c6614eb603dd912ed452a, type: 3}
+    result: {fileID: 8033084898759726549, guid: 9192cb1d8e568ea42b691ed327a10bc1, type: 3}
 --- !u!114 &1168930632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6110,7 +6101,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1598057540
 MonoBehaviour:
   m_ObjectHideFlags: 0

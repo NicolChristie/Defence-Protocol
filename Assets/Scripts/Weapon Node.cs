@@ -35,8 +35,9 @@ public class WeaponNode : MonoBehaviour
 
         if (isPlayerInside && Input.GetKeyDown(KeyCode.E))
         {
-            HandleWeaponPickupOrDrop();
+
             Debug.Log(recentlyPurchasedWeapon);
+            HandleWeaponPickupOrDrop();
         }
     }
 
@@ -94,13 +95,11 @@ private void HandleWeaponPickupOrDrop()
 {
     if (ShopManager.Instance != null && ShopManager.Instance.shopPanel.activeSelf)
     {
-        Debug.Log("Shop is open. Cannot pick up or drop weapons.");
         return;
     }
 
     if (carryLocation == null)
     {
-        Debug.LogWarning("Carry Location not assigned in WeaponNode!");
         return;
     }
 
@@ -112,8 +111,7 @@ private void HandleWeaponPickupOrDrop()
     }
 
     if (playerWeapon == null && storedWeapon != null)
-    {
-        Debug.Log("Picking up stored weapon.");
+    {;
 
         playerWeapon = storedWeapon;
         storedWeapon = null;
@@ -142,7 +140,6 @@ private void HandleWeaponPickupOrDrop()
             Weaponprefab weaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
             if (weaponPrefab != null)
             {
-                Debug.Log("Resetting dropped weapon to base stats.");
                 weaponPrefab.ResetToBaseStats();
             }
         }
@@ -150,9 +147,13 @@ private void HandleWeaponPickupOrDrop()
         WeaponNode weaponNode = storedWeapon.GetComponent<WeaponNode>();
         if (weaponNode != null && weaponNode.recentlyPurchasedWeapon)
         {
-            Debug.Log("Stored weapon was recently purchased. Reopening shop...");
+            Debug.Log("Recently purchased weapon detected. Opening shop...");
+            Debug.Log(recentlyPurchasedWeapon);
             weaponNode.recentlyPurchasedWeapon = false;
             StartCoroutine(ShowShopWithDelay(0.5f));
+        }else{ 
+            Debug.Log("No recently purchased weapon detected. No shop to open.");
+            Debug.Log(recentlyPurchasedWeapon);
         }
 
         return;
@@ -167,7 +168,6 @@ private void HandleWeaponPickupOrDrop()
 
         if (playerWeaponPrefab.originalPrefab == storedWeaponPrefab.originalPrefab)
         {
-            Debug.Log("Original prefabs match. Attempting to merge...");
 
             Weaponprefab result = WeaponMergeManager.Instance.GetMergeResult(
                 playerWeaponPrefab,
@@ -176,7 +176,6 @@ private void HandleWeaponPickupOrDrop()
 
             if (result != null)
             {
-                Debug.Log("Merge result found! Replacing both weapons.");
 
                 Destroy(playerWeapon);
                 Destroy(storedWeapon);
@@ -194,6 +193,12 @@ private void HandleWeaponPickupOrDrop()
                     newWeaponPrefab.transform.localScale = Vector3.one * 1f;
                     mergedWeapon = true;  // Set the flag to indicate a merge happened
                 }
+                WeaponNode newWeaponNode = newWeapon.GetComponent<WeaponNode>();
+                if (newWeaponNode == null)
+                    {
+                        newWeaponNode = newWeapon.AddComponent<WeaponNode>();
+                    }
+                newWeaponNode.SetRecentlyPurchasedWeapon();
 
                 WeaponNode weaponNode = storedWeapon.GetComponent<WeaponNode>();
                 if (weaponNode != null)
@@ -241,6 +246,15 @@ private void HandleWeaponPickupOrDrop()
         playerWeapon.transform.localRotation = Quaternion.identity;
         playerWeapon.transform.localScale = Vector3.one * 0.66f;
 
+        // Ensure the weapon placed in the node sets the recentlyPurchased flag
+        WeaponNode swappedInWeaponNode = storedWeapon.GetComponent<WeaponNode>();
+        if (swappedInWeaponNode == null)
+        {
+        swappedInWeaponNode = storedWeapon.AddComponent<WeaponNode>();
+        }
+        swappedInWeaponNode.SetRecentlyPurchasedWeapon();
+
+
         return;
     }
 
@@ -260,5 +274,6 @@ private void HandleWeaponPickupOrDrop()
     {
         Debug.Log("Setting recently purchased weapon flag.");  
         recentlyPurchasedWeapon = true;
+        Debug.Log(recentlyPurchasedWeapon);
     }
 }

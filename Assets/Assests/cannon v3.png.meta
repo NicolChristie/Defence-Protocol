@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 714e69676a9d4df4a883439b7ed32962
+guid: 71de3af46f2514743b4a7cbbf46b70c4
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4711374544223704480
-    second: canon_0
+      213: -3410384754025469392
+    second: cannon v3_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: canon_0
+      name: cannon v3_0
       rect:
         serializedVersion: 2
-        x: 30
-        y: 22
-        width: 283
-        height: 217
+        x: 9
+        y: 24
+        width: 233
+        height: 198
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0a59540af2a226140800000000000000
-      internalID: 4711374544223704480
+      spriteID: 03a67ec9221eba0d0800000000000000
+      internalID: -3410384754025469392
       vertices: []
       indices: 
       edges: []
