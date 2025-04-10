@@ -61,6 +61,7 @@ MonoBehaviour:
   levelSprites:
   - {fileID: 4711374544223704480, guid: 714e69676a9d4df4a883439b7ed32962, type: 3}
   - {fileID: -5890828503606760369, guid: 45258834c4e9981418b6a0f6249a6d9c, type: 3}
+  originalPrefab: {fileID: 6346394211185617559}
 --- !u!212 &5521074128536461481
 SpriteRenderer:
   m_ObjectHideFlags: 0

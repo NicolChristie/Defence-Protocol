@@ -200,7 +200,7 @@ public class ShopManager : MonoBehaviour
 
 
 
-    void EquipWeapon(ShopItem item)
+public void EquipWeapon(ShopItem item)
 {
     if (item.weaponPrefab == null)
     {
@@ -214,7 +214,13 @@ public class ShopManager : MonoBehaviour
         return;
     }
 
+    // Instantiate and store the original prefab reference
     GameObject weaponInstance = Instantiate(item.weaponPrefab);
+    Weaponprefab weaponScript = weaponInstance.GetComponent<Weaponprefab>();
+    if (weaponScript != null)
+    {
+        weaponScript.originalPrefab = item.weaponPrefab; // ✅ Set originalPrefab here
+    }
 
     GameObject player = GameObject.FindGameObjectWithTag("Player");
     if (player == null)
@@ -244,10 +250,25 @@ public class ShopManager : MonoBehaviour
     WeaponNode weaponNode = weaponInstance.AddComponent<WeaponNode>();
     weaponNode.SetRecentlyPurchasedWeapon();
 
+    // Check if the weapon was merged
+    if (weaponNode.mergedWeapon)
+    {
+        Debug.Log("Merged weapon detected. Handling merge...");
+        weaponNode.mergedWeapon = false; // Reset flag after handling the merged weapon
+        weaponNode.recentlyPurchasedWeapon = true;
+        StartCoroutine(ShowShopWithDelay(0.5f)); // Open the shop after merge
+    }
+
     Debug.Log("Weapon equipped: " + weaponInstance.name);
 }
 
 
+
+    private IEnumerator ShowShopWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ShowShop();
+    }
     public void ShowShop()
     {
         shopPanel.SetActive(true);

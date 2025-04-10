@@ -59,7 +59,7 @@ MonoBehaviour:
   homingSpeed: 5
   level: 1
   levelSprites: []
-  originalPrefab: {fileID: 0}
+  originalPrefab: {fileID: 3387474910527744241}
 --- !u!212 &8306805692423019340
 SpriteRenderer:
   m_ObjectHideFlags: 0

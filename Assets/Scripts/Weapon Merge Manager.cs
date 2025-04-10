@@ -19,34 +19,23 @@ public class WeaponMergeManager : MonoBehaviour
     {
             Instance = this;
         // Debug to list all potential merges on startup
-        Debug.Log("List of potential merges on start:");
-
-        if (mergeCombinations != null)
-        {
-            foreach (var entry in mergeCombinations)
-            {
-                Debug.Log($"Merge Pair: {entry.weaponA.name} + {entry.weaponB.name} -> Result: {entry.result.name}");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("Merge combinations list is null!");
-        }
     }
 
    public Weaponprefab GetMergeResult(Weaponprefab weapon1, Weaponprefab weapon2)
-   {
-        foreach (var entry in mergeCombinations)
+{
+    foreach (var entry in mergeCombinations)
+    {
+        if ((entry.weaponA.originalPrefab == weapon1.originalPrefab &&
+             entry.weaponB.originalPrefab == weapon2.originalPrefab) ||
+            (entry.weaponA.originalPrefab == weapon2.originalPrefab &&
+             entry.weaponB.originalPrefab == weapon1.originalPrefab))
         {
-            // Compare the actual Weaponprefab references, not just the names
-            if ((entry.weaponA == weapon1 && entry.weaponB == weapon2) ||
-                (entry.weaponA == weapon2 && entry.weaponB == weapon1))
-            {
-                Debug.Log($"Found merge: {weapon1.name} + {weapon2.name} -> {entry.result.name}");
-                return entry.result;
-            }
+            return entry.result;
         }
+    }
 
-        return null;
-   }
+    Debug.Log($"❌ No merge found for: {weapon1.originalPrefab.name} + {weapon2.originalPrefab.name}");
+    return null;
+}
+
 }
