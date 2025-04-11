@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 71de3af46f2514743b4a7cbbf46b70c4
+guid: 10265e7f21f3c40449c9deb07facca1a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3410384754025469392
-    second: cannon v3_0
+      213: 6675052898331105773
+    second: laser v3_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,17 +96,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: cannon v3_0
+      name: laser v3_0
       rect:
         serializedVersion: 2
-        x: 9
-        y: 24
-        width: 233
-        height: 198
+        x: 12
+        y: 20
+        width: 293
+        height: 238
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 03a67ec9221eba0d0800000000000000
-      internalID: -3410384754025469392
+      spriteID: de997fdbe3d82ac50800000000000000
+      internalID: 6675052898331105773
       vertices: []
       indices: 
       edges: []

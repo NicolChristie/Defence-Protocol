@@ -6,66 +6,57 @@ public class WeaponNode : MonoBehaviour
     public Transform carryLocation;
     public GameObject storedWeapon;
     public static GameObject playerWeapon;
+
+    private Weaponprefab storedWeaponPrefab;
+    private static Weaponprefab playerWeaponPrefab;
+
     private bool isPlayerInside = false;
-    public bool recentlyPurchasedWeapon = false;
     public bool mergedWeapon = false;
-
     private bool boostApplied = false;
-    
 
-    private void OnEnable()
+    void Update()
+{
+    if (ShopManager.Instance != null && ShopManager.Instance.shopPanel.activeSelf)
+        return;
+
+    if (isPlayerInside && Input.GetKeyDown(KeyCode.E))
     {
-        ShopManager.OnWeaponPurchased += HandleWeaponPurchased;
-    }
-
-    private void OnDisable()
-    {
-        ShopManager.OnWeaponPurchased -= HandleWeaponPurchased;
-    }
-
-    private void HandleWeaponPurchased()
-    {
-        recentlyPurchasedWeapon = true;
-    }
-
-    private void Update()
-    {
-        if (ShopManager.Instance != null && ShopManager.Instance.shopPanel.activeSelf)
-            return;
-
-        if (isPlayerInside && Input.GetKeyDown(KeyCode.E))
-        {
-
-            Debug.Log(recentlyPurchasedWeapon);
+            // Weapon was purchased, so handle pickup/drop/merge
+            Debug.Log("starting weapon process");
             HandleWeaponPickupOrDrop();
-        }
     }
+}
+
+
 
     private void OnTriggerEnter2D(Collider2D collision)
+{
+    if (collision.CompareTag("Player"))
     {
-        if (collision.CompareTag("Player"))
+        CharacterManager player = collision.GetComponent<CharacterManager>();
+        if (player != null)
         {
-            CharacterManager player = collision.GetComponent<CharacterManager>();
-            if (player != null)
-            {
-                isPlayerInside = true;
+            isPlayerInside = true;
 
-                if (storedWeapon != null)
+            // Ensure storedWeaponPrefab is assigned correctly to the weapon the player is carrying
+            if (playerWeapon != null)
+            {
+                playerWeaponPrefab = playerWeapon.GetComponent<Weaponprefab>();
+                if (playerWeaponPrefab != null && !boostApplied)
                 {
-                    Weaponprefab weaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
-                    if (weaponPrefab != null && !boostApplied)
-                    {
-                        weaponPrefab.ApplyBoost(
-                            player.GetWeaponMultiplier(),
-                            player.GetDamageMultiplier(),
-                            false
-                        );
-                        boostApplied = true;
-                    }
+                    playerWeaponPrefab.ApplyBoost(
+                        player.GetWeaponMultiplier(),
+                        player.GetDamageMultiplier(),
+                        false
+                    );
+                    boostApplied = true;
                 }
             }
         }
     }
+}
+
+
 
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -76,30 +67,25 @@ public class WeaponNode : MonoBehaviour
             {
                 isPlayerInside = false;
 
-                if (storedWeapon != null)
+                if (storedWeaponPrefab != null && boostApplied)
                 {
-                    Weaponprefab weaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
-                    if (weaponPrefab != null && boostApplied)
-                    {
-                        weaponPrefab.RemoveBoost(
-                            player.GetWeaponMultiplier(),
-                            player.GetDamageMultiplier()
-                        );
-                        boostApplied = false;
-                    }
+                    storedWeaponPrefab.RemoveBoost(
+                        player.GetWeaponMultiplier(),
+                        player.GetDamageMultiplier()
+                    );
+                    boostApplied = false;
                 }
             }
         }
     }
-private void HandleWeaponPickupOrDrop()
+
+    private void HandleWeaponPickupOrDrop()
 {
     if (ShopManager.Instance != null && ShopManager.Instance.shopPanel.activeSelf)
-    {
         return;
-    }
 
-    if (carryLocation == null)
-    {
+    if (carryLocation == null){
+        Debug.LogWarning("Carry location not assigned!");
         return;
     }
 
@@ -110,24 +96,52 @@ private void HandleWeaponPickupOrDrop()
         return;
     }
 
+    // Pickup Weapon
     if (playerWeapon == null && storedWeapon != null)
-    {;
+    {
+        PickupWeapon(player);
+        return;
+    }
+    // Drop Weapon
+    else if (playerWeapon != null && storedWeapon == null)
+    {
+        DropWeapon(player);
+        return;
+    }
+    // Swap or Merge Weapons
+    else if (playerWeapon != null && storedWeapon != null)
+    {
+        SwapOrMergeWeapons(player);
+        return;
+    } else{
+        Debug.LogWarning("No valid weapon to pick up or drop!");
+        return;
+    }
 
+}
+
+
+    private void PickupWeapon(GameObject player)
+    {
+        Debug.Log("Picking up weapon...");
         playerWeapon = storedWeapon;
+        playerWeaponPrefab = playerWeapon.GetComponent<Weaponprefab>();
         storedWeapon = null;
+        storedWeaponPrefab = null;
 
         playerWeapon.transform.SetParent(player.transform);
         playerWeapon.transform.position = carryLocation.position;
         playerWeapon.transform.localRotation = Quaternion.identity;
         playerWeapon.transform.localScale = Vector3.one * 0.66f;
-        return;
     }
-    else if (playerWeapon != null && storedWeapon == null)
-    {
-        Debug.Log("Dropping player weapon into empty node.");
 
+    private void DropWeapon(GameObject player)
+    {
+        Debug.Log("Dropping weapon...");
         storedWeapon = playerWeapon;
+        storedWeaponPrefab = playerWeaponPrefab;
         playerWeapon = null;
+        playerWeaponPrefab = null;
 
         storedWeapon.transform.SetParent(transform);
         storedWeapon.transform.position = transform.position;
@@ -135,40 +149,34 @@ private void HandleWeaponPickupOrDrop()
         storedWeapon.transform.localScale = Vector3.one;
 
         CharacterManager currentPlayer = player.GetComponent<CharacterManager>();
-        if (currentPlayer != null && storedWeapon != null)
+        if (currentPlayer != null && storedWeaponPrefab != null)
         {
-            Weaponprefab weaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
-            if (weaponPrefab != null)
-            {
-                weaponPrefab.ResetToBaseStats();
-            }
+            storedWeaponPrefab.ResetToBaseStats();
         }
 
-        WeaponNode weaponNode = storedWeapon.GetComponent<WeaponNode>();
-        if (weaponNode != null && weaponNode.recentlyPurchasedWeapon)
+        // Check if weapon was purchased recently
+        if (storedWeaponPrefab != null && storedWeaponPrefab.wasPurchased)
         {
             Debug.Log("Recently purchased weapon detected. Opening shop...");
-            Debug.Log(recentlyPurchasedWeapon);
-            weaponNode.recentlyPurchasedWeapon = false;
-            StartCoroutine(ShowShopWithDelay(0.5f));
-        }else{ 
-            Debug.Log("No recently purchased weapon detected. No shop to open.");
-            Debug.Log(recentlyPurchasedWeapon);
+            storedWeaponPrefab.wasPurchased = false;
+            StartCoroutine(ShowShopWithDelay(0.5f)); // Open shop after placing weapon
         }
-
-        return;
-    }
-    else if (playerWeapon != null && storedWeapon != null)
-    {
-    Weaponprefab playerWeaponPrefab = playerWeapon.GetComponent<Weaponprefab>();
-    Weaponprefab storedWeaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
-    Debug.Log(recentlyPurchasedWeapon);
-    if (playerWeaponPrefab != null && storedWeaponPrefab != null)
-    {
-
-        if (playerWeaponPrefab.originalPrefab == storedWeaponPrefab.originalPrefab)
+        else
         {
+            Debug.Log("No recently purchased weapon detected. No shop to open.");
+        }
+    }
 
+    private void SwapOrMergeWeapons(GameObject player)
+    {
+        if (playerWeaponPrefab == null)
+            playerWeaponPrefab = playerWeapon.GetComponent<Weaponprefab>();
+        if (storedWeaponPrefab == null)
+            storedWeaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
+
+        if (playerWeaponPrefab != null && storedWeaponPrefab != null &&
+            playerWeaponPrefab.originalPrefab == storedWeaponPrefab.originalPrefab)
+        {
             Weaponprefab result = WeaponMergeManager.Instance.GetMergeResult(
                 playerWeaponPrefab,
                 storedWeaponPrefab
@@ -176,65 +184,61 @@ private void HandleWeaponPickupOrDrop()
 
             if (result != null)
             {
-
-                Destroy(playerWeapon);
-                Destroy(storedWeapon);
-                playerWeapon = null;
-                storedWeapon = null;
-
-                GameObject newWeapon = Instantiate(result.gameObject, transform.position, Quaternion.identity, transform);
-                storedWeapon = newWeapon;
-
-                Weaponprefab newWeaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
-                if (newWeaponPrefab != null)
-                {
-                    Debug.Log("Resetting merged weapon to base stats.");
-                    newWeaponPrefab.ResetToBaseStats();
-                    newWeaponPrefab.transform.localScale = Vector3.one * 1f;
-                    mergedWeapon = true;  // Set the flag to indicate a merge happened
-                }
-                WeaponNode newWeaponNode = newWeapon.GetComponent<WeaponNode>();
-                if (newWeaponNode == null)
-                    {
-                        newWeaponNode = newWeapon.AddComponent<WeaponNode>();
-                    }
-                newWeaponNode.SetRecentlyPurchasedWeapon();
-
-                WeaponNode weaponNode = storedWeapon.GetComponent<WeaponNode>();
-                if (weaponNode != null)
-                {
-                    weaponNode.boostApplied = false;
-                }
-
-                // Open the shop after a successful merge
-                if (weaponNode != null && weaponNode.recentlyPurchasedWeapon)
-                {
-                    Debug.Log("Merged weapon was recently purchased. Reopening shop...");
-                    recentlyPurchasedWeapon = false;  // Reset the flag
-                    StartCoroutine(ShowShopWithDelay(0.5f));  // Open shop with a delay
-                }else{ 
-                    Debug.Log("Merged weapon was not recently purchased. No shop to open.");
-                    Debug.Log(recentlyPurchasedWeapon);
-                }
-
+                MergeWeapons(result);
                 return;
             }
-            else
-            {
-                Debug.Log("No valid merge result. Swapping instead.");
-            }
         }
-        else
+
+        // Swap weapons if merging is not possible
+        SwapWeapons(player);
+    }
+
+    private void MergeWeapons(Weaponprefab result)
+    {
+        Destroy(storedWeapon);
+        storedWeapon = null;
+        storedWeaponPrefab = null;
+
+        GameObject newWeapon = Instantiate(result.gameObject, transform.position, Quaternion.identity, transform);
+        storedWeapon = newWeapon;
+        storedWeaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
+
+        // Transfer the wasPurchased flag
+        if (playerWeaponPrefab.wasPurchased)
         {
-            Debug.Log("Weapons are not identical. Skipping merge and swapping instead.");
+            storedWeaponPrefab.wasPurchased = true;
         }
 
-        // Perform swap if no merge happened
-        Debug.Log($"Swapping weapons: {playerWeaponPrefab.name} <--> {storedWeaponPrefab.name}");
+        Destroy(playerWeapon);
+        playerWeaponPrefab = null;
+        playerWeapon = null;
 
+        if (storedWeaponPrefab != null)
+        {
+            storedWeaponPrefab.ResetToBaseStats();
+            storedWeaponPrefab.transform.localScale = Vector3.one;
+            mergedWeapon = true;
+        }
+
+        WeaponNode newWeaponNode = newWeapon.GetComponent<WeaponNode>() ?? newWeapon.AddComponent<WeaponNode>();
+        newWeaponNode.boostApplied = false;
+
+        Debug.Log("Weapon merged. Reopening shop...");
+        StartCoroutine(ShowShopWithDelay(0.5f)); // Open shop after merge
+        storedWeaponPrefab.wasPurchased = false;
+    }
+
+    private void SwapWeapons(GameObject player)
+    {
+        Debug.Log("Swapping weapons...");
         GameObject temp = storedWeapon;
+        Weaponprefab tempPrefab = storedWeaponPrefab;
+
         storedWeapon = playerWeapon;
+        storedWeaponPrefab = playerWeaponPrefab;
+
         playerWeapon = temp;
+        playerWeaponPrefab = tempPrefab;
 
         storedWeapon.transform.SetParent(transform);
         storedWeapon.transform.position = transform.position;
@@ -246,34 +250,18 @@ private void HandleWeaponPickupOrDrop()
         playerWeapon.transform.localRotation = Quaternion.identity;
         playerWeapon.transform.localScale = Vector3.one * 0.66f;
 
-        // Ensure the weapon placed in the node sets the recentlyPurchased flag
-        WeaponNode swappedInWeaponNode = storedWeapon.GetComponent<WeaponNode>();
-        if (swappedInWeaponNode == null)
+        // Swap the wasPurchased flag between prefabs
+        if (storedWeaponPrefab != null && playerWeaponPrefab != null)
         {
-        swappedInWeaponNode = storedWeapon.AddComponent<WeaponNode>();
+            bool tempWasPurchased = storedWeaponPrefab.wasPurchased;
+            storedWeaponPrefab.wasPurchased = playerWeaponPrefab.wasPurchased;
+            playerWeaponPrefab.wasPurchased = tempWasPurchased;
         }
-        swappedInWeaponNode.SetRecentlyPurchasedWeapon();
-
-
-        return;
     }
-
-    Debug.LogWarning("One of the weapons is missing a Weaponprefab component!");
-    return;
-}
-
-}
 
     private IEnumerator ShowShopWithDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
         ShopManager.Instance.ShowShop();
-    }
-
-    public void SetRecentlyPurchasedWeapon()
-    {
-        Debug.Log("Setting recently purchased weapon flag.");  
-        recentlyPurchasedWeapon = true;
-        Debug.Log(recentlyPurchasedWeapon);
     }
 }

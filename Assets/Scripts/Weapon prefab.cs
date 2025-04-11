@@ -17,8 +17,7 @@ public class Weaponprefab : MonoBehaviour
     private float stopDistance = 100f;
     public bool homing = false;
     public float homingSpeed = 5f;
-    public int level = 1;
-
+    public bool wasPurchased = false;
 
     private SpriteRenderer spriteRenderer;
 
@@ -33,7 +32,6 @@ public class Weaponprefab : MonoBehaviour
     private bool isRotated = false;
     public GameObject originalPrefab; // For prefab comparison in merge logic
 
-
     void Start()
     {
         baseFireRate = fireRate;
@@ -46,13 +44,11 @@ public class Weaponprefab : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     
         if (originalPrefab == null)
-    originalPrefab = gameObject; // fallback if not manually assigned
-
+            originalPrefab = gameObject; // fallback if not manually assigned
     }
 
     public void UpgradeWeapon()
     {
-
         fireRate *= 1.25f;
         projectileDamage += 1;
 
@@ -173,5 +169,11 @@ public class Weaponprefab : MonoBehaviour
 
         newProjectile.SetProperties(firePoint, projectileDamage, range, aoeRadius, aoeDamageMultiplier, pierceCount,
             stopDistance, homing, homingSpeed, currentTarget, deviation);
+    }
+
+    public bool getPurchased()
+    {
+        Debug.LogWarning("checking if the weapon was purchased and that is" + wasPurchased);
+        return wasPurchased;
     }
 }

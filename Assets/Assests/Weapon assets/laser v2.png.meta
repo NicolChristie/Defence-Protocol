@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f6ed81ded9e114b44a0aae3a9e72ae2c
+guid: 188edbd1fdf6d5a4cae793271739b905
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -544764828794962812
-    second: canon v2_0
+      213: -4533719917616336276
+    second: laser v2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,17 +96,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: canon v2_0
+      name: laser v2_0
       rect:
         serializedVersion: 2
-        x: 13
-        y: 43
-        width: 243
-        height: 200
+        x: 43
+        y: 60
+        width: 293
+        height: 238
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 48cbc85464b9078f0800000000000000
-      internalID: -544764828794962812
+      spriteID: c627d5f61cdf411c0800000000000000
+      internalID: -4533719917616336276
       vertices: []
       indices: 
       edges: []
