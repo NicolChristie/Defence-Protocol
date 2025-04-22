@@ -182,6 +182,7 @@ public class WeaponNode : MonoBehaviour
 
     private void SwapOrMergeWeapons(GameObject player)
     {
+        Debug.Log($"trying to swap or merge weapons... {playerWeaponPrefab} and {storedWeaponPrefab}");
         if (playerWeaponPrefab == null)
             playerWeaponPrefab = playerWeapon.GetComponent<Weaponprefab>();
         if (storedWeaponPrefab == null)
@@ -207,40 +208,44 @@ public class WeaponNode : MonoBehaviour
     }
 
     private void MergeWeapons(Weaponprefab result)
+{
+    Destroy(storedWeapon);
+    storedWeapon = null;
+    storedWeaponPrefab = null;
+
+    GameObject newWeapon = Instantiate(result.gameObject, transform.position, Quaternion.identity, transform);
+    storedWeapon = newWeapon;
+    storedWeaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
+
+    // ✅ Assign the correct original prefab here
+    storedWeaponPrefab.originalPrefab = result.originalPrefab != null ? result.originalPrefab : result.gameObject;
+
+    // Transfer the wasPurchased flag
+    if (playerWeaponPrefab.wasPurchased)
     {
-        Destroy(storedWeapon);
-        storedWeapon = null;
-        storedWeaponPrefab = null;
-
-        GameObject newWeapon = Instantiate(result.gameObject, transform.position, Quaternion.identity, transform);
-        storedWeapon = newWeapon;
-        storedWeaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
-
-        // Transfer the wasPurchased flag
-        if (playerWeaponPrefab.wasPurchased)
-        {
-            storedWeaponPrefab.wasPurchased = true;
-        }
-
-        Destroy(playerWeapon);
-        playerWeaponPrefab = null;
-        playerWeapon = null;
-
-        if (storedWeaponPrefab != null)
-        {
-            storedWeaponPrefab.InitialiseBaseStats();
-            storedWeaponPrefab.ResetToBaseStats();
-            storedWeaponPrefab.transform.localScale = Vector3.one;
-            mergedWeapon = true;
-        }
-
-        WeaponNode newWeaponNode = newWeapon.GetComponent<WeaponNode>() ?? newWeapon.AddComponent<WeaponNode>();
-        newWeaponNode.boostApplied = false;
-
-        Debug.Log("Weapon merged. Reopening shop...");
-        StartCoroutine(ShowShopWithDelay(0.5f)); // Open shop after merge
-        storedWeaponPrefab.wasPurchased = false;
+        storedWeaponPrefab.wasPurchased = true;
     }
+
+    Destroy(playerWeapon);
+    playerWeaponPrefab = null;
+    playerWeapon = null;
+
+    if (storedWeaponPrefab != null)
+    {
+        storedWeaponPrefab.InitialiseBaseStats();
+        storedWeaponPrefab.ResetToBaseStats();
+        storedWeaponPrefab.transform.localScale = Vector3.one;
+        mergedWeapon = true;
+    }
+
+    WeaponNode newWeaponNode = newWeapon.GetComponent<WeaponNode>() ?? newWeapon.AddComponent<WeaponNode>();
+    newWeaponNode.boostApplied = false;
+
+    Debug.Log("Weapon merged. Reopening shop...");
+    StartCoroutine(ShowShopWithDelay(0.5f)); // Open shop after merge
+    storedWeaponPrefab.wasPurchased = false;
+}
+
 
     private void SwapWeapons(GameObject player)
     {
