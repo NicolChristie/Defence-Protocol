@@ -5,10 +5,11 @@ public class CharacterManager : MonoBehaviour
     public float baseSpeed = 5f;          // Base speed of the player
     public float weaponMultiplier = 2f;   // Weapon multiplier (affects fire rate)
     public float damageMultiplier = 2f;   // Damage multiplier (affects projectile damage)
-
+    public float rotationMultiplier = 2f; // Rotation multiplier (affects rotation speed)
     private float currentSpeed;           // Current player speed after applying boosts
     private float currentWeaponMultiplier;
     private float currentDamageMultiplier;
+    private float currentRotationMultiplier;
 
     void Start()
     {
@@ -16,6 +17,7 @@ public class CharacterManager : MonoBehaviour
         currentSpeed = baseSpeed;
         currentWeaponMultiplier = weaponMultiplier;
         currentDamageMultiplier = damageMultiplier;
+        currentRotationMultiplier = rotationMultiplier;
         Debug.Log("the current weapi multiplier is " + currentWeaponMultiplier + " the current damage multiplier is " + currentDamageMultiplier);
     }
 
@@ -25,6 +27,7 @@ public class CharacterManager : MonoBehaviour
     {
         currentWeaponMultiplier = weaponMultiplier;
         currentDamageMultiplier = damageMultiplier;
+        currentRotationMultiplier = rotationMultiplier;
         currentSpeed = baseSpeed;  // Reset speed back to the base value
     }
 
@@ -37,6 +40,11 @@ public class CharacterManager : MonoBehaviour
     public float GetDamageMultiplier()
     {
         return currentDamageMultiplier;
+    }
+
+    public float GetRotationMultiplier()
+    {
+        return currentRotationMultiplier;
     }
 
     public float GetSpeed()

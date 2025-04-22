@@ -23,12 +23,13 @@ public class Weaponprefab : MonoBehaviour
 
     private float baseFireRate;
     private int baseDamage;
+    private float baseRotation;
     private float boostedFireRate;
     private int boostedDamage;
+    private float boostedRotation;
 
     private float nextFireTime = 0f;
     private GameObject currentTarget;
-    private float baseRotation;
     private bool isRotated = false;
     public GameObject originalPrefab; // For prefab comparison in merge logic
 
@@ -36,10 +37,10 @@ public class Weaponprefab : MonoBehaviour
     {
         baseFireRate = fireRate;
         baseDamage = projectileDamage;
+        baseRotation = rotationSpeed;
         boostedFireRate = fireRate;
         boostedDamage = projectileDamage;
-
-        baseRotation = transform.eulerAngles.z;
+        boostedRotation = rotationSpeed;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
     
@@ -47,25 +48,20 @@ public class Weaponprefab : MonoBehaviour
             originalPrefab = gameObject; // fallback if not manually assigned
     }
 
-    public void UpgradeWeapon()
-    {
-        fireRate *= 1.25f;
-        projectileDamage += 1;
 
-        UpdateStats();
-    }
-
-    public void ApplyBoost(float speedMultiplier, float damageMultiplier, bool isFirstTime)
+    public void ApplyBoost(float speedMultiplier, float damageMultiplier,float rotationMultiplier, bool isFirstTime)
     {
         if (isFirstTime)
         {
             boostedFireRate = baseFireRate * speedMultiplier * speedMultiplier;
             boostedDamage = Mathf.RoundToInt(baseDamage * damageMultiplier * damageMultiplier);
+            boostedRotation = baseRotation * rotationMultiplier * rotationMultiplier;
         }
         else
         {
             boostedFireRate *= speedMultiplier;
             boostedDamage = Mathf.RoundToInt(boostedDamage * damageMultiplier);
+            boostedRotation *= rotationMultiplier;
         }
 
         UpdateStats();
@@ -75,14 +71,15 @@ public class Weaponprefab : MonoBehaviour
     {
         boostedFireRate = baseFireRate;
         boostedDamage = baseDamage;
+        boostedRotation = baseRotation;
         UpdateStats();
     }
 
-    public void RemoveBoost(float speedMultiplier, float damageMultiplier)
+    public void RemoveBoost(float speedMultiplier, float damageMultiplier,float rotationMultiplier)
     {
         boostedFireRate /= speedMultiplier;
         boostedDamage = Mathf.RoundToInt(boostedDamage / damageMultiplier);
-
+        boostedRotation /= rotationMultiplier;
         UpdateStats();
     }
 
@@ -90,6 +87,8 @@ public class Weaponprefab : MonoBehaviour
     {
         fireRate = boostedFireRate;
         projectileDamage = boostedDamage;
+        rotationSpeed = boostedRotation;
+        Debug.Log($"Updated stats: Fire Rate: {fireRate}, Damage: {projectileDamage}");
     }
 
     void Update()

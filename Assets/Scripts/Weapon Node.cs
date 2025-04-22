@@ -22,7 +22,7 @@ public class WeaponNode : MonoBehaviour
     if (isPlayerInside && Input.GetKeyDown(KeyCode.E))
     {
             // Weapon was purchased, so handle pickup/drop/merge
-            Debug.Log("starting weapon process");
+            Debug.Log($"the player is carrying {playerWeaponPrefab} and the stored weapon is {storedWeaponPrefab}");
             HandleWeaponPickupOrDrop();
     }
 }
@@ -47,6 +47,19 @@ public class WeaponNode : MonoBehaviour
                     playerWeaponPrefab.ApplyBoost(
                         player.GetWeaponMultiplier(),
                         player.GetDamageMultiplier(),
+                        player.GetRotationMultiplier(),
+                        false
+                    );
+                    boostApplied = true;
+                }
+            } else if (storedWeapon != null)
+            {
+                if (storedWeaponPrefab != null && !boostApplied)
+                {
+                    storedWeaponPrefab.ApplyBoost(
+                        player.GetWeaponMultiplier(),
+                        player.GetDamageMultiplier(),
+                        player.GetRotationMultiplier(),
                         false
                     );
                     boostApplied = true;
@@ -55,7 +68,6 @@ public class WeaponNode : MonoBehaviour
         }
     }
 }
-
 
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -71,7 +83,8 @@ public class WeaponNode : MonoBehaviour
                 {
                     storedWeaponPrefab.RemoveBoost(
                         player.GetWeaponMultiplier(),
-                        player.GetDamageMultiplier()
+                        player.GetDamageMultiplier(),
+                        player.GetRotationMultiplier()
                     );
                     boostApplied = false;
                 }

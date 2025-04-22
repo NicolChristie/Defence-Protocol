@@ -57,8 +57,7 @@ MonoBehaviour:
   rotationSpeed: 180
   homing: 1
   homingSpeed: 4
-  level: 1
-  levelSprites: []
+  wasPurchased: 0
   originalPrefab: {fileID: 808237241589946597}
 --- !u!212 &565980020223373514
 SpriteRenderer:
@@ -104,12 +103,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: -7961874826656482245, guid: d70a12ac15d08514caf049fd123f3f3a, type: 3}
+  m_Sprite: {fileID: 7047076698593947823, guid: 02bb37dc82e77d446bf4ceb2fe3b88ac, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.79, y: 2.25}
+  m_Size: {x: 4.37, y: 2.08}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

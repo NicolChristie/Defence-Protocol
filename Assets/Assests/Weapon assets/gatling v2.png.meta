@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d70a12ac15d08514caf049fd123f3f3a
+guid: fef0ba5634620a14bb65dc200491063e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7961874826656482245
-    second: missile launcher_0
+      213: -2847694234305926409
+    second: gatling v2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: missile launcher_0
+      name: gatling v2_0
       rect:
         serializedVersion: 2
-        x: 40
-        y: 53
-        width: 239
-        height: 240
+        x: 41
+        y: 16
+        width: 377
+        height: 184
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b3cf30b670db18190800000000000000
-      internalID: -7961874826656482245
+      spriteID: 7fa644f7e25fa78d0800000000000000
+      internalID: -2847694234305926409
       vertices: []
       indices: 
       edges: []
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      missile launcher_0: -7961874826656482245
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

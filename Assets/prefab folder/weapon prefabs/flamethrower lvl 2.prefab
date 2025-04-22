@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d300609011ebde24a82e27485e805841, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 8867543630500720856, guid: 790e7ca80fe635046ac9dd51385ca54e, type: 3}
+  projectilePrefab: {fileID: 8551207099166731160, guid: 5e70806d61decc645b9b752deaf691ec, type: 3}
   firePoint: {fileID: 3922578711197080810}
   fireRate: 15
   projectileDamage: 2
@@ -103,7 +103,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 2800715737579632502, guid: a768dcaa176ab1e45abe322e536f06d3, type: 3}
+  m_Sprite: {fileID: 1786841576518262886, guid: a3d82b01c4d9cc044813704cb30fb95c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

@@ -67,6 +67,11 @@ public class PlayerShipUpgradeManager : MonoBehaviour
                 Debug.Log($"New Damage: {character.damageMultiplier}"); 
                 break;
 
+            case "Rotation Speed":
+                character.rotationMultiplier *= upgrade.upgradeValue; 
+                Debug.Log($"New Rotation Speed: {character.rotationMultiplier}"); 
+                break;
+
             default:
                 Debug.LogWarning("Upgrade not recognized: " + upgrade.itemName);
                 return;
