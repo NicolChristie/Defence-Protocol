@@ -187,70 +187,70 @@ public class ShopManager : MonoBehaviour
         isPurchasing = false;
     }
 
-   public void EquipWeapon(ShopItem item)
-{
-    if (item.weaponPrefab == null)
+    public void EquipWeapon(ShopItem item)
     {
-        Debug.LogError("No weapon prefab assigned!");
-        return;
-    }
+        if (item.weaponPrefab == null)
+        {
+            Debug.LogError("No weapon prefab assigned!");
+            return;
+        }
 
-    if (WeaponNode.playerWeapon != null)
-    {
-        Debug.Log("Player is already holding a weapon. Cannot equip another.");
-        return;
-    }
+        if (WeaponNode.playerWeapon != null)
+        {
+            Debug.Log("Player is already holding a weapon. Cannot equip another.");
+            return;
+        }
 
-    // Instantiate and store the original prefab reference
-    GameObject weaponInstance = Instantiate(item.weaponPrefab);
-    Weaponprefab weaponScript = weaponInstance.GetComponent<Weaponprefab>();
-    if (weaponScript != null)
-    {
-        weaponScript.originalPrefab = item.weaponPrefab; // Set originalPrefab here
-    }
+        // Instantiate and store the original prefab reference
+        GameObject weaponInstance = Instantiate(item.weaponPrefab);
+        Weaponprefab weaponScript = weaponInstance.GetComponent<Weaponprefab>();
+        if (weaponScript != null)
+        {
+            weaponScript.originalPrefab = item.weaponPrefab; // ✅ Set originalPrefab here
+        }
 
-    GameObject player = GameObject.FindGameObjectWithTag("Player");
-    if (player == null)
-    {
-        Debug.LogError("Player not found!");
-        Destroy(weaponInstance);
-        return;
-    }
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player == null)
+        {
+            Debug.LogError("Player not found!");
+            Destroy(weaponInstance);
+            return;
+        }
 
-    Transform carryLocation = player.transform.Find("carryLocation");
-    if (carryLocation == null)
-    {
-        Debug.LogError("Carry Location not found on player!");
-        Destroy(weaponInstance);
-        return;
-    }
+        Transform carryLocation = player.transform.Find("carryLocation");
+        if (carryLocation == null)
+        {
+            Debug.LogError("Carry Location not found on player!");
+            Destroy(weaponInstance);
+            return;
+        }
 
-    Debug.Log("Equipping weapon to player...");
+        Debug.Log("Equipping weapon to player...");
 
-    weaponInstance.transform.SetParent(carryLocation);
-    weaponInstance.transform.localPosition = Vector3.zero;
-    weaponInstance.transform.localRotation = Quaternion.identity;
-    weaponInstance.transform.localScale = Vector3.one * 1f;
+        weaponInstance.transform.SetParent(carryLocation);
+        weaponInstance.transform.localPosition = Vector3.zero;
+        weaponInstance.transform.localRotation = Quaternion.identity;
+        weaponInstance.transform.localScale = Vector3.one * 1f;
 
-    WeaponNode.playerWeapon = weaponInstance; // Correctly set the player's weapon
-    WeaponNode weaponNode = weaponInstance.GetComponent<WeaponNode>();
-    if (weaponNode == null)
-    {
-        weaponNode = weaponInstance.AddComponent<WeaponNode>(); // Ensure WeaponNode exists on the weapon
-    }
+        WeaponNode.playerWeapon = weaponInstance;
 
-    // Set up the weapon prefab
-    Weaponprefab weaponPrefab = weaponInstance.GetComponent<Weaponprefab>();
+        WeaponNode weaponNode = weaponInstance.AddComponent<WeaponNode>();
+        Weaponprefab weaponPrefab = weaponInstance.GetComponent<Weaponprefab>();
     if (weaponPrefab != null)
     {
-        weaponPrefab.wasPurchased = true; // Set wasPurchased flag for the weapon
+        weaponPrefab.wasPurchased = true;
         Debug.Log("Weapon purchased! Setting wasPurchased flag.");
     }
+        // Check if the weapon was merged
+        if (weaponNode.mergedWeapon)
+        {
+            Debug.Log("Merged weapon detected. Handling merge...");
+            weaponNode.mergedWeapon = false; // Reset flag after handling the merged weapon
+            StartCoroutine(ShowShopWithDelay(0.5f)); // Open the shop after merge
+        }
 
-    Debug.Log("Weapon equipped: " + weaponInstance.name);
-}
-
-
+        Debug.Log("Weapon equipped: " + weaponInstance.name);
+    }
 
     private IEnumerator ShowShopWithDelay(float delay)
     {

@@ -228,6 +228,7 @@ public class WeaponNode : MonoBehaviour
 
         if (storedWeaponPrefab != null)
         {
+            storedWeaponPrefab.InitialiseBaseStats();
             storedWeaponPrefab.ResetToBaseStats();
             storedWeaponPrefab.transform.localScale = Vector3.one;
             mergedWeapon = true;

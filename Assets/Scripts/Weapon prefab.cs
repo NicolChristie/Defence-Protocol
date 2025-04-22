@@ -48,6 +48,16 @@ public class Weaponprefab : MonoBehaviour
             originalPrefab = gameObject; // fallback if not manually assigned
     }
 
+    public void InitialiseBaseStats()
+    {
+        baseFireRate = fireRate;
+        baseDamage = projectileDamage;
+        baseRotation = rotationSpeed;
+
+        boostedFireRate = fireRate;
+        boostedDamage = projectileDamage;
+        boostedRotation = rotationSpeed;
+    }
 
     public void ApplyBoost(float speedMultiplier, float damageMultiplier,float rotationMultiplier, bool isFirstTime)
     {

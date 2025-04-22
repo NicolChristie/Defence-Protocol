@@ -6,7 +6,6 @@ Level 2:
 1M.L, 1B.R,
 1A.U, 1M.D
 
-"
 Level 3:
 2M.R, 1B.L
 [2A.U, 3M.D]
@@ -45,4 +44,3 @@ Level 10:
 [7M.L, 4A.R]
 [5B.D, 5M.U]
 6A.L, 4B.R, 3M.D
-"
