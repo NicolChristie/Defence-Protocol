@@ -16,6 +16,8 @@ public class ShopManager : MonoBehaviour
     public TextMeshProUGUI[] itemDescriptionTexts;
     public RawImage[] itemImageSlots;
     public Button[] buyButtons;
+    public Button goToShip;
+    public Button goToShop;
     public GameObject shopPanel;
     private bool isPurchasing = false;
 
@@ -88,11 +90,11 @@ public class ShopManager : MonoBehaviour
                     break;
             }
 
-            // Set item image for RawImage UI
             if (currentItem.itemImage != null)
             {
                 itemImageSlots[slot].texture = currentItem.itemImage;
                 itemImageSlots[slot].enabled = true;
+                AdjustRawImageAspect(itemImageSlots[slot], currentItem.itemImage); // 🔥 ADD THIS LINE
             }
             else
             {
@@ -252,6 +254,22 @@ public class ShopManager : MonoBehaviour
         Debug.Log("Weapon equipped: " + weaponInstance.name);
     }
 
+    private void AdjustRawImageAspect(RawImage rawImage, Texture texture)
+    {
+        if (texture == null || rawImage == null) return;
+
+        float textureWidth = texture.width;
+        float textureHeight = texture.height;
+        float aspectRatio = textureWidth / textureHeight;
+
+        RectTransform rt = rawImage.rectTransform;
+        float currentHeight = rt.rect.height;
+        float newWidth = currentHeight * aspectRatio;
+
+        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newWidth);
+    }
+
+
     private IEnumerator ShowShopWithDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -261,10 +279,24 @@ public class ShopManager : MonoBehaviour
     public void ShowShop()
     {
         shopPanel.SetActive(true);
+        goToShop.gameObject.SetActive(false);
     }
 
     public void HideShop()
     {
         shopPanel.SetActive(false);
+    }
+
+    public void ReturnToShip(){
+        Debug.Log("Returning to ship...");
+        goToShop.gameObject.SetActive(true);
+        shopPanel.SetActive(false);
+
+    }
+
+    public void ReturnToShop(){
+        Debug.Log("Going to shop...");
+        shopPanel.SetActive(true);
+        goToShop.gameObject.SetActive(false);
     }
 }

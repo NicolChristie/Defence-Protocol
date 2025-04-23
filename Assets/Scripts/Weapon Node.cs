@@ -240,10 +240,13 @@ public class WeaponNode : MonoBehaviour
 
     WeaponNode newWeaponNode = newWeapon.GetComponent<WeaponNode>() ?? newWeapon.AddComponent<WeaponNode>();
     newWeaponNode.boostApplied = false;
+    if(storedWeaponPrefab.wasPurchased)
+    {
+        Debug.Log("Weapon merged. Reopening shop...");
+        StartCoroutine(ShowShopWithDelay(0.5f)); // Open shop after merge
+        storedWeaponPrefab.wasPurchased = false;
+    }
 
-    Debug.Log("Weapon merged. Reopening shop...");
-    StartCoroutine(ShowShopWithDelay(0.5f)); // Open shop after merge
-    storedWeaponPrefab.wasPurchased = false;
 }
 
 

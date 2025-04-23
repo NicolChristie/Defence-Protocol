@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 
-public class LevelHandler : MonoBehaviour
+public class TutorialLevelHandler : MonoBehaviour
 {
     public EnemySpawner enemySpawner; // Reference to EnemySpawner
     public GameObject player; // Reference to the player
@@ -12,26 +12,22 @@ public class LevelHandler : MonoBehaviour
     public EnemyType[] enemyTypes; // Reference to different enemy types
     private int levelIndex = 0;
     private int spawnedEnemyCount = 0;
+    public TutorialManager tutorialManager; // Reference to the TutorialManager
+
 
     public TextAsset levelFile; // Drag your Levels.txt file here in the Inspector
     private bool isLevelComplete = false; // Flag to check if level is complete
     private bool isGameStarted = false; // Flag to track if the game has started
 
-    private void Start()
-    {
-        // Show the next level button and shop at the start
-        nextLevelButton.SetActive(true); // Show the next level button
-        ShopManager.Instance.ShowShop(); // Show the shop at the start
-    }
+   
 
     // 🔄 Start the game when the user presses  "Start"
     public void StartLevel()
     {
         isGameStarted = true;
 
-        // Hide the next level button and the shop before starting the level
         nextLevelButton.SetActive(false);
-        ShopManager.Instance.HideShop();
+
 
         // Start the level with a delay
         StartCoroutine(HandleLevelWithDelay(1)); // Start Level 1 with a delay
@@ -87,17 +83,21 @@ public class LevelHandler : MonoBehaviour
             Debug.Log("Player has placed the weapon down. Proceeding with level completion.");
         }
 
-        // Once all enemies are destroyed and the player isn't carrying a weapon, show the next level button and the shop
         Debug.Log("🎉 Level Complete!");
 
         // Add a check to ensure that the level hasn't already been completed
         if (isLevelComplete) yield break; // Prevent duplicate execution
 
         isLevelComplete = true;
-        CoinManager.Instance.AddCoins(5); // Reward for finishing the level
-        ShopManager.Instance.GenerateShop();
-        nextLevelButton.SetActive(true); // Show the next level button
-        ShopManager.Instance.ShowShop(); // Show the shop after completing the level
+        if (tutorialManager != null)
+        {
+            tutorialManager.TriggerNextStep();
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ TutorialManager reference is not set!");
+        }
+    
     }
 
     // Wait until the player places down the weapon
@@ -112,6 +112,7 @@ public class LevelHandler : MonoBehaviour
         Debug.Log("Weapon has been placed down.");
     }
 
+    
     public void ProceedToNextLevel()
     {
         levelIndex++; // Increment the level index
@@ -119,11 +120,6 @@ public class LevelHandler : MonoBehaviour
 
         Debug.Log($"Next level button pressed! Current level: {levelIndex}");
 
-        // Generate a new shop before starting the next level
-        ShopManager.Instance.GenerateShop();
-
-        // Hide the shop when proceeding to the next level
-        ShopManager.Instance.HideShop();
 
         List<string> nextLevelData = LoadLevelFromFile(levelFile, levelIndex);
 

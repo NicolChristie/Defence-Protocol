@@ -86,6 +86,6 @@ public class ShipHealthBar : MonoBehaviour
         // Restart the current scene (resets the game)
         Debug.Log("Restarting game...");
         Time.timeScale = 1;  // Ensure time is resumed
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene("Start Menu");
     }
 }

@@ -53,7 +53,7 @@ MonoBehaviour:
   aoeRadius: 0
   aoeDamageMultiplier: 0.5
   pierceCount: 1
-  deviation: 20
+  deviation: 15
   rotationSpeed: 150
   homing: 0
   homingSpeed: 5

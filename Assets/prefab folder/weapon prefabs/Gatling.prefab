@@ -53,12 +53,11 @@ MonoBehaviour:
   aoeRadius: 0
   aoeDamageMultiplier: 0.5
   pierceCount: 0
-  deviation: 30
+  deviation: 20
   rotationSpeed: 250
   homing: 0
   homingSpeed: 5
-  level: 1
-  levelSprites: []
+  wasPurchased: 0
   originalPrefab: {fileID: 8155543191941338249}
 --- !u!212 &5385977705890738898
 SpriteRenderer:

@@ -56,7 +56,7 @@ MonoBehaviour:
   deviation: 80
   rotationSpeed: 180
   homing: 1
-  homingSpeed: 4
+  homingSpeed: 6
   wasPurchased: 0
   originalPrefab: {fileID: 808237241589946597}
 --- !u!212 &565980020223373514
