@@ -7,7 +7,7 @@ public class WeaponNode : MonoBehaviour
     public GameObject storedWeapon;
     public static GameObject playerWeapon;
 
-    private Weaponprefab storedWeaponPrefab;
+    public Weaponprefab storedWeaponPrefab;
     private static Weaponprefab playerWeaponPrefab;
 
     private bool isPlayerInside = false;
@@ -166,7 +166,7 @@ public class WeaponNode : MonoBehaviour
         {
             storedWeaponPrefab.ResetToBaseStats();
         }
-
+        boostApplied = false;
         // Check if weapon was purchased recently
         if (storedWeaponPrefab != null && storedWeaponPrefab.wasPurchased)
         {
@@ -182,12 +182,11 @@ public class WeaponNode : MonoBehaviour
 
     private void SwapOrMergeWeapons(GameObject player)
     {
-        Debug.Log($"trying to swap or merge weapons... {playerWeaponPrefab} and {storedWeaponPrefab}");
+        Debug.Log($"trying to swap or merge weapons... {playerWeaponPrefab} and {storedWeaponPrefab} with the original prefabs {playerWeaponPrefab.originalPrefab} and {storedWeaponPrefab.originalPrefab}");
         if (playerWeaponPrefab == null)
             playerWeaponPrefab = playerWeapon.GetComponent<Weaponprefab>();
         if (storedWeaponPrefab == null)
             storedWeaponPrefab = storedWeapon.GetComponent<Weaponprefab>();
-
         if (playerWeaponPrefab != null && storedWeaponPrefab != null &&
             playerWeaponPrefab.originalPrefab == storedWeaponPrefab.originalPrefab)
         {
@@ -200,7 +199,12 @@ public class WeaponNode : MonoBehaviour
             {
                 MergeWeapons(result);
                 return;
+            }else
+            {
+                Debug.LogWarning("No valid merge result found!");
             }
+        }else{
+            Debug.LogWarning("prefabs do not match!");
         }
 
         // Swap weapons if merging is not possible

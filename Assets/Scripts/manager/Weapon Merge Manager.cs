@@ -23,12 +23,13 @@ public class WeaponMergeManager : MonoBehaviour
 
    public Weaponprefab GetMergeResult(Weaponprefab weapon1, Weaponprefab weapon2)
 {
+    Debug.Log($"🔄 Merging {weapon1.originalPrefab.name} + {weapon2.originalPrefab.name}");
     foreach (var entry in mergeCombinations)
     {
         if ((entry.weaponA.originalPrefab == weapon1.originalPrefab &&
-             entry.weaponB.originalPrefab == weapon2.originalPrefab) ||
+                entry.weaponB.originalPrefab == weapon2.originalPrefab) ||
             (entry.weaponA.originalPrefab == weapon2.originalPrefab &&
-             entry.weaponB.originalPrefab == weapon1.originalPrefab))
+                entry.weaponB.originalPrefab == weapon1.originalPrefab))
         {
             return entry.result;
         }

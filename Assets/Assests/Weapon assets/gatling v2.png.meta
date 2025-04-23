@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      gatling v2_0: -2847694234305926409
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

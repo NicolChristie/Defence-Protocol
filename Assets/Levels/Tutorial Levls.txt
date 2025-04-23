@@ -4,5 +4,14 @@ Level 1:
 1M.D
 
 Level 2:
-2M.D
-2M.D
+[2M.D,1S.D]
+5M.D
+
+Level 3:
+1S.U
+2M.U
+
+Level 4:
+[2S.D,2M.D]
+3M.D
+
