@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class TutorialManager : MonoBehaviour
 {
     public TextMeshProUGUI tutorialText; // Assign in inspector
+    public GameObject tutorialPanel; // Assign in inspector
     public TutorialLevelHandler TutorialLevelHandler;
     public GameObject CoinPanel;
     public Button continueButton;
@@ -53,8 +54,6 @@ public class TutorialManager : MonoBehaviour
     switch (levelIndex)
     {
         case 0:
-        PlaceWeaponOnNode(secondWeaponNode, secondWeaponPrefab);
-        PlaceWeaponOnNode(firstWeaponNode, firstWeaponPrefab);
             tutorialText.text = "Welcome! Use the W A S D keys to move around.";
             break;
 
@@ -70,10 +69,12 @@ public class TutorialManager : MonoBehaviour
         case 2:
             tutorialText.text = "Stand on the weapon node to increase its effectiveness!";
             break;
-
         case 3:
             tutorialText.text = "You can pick up and move weapons by pressing the 'E' key.";
-            tutorialText.rectTransform.anchoredPosition = new Vector2(tutorialText.rectTransform.anchoredPosition.x, -550f);
+            {
+                RectTransform panelRect = tutorialPanel.GetComponent<RectTransform>();
+                panelRect.anchoredPosition = new Vector2(panelRect.anchoredPosition.x, -550f);
+            }
             break;
 
         case 4:
@@ -83,15 +84,20 @@ public class TutorialManager : MonoBehaviour
                 PlaceWeaponOnNode(secondWeaponNode, secondWeaponPrefab);
                 hasPlacedSecondWeapon = true;
             }
-            tutorialText.rectTransform.anchoredPosition = new Vector2(tutorialText.rectTransform.anchoredPosition.x, 0f);
+            {
+                
+            }
             break;
 
         case 5:
             tutorialText.text = "Buy different weapons from the shop to increase your firepower!";
             CoinManager.Instance.AddCoins(5);
             ShopManager.Instance.GenerateShop();
-            TutorialLevelHandler.nextLevelButton.SetActive(true);
             ShopManager.Instance.ShowShop();
+            break;
+        
+        default:
+            tutorialText.text = "No tutorial available for this level.";
             break;
     }
 }
@@ -114,6 +120,8 @@ public class TutorialManager : MonoBehaviour
     }
 
     public void TriggerNextStep(){
+        RectTransform panelRect = tutorialPanel.GetComponent<RectTransform>();
+        panelRect.anchoredPosition = new Vector2(panelRect.anchoredPosition.x, 0f);
         continueButton.gameObject.SetActive(true); // Show the continue button
     }
 
@@ -126,6 +134,7 @@ public class TutorialManager : MonoBehaviour
             TutorialLevelHandler.ProceedToNextLevel(); // Proceed to the next level in the Level Handler
             tutorialText.text = "🔔 The tutorial is complete! Continue to the next level!";
         }
+
         else
         {
             TutorialLevelHandler.ProceedToNextLevel(); // Proceed to the next level
@@ -138,9 +147,21 @@ public class TutorialManager : MonoBehaviour
     private void PlaceWeaponOnNode(WeaponNode node, GameObject weaponPrefab)
 {
     GameObject weapon = Instantiate(weaponPrefab, node.transform.position, Quaternion.identity, node.transform);
+    Weaponprefab weaponComponent = weapon.GetComponent<Weaponprefab>();
+
     node.storedWeapon = weapon;
-    node.storedWeaponPrefab = weapon.GetComponent<Weaponprefab>();
+    node.storedWeaponPrefab = weaponComponent;
     weapon.transform.localScale = Vector3.one;
+
+    // ✅ Assign original prefab so merge comparisons work correctly
+    if (weaponComponent != null)
+    {
+        weaponComponent.originalPrefab = weaponPrefab;
+    }
+    else
+    {
+        Debug.LogWarning("Weaponprefab component missing from instantiated weapon.");
+    }
 }
 
 }

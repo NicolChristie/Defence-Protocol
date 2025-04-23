@@ -238,11 +238,11 @@ public class ShopManager : MonoBehaviour
 
         WeaponNode weaponNode = weaponInstance.AddComponent<WeaponNode>();
         Weaponprefab weaponPrefab = weaponInstance.GetComponent<Weaponprefab>();
-    if (weaponPrefab != null)
-    {
-        weaponPrefab.wasPurchased = true;
-        Debug.Log("Weapon purchased! Setting wasPurchased flag.");
-    }
+        if (weaponPrefab != null)
+        {
+            weaponPrefab.wasPurchased = true;
+            Debug.Log("Weapon purchased! Setting wasPurchased flag.");
+        }
         // Check if the weapon was merged
         if (weaponNode.mergedWeapon)
         {

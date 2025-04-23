@@ -15,3 +15,31 @@ Level 4:
 [2S.D,2M.D]
 3M.D
 
+Level 5:
+
+
+Level 6:
+4M.L, 3B.U
+[4A.R, 2B.D]
+3M.D, 1B.R
+
+Level 7:
+[5M.L, 4A.U]
+[4B.D, 2M.R]
+3M.U, 2A.L
+
+Level 8:
+6M.L, 5B.U
+[5A.R, 4M.D]
+3B.L, 3M.R
+
+Level 9:
+[5A.L, 5M.R]
+[4B.U, 3A.D]
+6M.L, 4B.R
+
+Level 10:
+[7M.L, 4A.R]
+[5B.D, 5M.U]
+6A.L, 4B.R, 3M.D
+
