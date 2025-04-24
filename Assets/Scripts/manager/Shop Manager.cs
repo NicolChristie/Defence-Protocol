@@ -145,66 +145,65 @@ public class ShopManager : MonoBehaviour
     }
 
     public void BuyItem(int shopSlot)
-{
-    if (shopSlot < 0 || shopSlot >= currentShopItems.Count)
     {
-        Debug.LogError("Invalid shop slot selected!");
-        return;
-    }
-
-    ShopItem itemToBuy = currentShopItems[shopSlot];
-
-    // Disable the button to prevent double clicking
-    buyButtons[shopSlot].interactable = false;
-
-    if (CoinManager.Instance.SpendCoins(itemToBuy.price))
-    {
-        // Dim the panel to indicate it's unavailable
-        if (shopSlot < itemPanels.Length)
+        if (shopSlot < 0 || shopSlot >= currentShopItems.Count)
         {
-            Image panelImage = itemPanels[shopSlot].GetComponent<Image>();
-            if (panelImage != null)
-            {
-                Color color = panelImage.color;
-                color.a = 0.5f; // Half-transparent
-                panelImage.color = color;
-            }
+            Debug.LogError("Invalid shop slot selected!");
+            return;
         }
 
-        // Disable the buy button permanently (until next shop generation)
+
+        ShopItem itemToBuy = currentShopItems[shopSlot];
+
+        // Disable the button to prevent double clicking
         buyButtons[shopSlot].interactable = false;
 
-        Debug.Log("Purchased: " + itemToBuy.itemName);
-
-        if (itemToBuy.itemType == ShopItem.ItemType.Weapon)
+        if (CoinManager.Instance.SpendCoins(itemToBuy.price))
         {
-            if (!weaponPurchaseCounts.ContainsKey(itemToBuy))
+            // Dim the panel to indicate it's unavailable
+            if (shopSlot < itemPanels.Length)
+            {
+                Image panelImage = itemPanels[shopSlot].GetComponent<Image>();
+                if (panelImage != null)
+                {
+                    Color color = panelImage.color;
+                    color.a = 0.5f; // Half-transparent
+                    panelImage.color = color;
+                }
+            }
+
+            // Disable the buy button permanently (until next shop generation)
+            buyButtons[shopSlot].interactable = false;
+
+            Debug.Log("Purchased: " + itemToBuy.itemName);
+
+            if (itemToBuy.itemType == ShopItem.ItemType.Weapon)
+            {
+                if (!weaponPurchaseCounts.ContainsKey(itemToBuy))
                 weaponPurchaseCounts[itemToBuy] = 1;
-            else
+                else
                 weaponPurchaseCounts[itemToBuy]++;
 
-            // Increment the price after purchase
-            itemToBuy.price += 1;
+        itemToBuy.price += 1; 
+                EquipWeapon(itemToBuy);
+                HideShop();
+            }
+            else if (itemToBuy.itemType == ShopItem.ItemType.PlayerUpgrade || itemToBuy.itemType == ShopItem.ItemType.ShipUpgrade)
+            {
+                PlayerShipUpgradeManager.Instance.ApplyUpgrade(itemToBuy);
+            }
 
-            // Update the UI to reflect the new price
-            itemPriceTexts[shopSlot].text = "Price: " + itemToBuy.price;
-
-            EquipWeapon(itemToBuy);
-            HideShop();
+            // Optionally, delay re-enabling the button to avoid repeated clicks
+            //StartCoroutine(ReenableButtonAfterPurchase(shopSlot));
         }
-        else if (itemToBuy.itemType == ShopItem.ItemType.PlayerUpgrade || itemToBuy.itemType == ShopItem.ItemType.ShipUpgrade)
+        else
         {
-            PlayerShipUpgradeManager.Instance.ApplyUpgrade(itemToBuy);
+            Debug.Log("Not enough coins to buy: " + itemToBuy.itemName);
+            // Re-enable the button if purchase fails
+            buyButtons[shopSlot].interactable = true;
+            //isPurchasing = false;  // Reset the flag if purchase fails
         }
     }
-    else
-    {
-        Debug.Log("Not enough coins to buy: " + itemToBuy.itemName);
-        // Re-enable the button if purchase fails
-        buyButtons[shopSlot].interactable = true;
-    }
-}
-
 
     private IEnumerator ReenableButtonAfterPurchase(int shopSlot)
     {
