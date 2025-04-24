@@ -8,6 +8,7 @@ public class PauseSettings : MonoBehaviour
     public Button backButton;
     public Button exitButton;
     public Button settingsButton;
+    public Button goToMenuButton; // Button to go back to the main menu
     public GameObject settingsUI;  // Reference to the settings menu UI (make sure it's not active at start)
 
     void Start()
@@ -19,6 +20,7 @@ public class PauseSettings : MonoBehaviour
         if (backButton != null) backButton.onClick.AddListener(ResumeGame);
         if (exitButton != null) exitButton.onClick.AddListener(ExitGame);
         if (settingsButton != null) settingsButton.onClick.AddListener(OpenSettings);
+        if (goToMenuButton != null) goToMenuButton.onClick.AddListener(exitToMenu);
     }
 
     void ExitGame()
@@ -43,6 +45,10 @@ public class PauseSettings : MonoBehaviour
     {
         var pauseManager = Object.FindFirstObjectByType<PauseMenu>();
         pauseManager.ResumeGame();
+    }
+
+    void exitToMenu(){
+        SceneManager.LoadScene("Start Menu");
     }
 }
 

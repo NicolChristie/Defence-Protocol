@@ -120,7 +120,7 @@ public class LevelHandler : MonoBehaviour
         Debug.Log($"Next level button pressed! Current level: {levelIndex}");
 
         // Generate a new shop before starting the next level
-        ShopManager.Instance.GenerateShop();
+        //ShopManager.Instance.GenerateShop();
 
         // Hide the shop when proceeding to the next level
         ShopManager.Instance.HideShop();

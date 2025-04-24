@@ -55,8 +55,9 @@ public class CharacterManager : MonoBehaviour
     void Update()
     {
         // Player movement using the current speed
-        float moveX = Input.GetAxis("Horizontal");
-        float moveY = Input.GetAxis("Vertical");
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveY = Input.GetAxisRaw("Vertical");
+
         Vector2 move = new Vector2(moveX, moveY).normalized * currentSpeed * Time.deltaTime;
 
         transform.position += (Vector3)move;

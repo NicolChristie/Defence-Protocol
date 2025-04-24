@@ -89,14 +89,21 @@ public class TutorialLevelHandler : MonoBehaviour
         if (isLevelComplete) yield break; // Prevent duplicate execution
 
         isLevelComplete = true;
-        if (tutorialManager != null)
-        {
-            tutorialManager.TriggerNextStep();
-        }
-        else
-        {
-            Debug.LogWarning("⚠️ TutorialManager reference is not set!");
-        }
+        if (levelIndex <= 8)
+    {
+    if (tutorialManager != null)
+    {
+        tutorialManager.TriggerNextStep(levelIndex);
+    }
+    }else
+    {
+        CoinManager.Instance.AddCoins(5); // Reward for finishing the level
+        ShopManager.Instance.GenerateShop();
+        nextLevelButton.SetActive(true); // Show the next level button
+        ShopManager.Instance.ShowShop(); 
+    }
+
+        
     
     }
 
@@ -120,12 +127,12 @@ public class TutorialLevelHandler : MonoBehaviour
 
         Debug.Log($"Next level button pressed! Current level: {levelIndex}");
 
+        ShopManager.Instance.HideShop();
 
         List<string> nextLevelData = LoadLevelFromFile(levelFile, levelIndex);
 
         if (nextLevelData.Count > 0)
         {
-            Debug.Log($"🚀 Moving to Level {levelIndex}");
             nextLevelButton.SetActive(false); // Hide the next level button
             StartCoroutine(StartLevelWithDelay(levelIndex));
 

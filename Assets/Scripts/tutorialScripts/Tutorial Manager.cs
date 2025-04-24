@@ -14,6 +14,10 @@ public class TutorialManager : MonoBehaviour
     public WeaponNode secondWeaponNode;
     public GameObject firstWeaponPrefab;
     public GameObject secondWeaponPrefab;
+    public GameObject nextLevelButton;
+    public GameObject healthBar;
+    public GameObject healthtxt;
+    public GameObject returnToShop;
     private bool hasPlacedFirstWeapon = false;
     private bool hasPlacedSecondWeapon = false;
     private int lastTutorialIndex = -1;
@@ -30,6 +34,9 @@ public class TutorialManager : MonoBehaviour
     {
         CoinPanel.SetActive(false);
         continueButton.gameObject.SetActive(false); // Hide at start
+        healthBar.SetActive(false);
+        healthtxt.SetActive(false);
+
     }
 
     private void Update()
@@ -50,7 +57,7 @@ public class TutorialManager : MonoBehaviour
 {
     if (lastTutorialIndex == levelIndex) return; // only update once per level change
     lastTutorialIndex = levelIndex;
-
+    RectTransform panelRect = tutorialPanel.GetComponent<RectTransform>();
     switch (levelIndex)
     {
         case 0:
@@ -70,10 +77,9 @@ public class TutorialManager : MonoBehaviour
             tutorialText.text = "Stand on the weapon node to increase its effectiveness!";
             break;
         case 3:
-            tutorialText.text = "You can pick up and move weapons by pressing the 'E' key.";
+            tutorialText.text = "You can pick up and move weapons by pressing the 'E' key. The weapon doesnt shoot when it is being held";
             {
-                RectTransform panelRect = tutorialPanel.GetComponent<RectTransform>();
-                panelRect.anchoredPosition = new Vector2(panelRect.anchoredPosition.x, -550f);
+                panelRect.anchoredPosition = new Vector2(panelRect.anchoredPosition.x, -650f);
             }
             break;
 
@@ -81,23 +87,41 @@ public class TutorialManager : MonoBehaviour
             tutorialText.text = "You can also merge two identical weapons to create a more powerful one!";
             if (!hasPlacedSecondWeapon)
             {
+                panelRect.anchoredPosition = new Vector2(panelRect.anchoredPosition.x, 0f);
                 PlaceWeaponOnNode(secondWeaponNode, secondWeaponPrefab);
                 hasPlacedSecondWeapon = true;
             }
-            {
-                
-            }
             break;
-
         case 5:
-            tutorialText.text = "Buy different weapons from the shop to increase your firepower!";
-            CoinManager.Instance.AddCoins(5);
+            tutorialText.text = "the Health bar shows your ship's health. If it reaches 0, you lose the game."; 
+            panelRect.anchoredPosition = new Vector2(116f, -100f);
+            healthBar.SetActive(true);
+            healthtxt.SetActive(true);
+            ShipHealthBar.Instance.setHealthBar(100);
+            break;
+        case 6:
+            tutorialText.text = "Coins are used to buy weapons";
+            CoinManager.Instance.setCoins(5);
+            panelRect.anchoredPosition = new Vector2(-147f, -100f);
+            CoinPanel.SetActive(true);
+            returnToShop.SetActive(false);
+            break;
+        case 7:
+            tutorialText.text = "Buy new weapons to make youself stronger, Good Luck";
+            CoinManager.Instance.setCoins(5);
             ShopManager.Instance.GenerateShop();
             ShopManager.Instance.ShowShop();
+            nextLevelButton.SetActive(true);
+            panelRect.anchoredPosition = new Vector2(170f, 0f);
+            break;
+
+        case 11:
+            tutorialPanel.SetActive(true); // Hide the tutorial text
+            tutorialText.text = "Well done! You have completed the tutorial!";
             break;
         
         default:
-            tutorialText.text = "No tutorial available for this level.";
+            tutorialPanel.SetActive(false); 
             break;
     }
 }
@@ -115,32 +139,21 @@ public class TutorialManager : MonoBehaviour
         {
             movementFinished = true;
             Debug.Log("✅ Movement tutorial complete!");
-            TriggerNextStep(); // Trigger the next step in the tutorial
+            TriggerNextStep(1); // Trigger the next step in the tutorial
         }
     }
 
-    public void TriggerNextStep(){
-        RectTransform panelRect = tutorialPanel.GetComponent<RectTransform>();
-        panelRect.anchoredPosition = new Vector2(panelRect.anchoredPosition.x, 0f);
+    public void TriggerNextStep(int levelIndex){
+        if(levelIndex <= 6){
         continueButton.gameObject.SetActive(true); // Show the continue button
+        }
     }
 
     // Handle the continue button press to advance the tutorial
     public void NextLevel()
     {
         int levelIndex = TutorialLevelHandler.GetCurrentLevelIndex();
-        if (levelIndex == 1) // Transition to Level 2
-        {
-            TutorialLevelHandler.ProceedToNextLevel(); // Proceed to the next level in the Level Handler
-            tutorialText.text = "🔔 The tutorial is complete! Continue to the next level!";
-        }
-
-        else
-        {
-            TutorialLevelHandler.ProceedToNextLevel(); // Proceed to the next level
-        }
-
-        // Hide the continue button after advancing to the next level
+        TutorialLevelHandler.ProceedToNextLevel(); // Proceed to the next level
         continueButton.gameObject.SetActive(false);
     }
 

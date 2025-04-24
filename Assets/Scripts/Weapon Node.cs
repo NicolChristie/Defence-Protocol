@@ -145,7 +145,7 @@ public class WeaponNode : MonoBehaviour
         playerWeapon.transform.SetParent(player.transform);
         playerWeapon.transform.position = carryLocation.position;
         playerWeapon.transform.localRotation = Quaternion.identity;
-        playerWeapon.transform.localScale = Vector3.one * 0.66f;
+        playerWeapon.transform.localScale = Vector3.one * 0.5f;
     }
 
     private void DropWeapon(GameObject player)
@@ -239,6 +239,7 @@ public class WeaponNode : MonoBehaviour
         storedWeaponPrefab.InitialiseBaseStats();
         storedWeaponPrefab.ResetToBaseStats();
         storedWeaponPrefab.transform.localScale = Vector3.one;
+        boostApplied = false;
         mergedWeapon = true;
     }
 

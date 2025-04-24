@@ -1,21 +1,39 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // For scene management
+using UnityEngine.SceneManagement;
+using TMPro; // Don't forget this!
 
 public class ShipHealthBar : MonoBehaviour
 {
-    public GameObject healthBar; // Assign the Health Bar GameObject in the Inspector
+    public GameObject healthBar;
     public int maxHP = 2;
     private int currentHP;
     private Vector3 fullScale = new Vector3(13f, 0.2f, 1f);
+    public static ShipHealthBar Instance;
 
     // Game Over UI elements
-    public GameObject gameOverCanvas;  // The Canvas that holds the Game Over screen UI
-    public GameObject restartButton;  // The restart button
-    public GameObject exitButton;  // The exit button
+    public GameObject gameOverCanvas;
+    public GameObject restartButton;
+    public GameObject exitButton;
+
+    // ➕ Add this: UI Text for showing HP
+    public TextMeshProUGUI hpText;
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }  
 
     void Start()
     {
         currentHP = maxHP;
+
         if (healthBar != null)
         {
             healthBar.transform.localScale = fullScale;
@@ -25,23 +43,28 @@ public class ShipHealthBar : MonoBehaviour
             Debug.LogError("ShipHealthBar: healthBar GameObject is not assigned!");
         }
 
-        // Initially, hide the Game Over canvas and buttons
+        if (hpText != null)
+        {
+            UpdateHPText(); // Initialize the text
+        }
+
         gameOverCanvas.SetActive(false);
     }
 
     void Update()
     {
-        // Example of taking damage (you can replace this with your own damage logic)
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            TakeDamage(10);
-        }
-
-        // Check for game over when health reaches 0
         if (currentHP <= 0)
         {
             GameOver();
         }
+    }
+
+    public void setHealthBar(int health)
+    {
+        currentHP = health;
+        currentHP = Mathf.Clamp(currentHP, 0, maxHP);
+        UpdateHealthBar();
+        UpdateHPText(); // 🔄 Update the text whenever HP changes
     }
 
     public void TakeDamage(int damage)
@@ -49,6 +72,7 @@ public class ShipHealthBar : MonoBehaviour
         currentHP -= damage;
         currentHP = Mathf.Clamp(currentHP, 0, maxHP);
         UpdateHealthBar();
+        UpdateHPText(); // 🔄 Update the text whenever HP changes
         Debug.Log("Ship took " + damage + " damage. Current HP: " + currentHP);
     }
 
@@ -61,21 +85,25 @@ public class ShipHealthBar : MonoBehaviour
         }
     }
 
+    // 🆕 This method updates the text
+    private void UpdateHPText()
+    {
+        if (hpText != null)
+        {
+            hpText.text = currentHP + " / " + maxHP;
+        }
+    }
+
     private void GameOver()
     {
-        // Pause the game
         Time.timeScale = 0;
-
-        // Show the Game Over UI
         gameOverCanvas.SetActive(true);
     }
 
     public void ExitGame()
     {
-        // Quit the game (this will only work in a built version)
         Debug.Log("Exiting game...");
         Application.Quit();
-                // If in the editor:
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
@@ -83,9 +111,8 @@ public class ShipHealthBar : MonoBehaviour
 
     public void RestartGame()
     {
-        // Restart the current scene (resets the game)
         Debug.Log("Restarting game...");
-        Time.timeScale = 1;  // Ensure time is resumed
+        Time.timeScale = 1;
         SceneManager.LoadScene("Start Menu");
     }
 }

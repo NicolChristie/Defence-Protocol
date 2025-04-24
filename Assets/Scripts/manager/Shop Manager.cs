@@ -11,6 +11,7 @@ public class ShopManager : MonoBehaviour
     public List<ShopItem> availableItems = new List<ShopItem>(); 
     private List<ShopItem> currentShopItems = new List<ShopItem>();
 
+    public GameObject[] itemPanels; // Assign this in the Inspector — one for each item slot
     public TextMeshProUGUI[] itemNameTexts;
     public TextMeshProUGUI[] itemPriceTexts;
     public TextMeshProUGUI[] itemDescriptionTexts;
@@ -19,7 +20,8 @@ public class ShopManager : MonoBehaviour
     public Button goToShip;
     public Button goToShop;
     public GameObject shopPanel;
-    private bool isPurchasing = false;
+    //private bool isPurchasing = false;  
+    private Dictionary<ShopItem, int> weaponPurchaseCounts = new Dictionary<ShopItem, int>();
 
     void Awake()
     {
@@ -67,6 +69,18 @@ public class ShopManager : MonoBehaviour
 
         for (int slot = 0; slot < 3; slot++)
         {
+            if (slot < itemPanels.Length)
+                {
+                    Image panelImage = itemPanels[slot].GetComponent<Image>();
+                    if (panelImage != null)
+                    {
+                        Color color = panelImage.color;
+                        color.a = 1f; // Fully opaque again
+                        panelImage.color = color;
+                    }
+                }
+
+            buyButtons[slot].interactable = true;
             ShopItem currentItem = currentShopItems[slot];
 
             itemNameTexts[slot].text = currentItem.itemName;
@@ -138,12 +152,6 @@ public class ShopManager : MonoBehaviour
             return;
         }
 
-        if (isPurchasing)  // Prevent purchase if already in progress
-        {
-            Debug.LogWarning("Purchase already in progress, skipping this request.");
-            return;
-        }
-
         isPurchasing = true;  // Set flag to true when purchase starts
 
         ShopItem itemToBuy = currentShopItems[shopSlot];
@@ -153,10 +161,31 @@ public class ShopManager : MonoBehaviour
 
         if (CoinManager.Instance.SpendCoins(itemToBuy.price))
         {
+            // Dim the panel to indicate it's unavailable
+            if (shopSlot < itemPanels.Length)
+            {
+                Image panelImage = itemPanels[shopSlot].GetComponent<Image>();
+                if (panelImage != null)
+                {
+                    Color color = panelImage.color;
+                    color.a = 0.5f; // Half-transparent
+                    panelImage.color = color;
+                }
+            }
+
+            // Disable the buy button permanently (until next shop generation)
+            buyButtons[shopSlot].interactable = false;
+
             Debug.Log("Purchased: " + itemToBuy.itemName);
 
             if (itemToBuy.itemType == ShopItem.ItemType.Weapon)
             {
+                if (!weaponPurchaseCounts.ContainsKey(itemToBuy))
+                weaponPurchaseCounts[itemToBuy] = 1;
+                else
+                weaponPurchaseCounts[itemToBuy]++;
+
+        itemToBuy.price += 1; 
                 EquipWeapon(itemToBuy);
                 HideShop();
             }
@@ -166,7 +195,7 @@ public class ShopManager : MonoBehaviour
             }
 
             // Optionally, delay re-enabling the button to avoid repeated clicks
-            StartCoroutine(ReenableButtonAfterPurchase(shopSlot));
+            //StartCoroutine(ReenableButtonAfterPurchase(shopSlot));
         }
         else
         {

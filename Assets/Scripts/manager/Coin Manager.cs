@@ -23,7 +23,13 @@ public class CoinManager : MonoBehaviour
     void Start()
     {
         UpdateCoinDisplay();  // Initialize the coin text when the game starts
-        AddCoins(5);  // Add 100 coins at the start of the game
+        setCoins(5); 
+    }
+
+    public void setCoins(int amount)
+    {
+        coins = amount;  // Set the coin count directly
+        UpdateCoinDisplay();  // Update the UI to reflect the new coin count
     }
 
     // Method to add coins

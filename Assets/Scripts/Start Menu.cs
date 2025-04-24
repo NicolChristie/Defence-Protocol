@@ -27,8 +27,6 @@ public class StartMenu : MonoBehaviour
 
     void ShowTutorial()
     {
-        Debug.Log("Tutorial coming soon!");
-        // Later, you could load a tutorial scene here instead
-        // SceneManager.LoadScene("TutorialScene");
+        //SceneManager.LoadScene("tutorial");
     }
 }
