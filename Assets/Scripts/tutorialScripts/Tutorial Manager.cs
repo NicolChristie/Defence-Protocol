@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 public class TutorialManager : MonoBehaviour
 {
     public TextMeshProUGUI tutorialText; // Assign in inspector
@@ -18,6 +18,8 @@ public class TutorialManager : MonoBehaviour
     public GameObject healthBar;
     public GameObject healthtxt;
     public GameObject returnToShop;
+
+    public GameObject goToMainMenuButton;
     private bool hasPlacedFirstWeapon = false;
     private bool hasPlacedSecondWeapon = false;
     private int lastTutorialIndex = -1;
@@ -30,13 +32,16 @@ public class TutorialManager : MonoBehaviour
     private bool SbuttonPressed = false;
     private bool DbuttonPressed = false;
 
+
     private void Start()
     {
         CoinPanel.SetActive(false);
         continueButton.gameObject.SetActive(false); // Hide at start
         healthBar.SetActive(false);
         healthtxt.SetActive(false);
-
+        goToMainMenuButton.SetActive(false);
+        RectTransform panelRect = tutorialPanel.GetComponent<RectTransform>();
+        panelRect.anchoredPosition = new Vector2(0f, 0f);
     }
 
     private void Update()
@@ -79,7 +84,7 @@ public class TutorialManager : MonoBehaviour
         case 3:
             tutorialText.text = "You can pick up and move weapons by pressing the 'E' key. The weapon doesnt shoot when it is being held";
             {
-                panelRect.anchoredPosition = new Vector2(panelRect.anchoredPosition.x, -650f);
+                panelRect.anchoredPosition = new Vector2(panelRect.anchoredPosition.x, -580f);
             }
             break;
 
@@ -112,12 +117,13 @@ public class TutorialManager : MonoBehaviour
             ShopManager.Instance.GenerateShop();
             ShopManager.Instance.ShowShop();
             nextLevelButton.SetActive(true);
-            panelRect.anchoredPosition = new Vector2(170f, 0f);
+            panelRect.anchoredPosition = new Vector2(0f, 0f);
             break;
 
-        case 11:
+        case 12:
             tutorialPanel.SetActive(true); // Hide the tutorial text
             tutorialText.text = "Well done! You have completed the tutorial!";
+            goToMainMenuButton.SetActive(true);
             break;
         
         default:
@@ -152,30 +158,41 @@ public class TutorialManager : MonoBehaviour
     // Handle the continue button press to advance the tutorial
     public void NextLevel()
     {
+         if (WeaponNode.playerWeapon != null)
+            {
+                Debug.Log("⚠️ You must place the weapon down before continuing.");
+                // Optionally show a message on the UI to notify the player
+                tutorialText.text = "Place the weapon back on a node before continuing.";
+                return;
+            }
         int levelIndex = TutorialLevelHandler.GetCurrentLevelIndex();
         TutorialLevelHandler.ProceedToNextLevel(); // Proceed to the next level
         continueButton.gameObject.SetActive(false);
     }
 
     private void PlaceWeaponOnNode(WeaponNode node, GameObject weaponPrefab)
-{
-    GameObject weapon = Instantiate(weaponPrefab, node.transform.position, Quaternion.identity, node.transform);
-    Weaponprefab weaponComponent = weapon.GetComponent<Weaponprefab>();
-
-    node.storedWeapon = weapon;
-    node.storedWeaponPrefab = weaponComponent;
-    weapon.transform.localScale = Vector3.one;
-
-    // ✅ Assign original prefab so merge comparisons work correctly
-    if (weaponComponent != null)
     {
-        weaponComponent.originalPrefab = weaponPrefab;
-    }
-    else
-    {
-        Debug.LogWarning("Weaponprefab component missing from instantiated weapon.");
-    }
-}
+        GameObject weapon = Instantiate(weaponPrefab, node.transform.position, Quaternion.identity, node.transform);
+        Weaponprefab weaponComponent = weapon.GetComponent<Weaponprefab>();
 
+        node.storedWeapon = weapon;
+        node.storedWeaponPrefab = weaponComponent;
+        weapon.transform.localScale = Vector3.one;
+
+        // ✅ Assign original prefab so merge comparisons work correctly
+        if (weaponComponent != null)
+        {
+            weaponComponent.originalPrefab = weaponPrefab;
+        }
+        else
+        {
+            Debug.LogWarning("Weaponprefab component missing from instantiated weapon.");
+        }
+    }
+
+    public void goToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 }
 

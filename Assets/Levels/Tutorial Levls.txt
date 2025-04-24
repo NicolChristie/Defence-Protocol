@@ -7,12 +7,10 @@ Level 2:
 10M.D
 
 Level 3:
-1I.U
 1S.U
 2M.U
 
 Level 4:
-1I.D
 [2S.D,2M.D]
 3M.D
 

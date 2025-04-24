@@ -11,7 +11,7 @@ public class LevelHandler : MonoBehaviour
     public GameObject nextLevelButton; // Reference to the Next Level Button
     public EnemyType[] enemyTypes; // Reference to different enemy types
     private int levelIndex = 0;
-    private int spawnedEnemyCount = 0;
+
 
     public TextAsset levelFile; // Drag your Levels.txt file here in the Inspector
     private bool isLevelComplete = false; // Flag to check if level is complete

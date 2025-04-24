@@ -11,7 +11,7 @@ public class TutorialLevelHandler : MonoBehaviour
     public GameObject nextLevelButton; // Reference to the Next Level Button
     public EnemyType[] enemyTypes; // Reference to different enemy types
     private int levelIndex = 0;
-    private int spawnedEnemyCount = 0;
+
     public TutorialManager tutorialManager; // Reference to the TutorialManager
 
 
@@ -89,22 +89,21 @@ public class TutorialLevelHandler : MonoBehaviour
         if (isLevelComplete) yield break; // Prevent duplicate execution
 
         isLevelComplete = true;
-        if (levelIndex <= 8)
-    {
-    if (tutorialManager != null)
-    {
-        tutorialManager.TriggerNextStep(levelIndex);
-    }
-    }else
-    {
-        CoinManager.Instance.AddCoins(5); // Reward for finishing the level
-        ShopManager.Instance.GenerateShop();
-        nextLevelButton.SetActive(true); // Show the next level button
-        ShopManager.Instance.ShowShop(); 
-    }
-
-        
-    
+        if (levelIndex < 8){
+            Debug.Log("showing tutorial manager and next level button");
+            if (tutorialManager != null)
+            {
+                tutorialManager.TriggerNextStep(levelIndex);
+            }
+        }else
+        {
+            Debug.Log("showing shop and next level button");
+            CoinManager.Instance.AddCoins(5); // Reward for finishing the level
+            ShopManager.Instance.GenerateShop();
+            nextLevelButton.SetActive(true); // Show the next level button
+            ShopManager.Instance.ShowShop(); 
+        }        
+        Debug.Log($"Level {levelIndex} completed! Proceeding to next level.");
     }
 
     // Wait until the player places down the weapon

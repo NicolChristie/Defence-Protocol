@@ -32,6 +32,7 @@ public class Weaponprefab : MonoBehaviour
     private GameObject currentTarget;
     private bool isRotated = false;
     public GameObject originalPrefab; // For prefab comparison in merge logic
+    
 
     void Start()
     {

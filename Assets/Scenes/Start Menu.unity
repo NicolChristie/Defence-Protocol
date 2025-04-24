@@ -485,7 +485,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startButton: {fileID: 74671973}
-  tutorialButton: {fileID: 74671973}
+  tutorialButton: {fileID: 1417344829}
 --- !u!4 &442189490
 Transform:
   m_ObjectHideFlags: 0

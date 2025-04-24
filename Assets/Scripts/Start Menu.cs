@@ -8,7 +8,7 @@ public class StartMenu : MonoBehaviour
     public Button tutorialButton;
 
     private string mainSceneName = "Main Scene"; // Replace with your actual main scene name
-    //  [SerializeField] private string tutorialSceneName = "Tutorial";
+    private string tutorialSceneName = "Tutorial";
 
     void Start()
     {
@@ -27,6 +27,6 @@ public class StartMenu : MonoBehaviour
 
     void ShowTutorial()
     {
-        //SceneManager.LoadScene("tutorial");
+        SceneManager.LoadScene(tutorialSceneName); // loads your tutorial scene
     }
 }
