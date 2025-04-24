@@ -145,66 +145,66 @@ public class ShopManager : MonoBehaviour
     }
 
     public void BuyItem(int shopSlot)
+{
+    if (shopSlot < 0 || shopSlot >= currentShopItems.Count)
     {
-        if (shopSlot < 0 || shopSlot >= currentShopItems.Count)
+        Debug.LogError("Invalid shop slot selected!");
+        return;
+    }
+
+    ShopItem itemToBuy = currentShopItems[shopSlot];
+
+    // Disable the button to prevent double clicking
+    buyButtons[shopSlot].interactable = false;
+
+    if (CoinManager.Instance.SpendCoins(itemToBuy.price))
+    {
+        // Dim the panel to indicate it's unavailable
+        if (shopSlot < itemPanels.Length)
         {
-            Debug.LogError("Invalid shop slot selected!");
-            return;
+            Image panelImage = itemPanels[shopSlot].GetComponent<Image>();
+            if (panelImage != null)
+            {
+                Color color = panelImage.color;
+                color.a = 0.5f; // Half-transparent
+                panelImage.color = color;
+            }
         }
 
-        isPurchasing = true;  // Set flag to true when purchase starts
-
-        ShopItem itemToBuy = currentShopItems[shopSlot];
-
-        // Disable the button to prevent double clicking
+        // Disable the buy button permanently (until next shop generation)
         buyButtons[shopSlot].interactable = false;
 
-        if (CoinManager.Instance.SpendCoins(itemToBuy.price))
+        Debug.Log("Purchased: " + itemToBuy.itemName);
+
+        if (itemToBuy.itemType == ShopItem.ItemType.Weapon)
         {
-            // Dim the panel to indicate it's unavailable
-            if (shopSlot < itemPanels.Length)
-            {
-                Image panelImage = itemPanels[shopSlot].GetComponent<Image>();
-                if (panelImage != null)
-                {
-                    Color color = panelImage.color;
-                    color.a = 0.5f; // Half-transparent
-                    panelImage.color = color;
-                }
-            }
-
-            // Disable the buy button permanently (until next shop generation)
-            buyButtons[shopSlot].interactable = false;
-
-            Debug.Log("Purchased: " + itemToBuy.itemName);
-
-            if (itemToBuy.itemType == ShopItem.ItemType.Weapon)
-            {
-                if (!weaponPurchaseCounts.ContainsKey(itemToBuy))
+            if (!weaponPurchaseCounts.ContainsKey(itemToBuy))
                 weaponPurchaseCounts[itemToBuy] = 1;
-                else
+            else
                 weaponPurchaseCounts[itemToBuy]++;
 
-        itemToBuy.price += 1; 
-                EquipWeapon(itemToBuy);
-                HideShop();
-            }
-            else if (itemToBuy.itemType == ShopItem.ItemType.PlayerUpgrade || itemToBuy.itemType == ShopItem.ItemType.ShipUpgrade)
-            {
-                PlayerShipUpgradeManager.Instance.ApplyUpgrade(itemToBuy);
-            }
+            // Increment the price after purchase
+            itemToBuy.price += 1;
 
-            // Optionally, delay re-enabling the button to avoid repeated clicks
-            //StartCoroutine(ReenableButtonAfterPurchase(shopSlot));
+            // Update the UI to reflect the new price
+            itemPriceTexts[shopSlot].text = "Price: " + itemToBuy.price;
+
+            EquipWeapon(itemToBuy);
+            HideShop();
         }
-        else
+        else if (itemToBuy.itemType == ShopItem.ItemType.PlayerUpgrade || itemToBuy.itemType == ShopItem.ItemType.ShipUpgrade)
         {
-            Debug.Log("Not enough coins to buy: " + itemToBuy.itemName);
-            // Re-enable the button if purchase fails
-            buyButtons[shopSlot].interactable = true;
-            isPurchasing = false;  // Reset the flag if purchase fails
+            PlayerShipUpgradeManager.Instance.ApplyUpgrade(itemToBuy);
         }
     }
+    else
+    {
+        Debug.Log("Not enough coins to buy: " + itemToBuy.itemName);
+        // Re-enable the button if purchase fails
+        buyButtons[shopSlot].interactable = true;
+    }
+}
+
 
     private IEnumerator ReenableButtonAfterPurchase(int shopSlot)
     {
@@ -215,7 +215,7 @@ public class ShopManager : MonoBehaviour
         buyButtons[shopSlot].interactable = true;
 
         // Reset the purchasing flag
-        isPurchasing = false;
+        //isPurchasing = false;
     }
 
     public void EquipWeapon(ShopItem item)
