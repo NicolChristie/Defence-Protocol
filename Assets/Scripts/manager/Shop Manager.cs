@@ -11,7 +11,6 @@ public class ShopManager : MonoBehaviour
     public List<ShopItem> availableItems = new List<ShopItem>(); 
     private List<ShopItem> currentShopItems = new List<ShopItem>();
 
-    public GameObject[] itemPanels; // Assign this in the Inspector — one for each item slot
     public TextMeshProUGUI[] itemNameTexts;
     public TextMeshProUGUI[] itemPriceTexts;
     public TextMeshProUGUI[] itemDescriptionTexts;
@@ -20,8 +19,8 @@ public class ShopManager : MonoBehaviour
     public Button goToShip;
     public Button goToShop;
     public GameObject shopPanel;
-    //private bool isPurchasing = false;  
-    private Dictionary<ShopItem, int> weaponPurchaseCounts = new Dictionary<ShopItem, int>();
+    private bool isPurchasing = false;
+    private Dictionary<ShopItem, int> weaponPurchaseCounts = new Dictionary<ShopItem, int>(); //remove
 
     void Awake()
     {
@@ -34,6 +33,21 @@ public class ShopManager : MonoBehaviour
     void Start()
     {
         GenerateShop();
+        RemovePlayerWeapon(); // Call this to ensure the player starts without a weapon
+    }
+
+    public void RemovePlayerWeapon()
+    {
+        if (WeaponNode.playerWeapon != null)
+        {
+            Debug.Log("Removing player's current weapon...");
+            Destroy(WeaponNode.playerWeapon); // Destroy the weapon object
+            WeaponNode.playerWeapon = null;  // Clear the reference to the player's weapon
+        }
+        else
+        {
+            Debug.Log("No weapon to remove.");
+        }
     }
 
     public void GenerateShop()
@@ -46,41 +60,25 @@ public class ShopManager : MonoBehaviour
             return;
         }
 
-        List<int> chosenIndexes = new List<int>();
-        while (chosenIndexes.Count < 3)
+        HashSet<ShopItem> chosenItems = new HashSet<ShopItem>();
+        while (chosenItems.Count < 3)
         {
-            // Roll for rarity first
             ShopItem.Rarity rarity = GetRandomRarity();
-
-            // Get items of that rarity
             List<ShopItem> itemsOfRarity = availableItems.FindAll(item => item.itemRarity == rarity);
-
-            // Ensure there are items of that rarity to choose from
             if (itemsOfRarity.Count > 0)
             {
-                int randomIndex = Random.Range(0, itemsOfRarity.Count);
-                if (!chosenIndexes.Contains(randomIndex))
+                ShopItem candidate = itemsOfRarity[Random.Range(0, itemsOfRarity.Count)];
+                if (!chosenItems.Contains(candidate))
                 {
-                    chosenIndexes.Add(randomIndex);
-                    currentShopItems.Add(itemsOfRarity[randomIndex]);
+                    chosenItems.Add(candidate);
+                    currentShopItems.Add(candidate);
                 }
             }
+
         }
 
         for (int slot = 0; slot < 3; slot++)
         {
-            if (slot < itemPanels.Length)
-                {
-                    Image panelImage = itemPanels[slot].GetComponent<Image>();
-                    if (panelImage != null)
-                    {
-                        Color color = panelImage.color;
-                        color.a = 1f; // Fully opaque again
-                        panelImage.color = color;
-                    }
-                }
-
-            buyButtons[slot].interactable = true;
             ShopItem currentItem = currentShopItems[slot];
 
             itemNameTexts[slot].text = currentItem.itemName;
@@ -152,6 +150,14 @@ public class ShopManager : MonoBehaviour
         return;
     }
 
+    if (isPurchasing)  // Prevent purchase if already in progress
+    {
+        Debug.LogWarning("Purchase already in progress, skipping this request.");
+        return;
+    }
+
+    isPurchasing = true;  // Set flag to true when purchase starts
+
     ShopItem itemToBuy = currentShopItems[shopSlot];
 
     // Disable the button to prevent double clicking
@@ -159,23 +165,9 @@ public class ShopManager : MonoBehaviour
 
     if (CoinManager.Instance.SpendCoins(itemToBuy.price))
     {
-        // Dim the panel to indicate it's unavailable
-        if (shopSlot < itemPanels.Length)
-        {
-            Image panelImage = itemPanels[shopSlot].GetComponent<Image>();
-            if (panelImage != null)
-            {
-                Color color = panelImage.color;
-                color.a = 0.5f; // Half-transparent
-                panelImage.color = color;
-            }
-        }
-
-        // Disable the buy button permanently (until next shop generation)
-        buyButtons[shopSlot].interactable = false;
-
         Debug.Log("Purchased: " + itemToBuy.itemName);
 
+        // Track and increase price if it's a weapon
         if (itemToBuy.itemType == ShopItem.ItemType.Weapon)
         {
             if (!weaponPurchaseCounts.ContainsKey(itemToBuy))
@@ -183,25 +175,24 @@ public class ShopManager : MonoBehaviour
             else
                 weaponPurchaseCounts[itemToBuy]++;
 
-            // Increment the price after purchase
-            itemToBuy.price += 1;
-
-            // Update the UI to reflect the new price
-            itemPriceTexts[shopSlot].text = "Price: " + itemToBuy.price;
-
-            EquipWeapon(itemToBuy);
-            HideShop();
+                itemToBuy.price += 1;
+                EquipWeapon(itemToBuy);
+                HideShop();
         }
         else if (itemToBuy.itemType == ShopItem.ItemType.PlayerUpgrade || itemToBuy.itemType == ShopItem.ItemType.ShipUpgrade)
         {
             PlayerShipUpgradeManager.Instance.ApplyUpgrade(itemToBuy);
         }
+
+        // Optionally, delay re-enabling the button to avoid repeated clicks
+        StartCoroutine(ReenableButtonAfterPurchase(shopSlot));
     }
     else
     {
         Debug.Log("Not enough coins to buy: " + itemToBuy.itemName);
         // Re-enable the button if purchase fails
         buyButtons[shopSlot].interactable = true;
+        isPurchasing = false;  // Reset the flag if purchase fails
     }
 }
 
@@ -215,73 +206,75 @@ public class ShopManager : MonoBehaviour
         buyButtons[shopSlot].interactable = true;
 
         // Reset the purchasing flag
-        //isPurchasing = false;
+        isPurchasing = false;
     }
 
     public void EquipWeapon(ShopItem item)
+{
+    if (item.weaponPrefab == null)
     {
-        if (item.weaponPrefab == null)
-        {
-            Debug.LogError("No weapon prefab assigned!");
-            return;
-        }
-
-        if (WeaponNode.playerWeapon != null)
-        {
-            Debug.Log("Player is already holding a weapon. Cannot equip another.");
-            return;
-        }
-
-        // Instantiate and store the original prefab reference
-        GameObject weaponInstance = Instantiate(item.weaponPrefab);
-        Weaponprefab weaponScript = weaponInstance.GetComponent<Weaponprefab>();
-        if (weaponScript != null)
-        {
-            weaponScript.originalPrefab = item.weaponPrefab; // ✅ Set originalPrefab here
-        }
-
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player == null)
-        {
-            Debug.LogError("Player not found!");
-            Destroy(weaponInstance);
-            return;
-        }
-
-        Transform carryLocation = player.transform.Find("carryLocation");
-        if (carryLocation == null)
-        {
-            Debug.LogError("Carry Location not found on player!");
-            Destroy(weaponInstance);
-            return;
-        }
-
-        Debug.Log("Equipping weapon to player...");
-
-        weaponInstance.transform.SetParent(carryLocation);
-        weaponInstance.transform.localPosition = Vector3.zero;
-        weaponInstance.transform.localRotation = Quaternion.identity;
-        weaponInstance.transform.localScale = Vector3.one * 1f;
-
-        WeaponNode.playerWeapon = weaponInstance;
-
-        WeaponNode weaponNode = weaponInstance.AddComponent<WeaponNode>();
-        Weaponprefab weaponPrefab = weaponInstance.GetComponent<Weaponprefab>();
-        if (weaponPrefab != null)
-        {
-            weaponPrefab.wasPurchased = true;
-            Debug.Log("Weapon purchased! Setting wasPurchased flag.");
-        }
-        // Check if the weapon was merged
-        if (weaponNode.mergedWeapon)
-        {
-            Debug.Log("Merged weapon detected. Handling merge...");
-            weaponNode.mergedWeapon = false; // Reset flag after handling the merged weapon
-            StartCoroutine(ShowShopWithDelay(0.5f)); // Open the shop after merge
-        }
-
-        Debug.Log("Weapon equipped: " + weaponInstance.name);
+        Debug.LogError("No weapon prefab assigned!");
+        return;
     }
+
+    if (WeaponNode.playerWeapon != null)
+    {
+        Debug.Log("Player is already holding a weapon. Cannot equip another.");
+        return;
+    }
+
+    // Instantiate and store the original prefab reference
+    GameObject weaponInstance = Instantiate(item.weaponPrefab);
+    Weaponprefab weaponScript = weaponInstance.GetComponent<Weaponprefab>();
+    if (weaponScript != null)
+    {
+        weaponScript.originalPrefab = item.weaponPrefab; // ✅ Set originalPrefab here
+    }
+
+    GameObject player = GameObject.FindGameObjectWithTag("Player");
+    if (player == null)
+    {
+        Debug.LogError("Player not found!");
+        Destroy(weaponInstance);
+        return;
+    }
+
+    Transform carryLocation = player.transform.Find("carryLocation");
+    if (carryLocation == null)
+    {
+        Debug.LogError("Carry Location not found on player!");
+        Destroy(weaponInstance);
+        return;
+    }
+
+    Debug.Log("Equipping weapon to player...");
+
+    weaponInstance.transform.SetParent(carryLocation);
+    weaponInstance.transform.localPosition = Vector3.zero;
+    weaponInstance.transform.localRotation = Quaternion.identity;
+    weaponInstance.transform.localScale = Vector3.one * 1f;
+
+    WeaponNode.playerWeapon = weaponInstance;  // Ensure this stays
+
+    WeaponNode weaponNode = weaponInstance.AddComponent<WeaponNode>();
+    Weaponprefab weaponPrefab = weaponInstance.GetComponent<Weaponprefab>();
+    if (weaponPrefab != null)
+    {
+        weaponPrefab.wasPurchased = true;
+        Debug.Log("Weapon purchased! Setting wasPurchased flag.");
+    }
+
+    // Check if the weapon was merged
+    if (weaponNode.mergedWeapon)
+    {
+        Debug.Log("Merged weapon detected. Handling merge...");
+        weaponNode.mergedWeapon = false; // Reset flag after handling the merged weapon
+        StartCoroutine(ShowShopWithDelay(0.5f)); // Open the shop after merge
+    }
+
+    Debug.Log("Weapon equipped: " + weaponInstance.name);
+}
+
 
     private void AdjustRawImageAspect(RawImage rawImage, Texture texture)
     {
@@ -298,6 +291,50 @@ public class ShopManager : MonoBehaviour
         rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newWidth);
     }
 
+    public void ReloadShop()
+{
+    for (int slot = 0; slot < currentShopItems.Count; slot++)
+    {
+        ShopItem currentItem = currentShopItems[slot];
+
+        itemNameTexts[slot].text = currentItem.itemName;
+        itemPriceTexts[slot].text = "Price: " + currentItem.price;
+        itemDescriptionTexts[slot].text = currentItem.description;
+
+        switch (currentItem.itemRarity)
+        {
+            case ShopItem.Rarity.Common:
+                itemNameTexts[slot].color = Color.black;
+                break;
+            case ShopItem.Rarity.Rare:
+                itemNameTexts[slot].color = Color.green;
+                break;
+            case ShopItem.Rarity.UltraRare:
+                itemNameTexts[slot].color = Color.blue;
+                break;
+            case ShopItem.Rarity.Legendary:
+                itemNameTexts[slot].color = Color.red;
+                break;
+        }
+
+        if (currentItem.itemImage != null)
+        {
+            itemImageSlots[slot].texture = currentItem.itemImage;
+            itemImageSlots[slot].enabled = true;
+            AdjustRawImageAspect(itemImageSlots[slot], currentItem.itemImage);
+        }
+        else
+        {
+            itemImageSlots[slot].enabled = false;
+        }
+
+        int slotNumber = slot;
+        buyButtons[slot].onClick.RemoveAllListeners();
+        buyButtons[slot].onClick.AddListener(() => BuyItem(slotNumber));
+    }
+}
+
+
 
     private IEnumerator ShowShopWithDelay(float delay)
     {
@@ -307,6 +344,7 @@ public class ShopManager : MonoBehaviour
 
     public void ShowShop()
     {
+        GenerateShop();
         shopPanel.SetActive(true);
         goToShop.gameObject.SetActive(false);
     }

@@ -72,7 +72,6 @@ public class CharacterManager : MonoBehaviour
     Vector2 move = new Vector2(moveX, moveY).normalized * currentSpeed * Time.deltaTime;
 
     if (move != Vector2.zero)
-        Debug.Log("Moving: " + move);
 
     transform.position += (Vector3)move;
 }

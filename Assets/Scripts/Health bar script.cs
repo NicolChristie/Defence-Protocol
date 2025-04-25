@@ -10,7 +10,7 @@ public class HealthBar : MonoBehaviour
         if (healthBar != null)
         {
             // Set the fullScale to a fixed value (like 1) for the x-axis, with a constant y scale of 0.1
-            fullScale = new Vector3(1f, 0.1f, healthBar.transform.localScale.z);
+            fullScale = new Vector3(0.25f, 0.02f, healthBar.transform.localScale.z);
 
             healthBar.transform.localScale = fullScale;
 

@@ -14,18 +14,43 @@ public class WeaponNode : MonoBehaviour
     public bool mergedWeapon = false;
     private bool boostApplied = false;
 
-    void Update()
-{
-    if (ShopManager.Instance != null && ShopManager.Instance.shopPanel.activeSelf)
-        return;
 
-    if (isPlayerInside && Input.GetKeyDown(KeyCode.E))
+    void Start()
     {
-            // Weapon was purchased, so handle pickup/drop/merge
-            Debug.Log($"the player is carrying {playerWeaponPrefab} and the stored weapon is {storedWeaponPrefab}");
-            HandleWeaponPickupOrDrop();
+        if (carryLocation == null)
+            {
+                GameObject player = GameObject.FindGameObjectWithTag("Player");
+                if (player != null)
+                {
+                    carryLocation = player.transform.Find("carryLocation");
+                    Debug.Log("Carry location found on player: " + carryLocation.name);
+                    if (carryLocation == null)
+                    {
+                        Debug.LogError("Carry location not found on the player!");
+                    }
+                }
+            }
+
+            // If no carryLocation is found, log an error
+            if (carryLocation == null)
+            {
+                Debug.LogError("No carryLocation assigned in WeaponNode or found on Player.");
+            }
     }
-}
+
+    void Update()
+    {
+        // Prevent reset when shop is open
+        if (ShopManager.Instance != null && ShopManager.Instance.shopPanel.activeSelf)
+            return;
+
+        if (isPlayerInside && Input.GetKeyDown(KeyCode.E))
+        {
+            // Handle pickup/drop/merge only when the shop is not active
+            HandleWeaponPickupOrDrop();
+        }
+    }
+
 
 
 
@@ -96,13 +121,22 @@ public class WeaponNode : MonoBehaviour
 {
     if (ShopManager.Instance != null && ShopManager.Instance.shopPanel.activeSelf)
         return;
-
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
     if (carryLocation == null){
         Debug.LogWarning("Carry location not assigned!");
-        return;
-    }
 
-    GameObject player = GameObject.FindGameObjectWithTag("Player");
+                if (player != null)
+                {
+                    carryLocation = player.transform.Find("carryLocation");
+                    Debug.Log("Carry location found on player: " + carryLocation.name);
+                    if (carryLocation == null)
+                    {
+                        Debug.LogError("Carry location not found on the player!");
+                        return;
+                    }
+                }
+    }
+    
     if (player == null)
     {
         Debug.LogWarning("Player not found!");

@@ -6,18 +6,23 @@ public class StartMenu : MonoBehaviour
 {
     public Button startButton;
     public Button tutorialButton;
+    private WeaponNode weaponNode; // Reference to the WeaponNode
 
     private string mainSceneName = "Main Scene"; // Replace with your actual main scene name
     private string tutorialSceneName = "Tutorial";
 
     void Start()
     {
+        // Set up button listeners
         Time.timeScale = 1f;
         if (startButton != null)
             startButton.onClick.AddListener(StartGame);
 
         if (tutorialButton != null)
             tutorialButton.onClick.AddListener(ShowTutorial);
+
+        // Get reference to WeaponNode
+        
     }
 
     void StartGame()

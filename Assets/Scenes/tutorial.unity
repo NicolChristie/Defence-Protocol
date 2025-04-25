@@ -1319,10 +1319,6 @@ MonoBehaviour:
     itemImage: {fileID: 2800000, guid: ea724a1138e04ad4b98b590e2127ebed, type: 3}
     upgradeValue: 2
     itemRarity: 1
-  itemPanels:
-  - {fileID: 2142510867}
-  - {fileID: 213643717}
-  - {fileID: 2082853611}
   itemNameTexts:
   - {fileID: 271647692}
   - {fileID: 1206289235}
@@ -7220,9 +7216,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1736668281}
+  - component: {fileID: 1736668285}
   - component: {fileID: 1736668284}
   - component: {fileID: 1736668283}
-  - component: {fileID: 1736668279}
   - component: {fileID: 1736668280}
   - component: {fileID: 1736668282}
   m_Layer: 0
@@ -7232,26 +7228,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1736668279
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1736668277}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98c10bd8e6235c04ca1e3e7c5dbc35c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 0}
-  spawnInterval: 1
-  mapWidth: 10
-  mapHeight: 6
-  spawnBuffer: 1
-  player: {fileID: 1997158894}
-  ship: {fileID: 655780315}
-  shipHealthBar: {fileID: 1736668280}
 --- !u!114 &1736668280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7337,7 +7313,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2262822947208bd4ab5280219db477ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemySpawner: {fileID: 1736668279}
+  enemySpawner: {fileID: 1736668285}
   player: {fileID: 1997158894}
   nextLevelButton: {fileID: 994184428}
   enemyTypes:
@@ -7378,6 +7354,26 @@ MonoBehaviour:
     identifier: S
   tutorialManager: {fileID: 1736668283}
   levelFile: {fileID: 4900000, guid: 31d455d2880814644ab9ad027d75d1ea, type: 3}
+--- !u!114 &1736668285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1736668277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98c10bd8e6235c04ca1e3e7c5dbc35c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyPrefab: {fileID: 0}
+  spawnInterval: 3
+  mapWidth: 10
+  mapHeight: 6
+  spawnBuffer: 1
+  player: {fileID: 1997158894}
+  ship: {fileID: 655780315}
+  shipHealthBar: {fileID: 1736668280}
 --- !u!1 &1743593632
 GameObject:
   m_ObjectHideFlags: 0

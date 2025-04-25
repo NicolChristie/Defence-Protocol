@@ -7401,10 +7401,6 @@ MonoBehaviour:
     itemImage: {fileID: 2800000, guid: ea724a1138e04ad4b98b590e2127ebed, type: 3}
     upgradeValue: 2
     itemRarity: 1
-  itemPanels:
-  - {fileID: 2016344334}
-  - {fileID: 455991908}
-  - {fileID: 1021324245}
   itemNameTexts:
   - {fileID: 720572797}
   - {fileID: 758079904}
