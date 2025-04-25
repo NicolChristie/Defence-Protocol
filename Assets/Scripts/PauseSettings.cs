@@ -48,7 +48,9 @@ public class PauseSettings : MonoBehaviour
     }
 
     void exitToMenu(){
+        Time.timeScale = 1f;
         SceneManager.LoadScene("Start Menu");
+
     }
 }
 

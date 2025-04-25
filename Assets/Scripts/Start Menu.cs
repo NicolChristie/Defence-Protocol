@@ -12,6 +12,7 @@ public class StartMenu : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 1f;
         if (startButton != null)
             startButton.onClick.AddListener(StartGame);
 

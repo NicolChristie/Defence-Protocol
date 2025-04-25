@@ -11,6 +11,18 @@ public class CharacterManager : MonoBehaviour
     private float currentDamageMultiplier;
     private float currentRotationMultiplier;
 
+    void Awake()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        if (players.Length > 1)
+        {
+            Destroy(gameObject); // Avoid duplicates
+            return;
+        }
+        Debug.Log("PlayerManager instance created: " + gameObject.name);
+        DontDestroyOnLoad(gameObject);
+    }
+
     void Start()
     {
         // Initialize speed and multipliers
@@ -53,13 +65,16 @@ public class CharacterManager : MonoBehaviour
     }
 
     void Update()
-    {
-        // Player movement using the current speed
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveY = Input.GetAxisRaw("Vertical");
+{
+    float moveX = Input.GetAxisRaw("Horizontal");
+    float moveY = Input.GetAxisRaw("Vertical");
 
-        Vector2 move = new Vector2(moveX, moveY).normalized * currentSpeed * Time.deltaTime;
+    Vector2 move = new Vector2(moveX, moveY).normalized * currentSpeed * Time.deltaTime;
 
-        transform.position += (Vector3)move;
-    }
+    if (move != Vector2.zero)
+        Debug.Log("Moving: " + move);
+
+    transform.position += (Vector3)move;
+}
+
 }
