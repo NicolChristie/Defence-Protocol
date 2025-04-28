@@ -137,6 +137,7 @@ public class LevelHandler : MonoBehaviour
         else
         {
             Debug.Log("🎉 All levels complete!");
+            ShipHealthBar.Instance.YouWin();
         }
     }
 
@@ -229,7 +230,6 @@ public class LevelHandler : MonoBehaviour
 
                 if (enemyType != null)
                 {
-                    Debug.Log($"🛡️ Spawning {count} enemies of type {enemyLetter} at {spawnDirection}");
                     for (int i = 0; i < count; i++)
                     {
                         SpawnEnemy(enemyType, spawnDirection);

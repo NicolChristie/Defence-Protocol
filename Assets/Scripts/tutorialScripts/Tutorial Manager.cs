@@ -82,9 +82,9 @@ public class TutorialManager : MonoBehaviour
             tutorialText.text = "Stand on the weapon node to increase its effectiveness!";
             break;
         case 3:
-            tutorialText.text = "You can pick up and move weapons by pressing the 'E' key. The weapon doesnt shoot when it is being held";
+            tutorialText.text = "You can pick up and move weapons by pressing the 'E' key. The weapon doesnt shoot when it is being held.";
             {
-                panelRect.anchoredPosition = new Vector2(panelRect.anchoredPosition.x, -580f);
+                panelRect.anchoredPosition = new Vector2(panelRect.anchoredPosition.x, -600f);
             }
             break;
 
@@ -98,21 +98,21 @@ public class TutorialManager : MonoBehaviour
             }
             break;
         case 5:
-            tutorialText.text = "the Health bar shows your ship's health. If it reaches 0, you lose the game."; 
+            tutorialText.text = "The health bar shows your ship's health. If it reaches 0, you lose the game."; 
             panelRect.anchoredPosition = new Vector2(116f, -100f);
             healthBar.SetActive(true);
             healthtxt.SetActive(true);
             ShipHealthBar.Instance.setHealthBar(100);
             break;
         case 6:
-            tutorialText.text = "Coins are used to buy weapons";
+            tutorialText.text = "Coins are used to buy weapons.";
             CoinManager.Instance.setCoins(5);
             panelRect.anchoredPosition = new Vector2(-147f, -100f);
             CoinPanel.SetActive(true);
             returnToShop.SetActive(false);
             break;
         case 7:
-            tutorialText.text = "Buy new weapons to make youself stronger, Good Luck";
+            tutorialText.text = "Buy new weapons to make youself stronger, Good Luck!";
             CoinManager.Instance.setCoins(5);
             ShopManager.Instance.GenerateShop();
             ShopManager.Instance.ShowShop();
@@ -192,7 +192,7 @@ public class TutorialManager : MonoBehaviour
 
     public void goToMainMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("Start Menu");
     }
 }
 

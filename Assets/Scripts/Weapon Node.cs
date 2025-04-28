@@ -8,6 +8,7 @@ public class WeaponNode : MonoBehaviour
     public static GameObject playerWeapon;
 
     public Weaponprefab storedWeaponPrefab;
+    public GameObject Outline;
     private static Weaponprefab playerWeaponPrefab;
 
     private bool isPlayerInside = false;
@@ -16,27 +17,34 @@ public class WeaponNode : MonoBehaviour
 
 
     void Start()
+{
+    // Ensure carryLocation is found or assigned
+    if (carryLocation == null)
     {
-        if (carryLocation == null)
-            {
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                if (player != null)
-                {
-                    carryLocation = player.transform.Find("carryLocation");
-                    Debug.Log("Carry location found on player: " + carryLocation.name);
-                    if (carryLocation == null)
-                    {
-                        Debug.LogError("Carry location not found on the player!");
-                    }
-                }
-            }
-
-            // If no carryLocation is found, log an error
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            carryLocation = player.transform.Find("carryLocation");
+            Debug.Log("Carry location found on player: " + carryLocation.name);
             if (carryLocation == null)
             {
-                Debug.LogError("No carryLocation assigned in WeaponNode or found on Player.");
+                Debug.LogError("Carry location not found on the player!");
             }
+        }
+        else
+        {
+            Debug.LogError("Player object not found!");
+        }
     }
+
+    // Handle the case where carryLocation is still null
+    if (carryLocation == null)
+    {
+        Debug.LogError("No carryLocation assigned in WeaponNode or found on Player.");
+        return; // Early exit to avoid further issues
+    }
+    //Outline.SetActive(false); // Ensure the outline is initially inactive
+}
 
     void Update()
     {
@@ -62,6 +70,7 @@ public class WeaponNode : MonoBehaviour
         if (player != null)
         {
             isPlayerInside = true;
+            Outline.SetActive(true); // Show the outline when player is inside the trigger
 
             // Ensure storedWeaponPrefab is assigned correctly to the weapon the player is carrying
             if (playerWeapon != null)
@@ -103,6 +112,7 @@ public class WeaponNode : MonoBehaviour
             if (player != null)
             {
                 isPlayerInside = false;
+                Outline.SetActive(false); // Hide the outline when player exits the trigger
 
                 if (storedWeaponPrefab != null && boostApplied)
                 {
@@ -136,7 +146,7 @@ public class WeaponNode : MonoBehaviour
                     }
                 }
     }
-    
+
     if (player == null)
     {
         Debug.LogWarning("Player not found!");

@@ -50,7 +50,7 @@ MonoBehaviour:
   fireRate: 4
   projectileDamage: 6
   range: 8
-  aoeRadius: 4
+  aoeRadius: 3
   aoeDamageMultiplier: 1
   pierceCount: 1
   deviation: 5

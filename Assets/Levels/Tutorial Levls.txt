@@ -1,18 +1,18 @@
 Level 1:
-1M.D,
-1M.D
+1G.D,
+1G.D
 
 Level 2:
-[2M.D,1S.D]
-10M.D
+[2G.D,1S.D]
+10G.D
 
 Level 3:
 1S.U
-2M.U
+2G.U
 
 Level 4:
-[2S.D,2M.D]
-3M.D
+[2S.D,2G.D]
+3G.D
 
 Level 5:
 1I.U
@@ -24,23 +24,23 @@ Level 7:
 1I.U
 
 Level 8:
-2M.R, 1B.L
-[2A.U, 3M.D]
+2G.R, 1B.L
+[2A.U, 3G.D]
 
 Level 9:
-3M.L, 2B.R
-[2A.D, 3M.U]
-1M.D
+3G.L, 2B.R
+[2A.D, 3G.U]
+1G.D
 
 Level 10:
 2A.L, 3B.U
-[3M.D, 4A.R]
-2M.R
+[3G.D, 4A.R]
+2G.R
 
 Level 11:
-4M.L, 3B.U
+4G.L, 3B.U
 [4A.R, 2B.D]
-3M.D, 1B.R
+3G.D, 1B.R
 
 Level 12:
 1I.U

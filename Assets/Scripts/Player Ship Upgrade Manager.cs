@@ -17,16 +17,15 @@ public class PlayerShipUpgradeManager : MonoBehaviour
     }
 
     void Start()
-{
-    character = FindFirstObjectByType<CharacterManager>(); // ✅ Updated method
-    if (character == null)
     {
-        Debug.LogError("CharacterManager not found!");
+        character = FindFirstObjectByType<CharacterManager>(); // ✅ Updated method
+        if (character == null)
+        {
+            Debug.LogError("CharacterManager not found!");
+        }
+
+        // ship = FindFirstObjectByType<ShipManager>();  // Future ship manager reference
     }
-
-    // ship = FindFirstObjectByType<ShipManager>();  // Future ship manager reference
-}
-
 
     public void ApplyUpgrade(ShopItem upgrade)
     {
@@ -50,33 +49,31 @@ public class PlayerShipUpgradeManager : MonoBehaviour
 
         Debug.Log($"Applying {upgrade.itemName} with multiplier: {upgrade.upgradeValue}");
 
+        // Pass the upgrade to the CharacterManager with the appropriate parameters
         switch (upgrade.itemName)
         {
             case "Speed Boost":
-                character.baseSpeed *= upgrade.upgradeValue; 
-                Debug.Log($"New Speed: {character.baseSpeed}"); 
+                character.ApplyUpgrade("Speed Boost", upgrade.upgradeValue);
                 break;
 
-            case "Weapon Fire Rate":
-                character.weaponMultiplier *= upgrade.upgradeValue;  
-                Debug.Log($"New Fire Rate: {character.weaponMultiplier}");
+            case "Fire Rate Boost":
+                character.ApplyUpgrade("Weapon Fire Rate", upgrade.upgradeValue);
                 break;
 
             case "Damage Boost":
-                character.damageMultiplier *= upgrade.upgradeValue; 
-                Debug.Log($"New Damage: {character.damageMultiplier}"); 
+                character.ApplyUpgrade("Damage Boost", upgrade.upgradeValue);
                 break;
 
-            case "Rotation Speed":
-                character.rotationMultiplier *= upgrade.upgradeValue; 
-                Debug.Log($"New Rotation Speed: {character.rotationMultiplier}"); 
+            case "Rotation Boost":
+                character.ApplyUpgrade("Rotation Speed", upgrade.upgradeValue);
                 break;
 
             default:
                 Debug.LogWarning("Upgrade not recognized: " + upgrade.itemName);
-                return;
+                break;
         }
 
+        // Log the final values after applying the upgrade
         Debug.Log($"{upgrade.itemName} applied! New values: Speed={character.baseSpeed}, Fire Rate={character.weaponMultiplier}, Damage={character.damageMultiplier}");
     }
 

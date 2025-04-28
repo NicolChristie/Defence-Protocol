@@ -1,46 +1,81 @@
 Level 1:
-1M.L,
-1A.D
+1G.L, 1G.R
+1G.D, 1G.L
 
 Level 2:
-1M.L, 1B.R,
-1A.U, 1M.D
+1G.L, 1G.R
+1G.D, [1C.L, 1C.R]
 
 Level 3:
-2M.R, 1B.L
-[2A.U, 3M.D]
+1G.L, 1G.R
+1G.D, [1C.L, 1C.R]
+1A.L
 
 Level 4:
-3M.L, 2B.R
-[2A.D, 3M.U]
-1M.D
+2G.L, 1G.R
+1G.D, [1C.L, 1C.R]
+1A.L, 1B.R
 
 Level 5:
-2A.L, 3B.U
-[3M.D, 4A.R]
-2M.R
+2G.L, [1G.R, 2C.D], 1G.U, 2F.L
+3B.R, 2C.D, [2E.L, 1D.U], 1H.R
 
 Level 6:
-4M.L, 3B.U
-[4A.R, 2B.D]
-3M.D, 1B.R
+[3G.L, 2B.R], 2C.U, 1D.D, 1F.R
+3B.L, 3A.R, [2D.U, 2E.D], 1A.L, 1I.R
 
 Level 7:
-[5M.L, 4A.U]
-[4B.D, 2M.R]
-3M.U, 2A.L
+[3G.L, 3B.U], 2C.D, 2E.R
+4A.R, 3C.L, [3D.U, 2E.D], 2F.L
 
 Level 8:
-6M.L, 5B.U
-[5A.R, 4M.D]
-3B.L, 3M.R
+[3G.L, 2B.R, 1C.U], 2D.L, 1F.D
+4A.L, 3B.R, [3C.U, 2D.D], 2H.L, 1F.R
 
 Level 9:
-[5A.L, 5M.R]
-[4B.U, 3A.D]
-6M.L, 4B.R
+[4A.L, 2C.R], 3B.D, 2F.L, 1D.U
+5A.L, [3C.R, 3B.D], 3F.R, 2D.U, 1E.L
 
 Level 10:
-[7M.L, 4A.R]
-[5B.D, 5M.U]
-6A.L, 4B.R, 3M.D
+[4A.L, 3C.R], [2B.U, 2D.D], 3F.L
+4B.L, [3D.U, 2E.R], 2F.D, 3A.R
+
+Level 11:
+[5A.L, 4B.R], 2E.L, [1F.D, 2C.U]
+4B.L, 3D.R, [3E.U, 2F.D], 2C.L
+
+Level 12:
+[5A.L, 4C.R], 3B.D, 2F.U, 2E.D
+5B.R, [3C.U, 2D.L], 3F.D, 2E.U, 1A.L
+
+Level 13:
+[6A.L, 5B.R], [4D.U, 3C.D], 2F.L, 3E.R
+5B.L, 4C.R, [4D.D, 3F.U], 2E.L, 2C.U
+
+Level 14:
+[6A.L, 5B.U], 4C.R, [3D.L, 3F.D]
+5C.U, 4D.R, [3E.L, 4F.D], 3B.R
+
+Level 15:
+[7A.L, 6B.R], [4C.U, 3D.D], [2E.L, 1F.R]
+6A.L, 5B.R, [5C.U, 4D.D], 3E.R, 2F.L
+
+Level 16:
+[7A.L, 6C.R], [4D.U, 3F.D], 2B.L, 3E.R
+6B.U, [5C.R, 4D.D], 4F.L, [3E.U, 2B.R]
+
+Level 17:
+[8A.L, 7B.R], [5D.U, 4C.D], 3F.L, [3E.L, 1F.R]
+7A.L, [6B.R, 5C.U], [4D.D, 4F.R], 3E.U
+
+Level 18:
+[8A.L, 7C.R], [6B.U, 4F.D], 2E.L, 4D.R
+7B.R, 5C.U, [5D.D, 5F.L], [4E.U, 3D.L]
+
+Level 19:
+[9A.L, 8B.R], [6C.U, 5D.D], [3E.L, 2F.R], 4C.L
+8A.L, 7B.R, [6D.U, 5F.D], [4E.R, 3F.L], 3C.U
+
+Level 20:
+[10A.L, 9B.R], [7C.U, 5F.D], [4E.L, 3F.R], [2D.L, 6F.U], [5B.L, 3D.U]
+9A.L, [8B.R, 6C.U], [5D.D, 5F.R], [4E.L, 4C.R], [3D.U, 3F.L]

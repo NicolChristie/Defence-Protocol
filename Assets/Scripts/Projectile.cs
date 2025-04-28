@@ -15,41 +15,43 @@ public class Projectile : MonoBehaviour
     private GameObject target;
     private bool homing;
     private float homingSpeed;
+    public GameObject aoeIndicatorPrefab;  // Reference to the AOE prefab
 
     public float speed = 10f;
 
-public void SetProperties(Transform weaponTransform, int dmg, float rng, float aoe, float aoeMultiplier, int pierce, float stopDist, bool homing, float homingSpeed, GameObject target, float deviationAmount = 0f)
-{
-    damage = dmg;
-    range = rng;
-    aoeRadius = aoe;
-    aoeDamageMultiplier = aoeMultiplier;
-    pierceCount = pierce;
-    startPosition = transform.position;
-    stopDistance = stopDist;  // Save the stopDistance
-    this.homing = homing;
-    this.homingSpeed = homingSpeed;
-    this.target = target;
-
-    // Homing projectile follows the target
-    if (homing && target != null)
+    public void SetProperties(Transform weaponTransform, int dmg, float rng, float aoe, float aoeMultiplier, int pierce, float stopDist, bool homing, float homingSpeed, GameObject target, float deviationAmount = 0f)
     {
-        direction = (target.transform.position - transform.position).normalized;
+        damage = dmg;
+        range = rng;
+        aoeRadius = aoe;
+        aoeDamageMultiplier = aoeMultiplier;
+        pierceCount = pierce;
+        startPosition = transform.position;
+        stopDistance = stopDist;  // Save the stopDistance
+        this.homing = homing;
+        this.homingSpeed = homingSpeed;
+        this.target = target;
 
-        // Apply deviation to homing direction
-        if (deviationAmount != 0f)
+        // Homing projectile follows the target
+        if (homing && target != null)
         {
-            // Randomly rotate the direction vector within the deviation angle range
-            float deviationAngle = Random.Range(-deviationAmount, deviationAmount);
-            direction = Quaternion.Euler(0, 0, deviationAngle) * direction;
+            direction = (target.transform.position - transform.position).normalized;
+
+            // Apply deviation to homing direction
+            if (deviationAmount != 0f)
+            {
+                // Randomly rotate the direction vector within the deviation angle range
+                float deviationAngle = Random.Range(-deviationAmount, deviationAmount);
+                direction = Quaternion.Euler(0, 0, deviationAngle) * direction;
+            }
+        }
+        else
+        {
+            // Non-homing projectiles inherit weapon rotation
+            direction = transform.right.normalized;
         }
     }
-    else
-    {
-        // Non-homing projectiles inherit weapon rotation
-        direction = transform.right.normalized;
-    }
-}
+
     void Update()
     {
         float distanceTraveled = Vector3.Distance(transform.position, startPosition);
@@ -99,7 +101,8 @@ public void SetProperties(Transform weaponTransform, int dmg, float rng, float a
             {
                 Destroy(gameObject);
             }
-        }else if (collision.CompareTag("Ship"))
+        }
+        else if (collision.CompareTag("Ship"))
         {
             Destroy(gameObject);
         }
@@ -107,6 +110,11 @@ public void SetProperties(Transform weaponTransform, int dmg, float rng, float a
 
     void ApplyAOE(Vector3 explosionPoint)
     {
+        Debug.Log("Applying AOE damage...");
+        // 1. Visualize AOE
+        ShowAOEIndicator(explosionPoint);
+
+        // 2. Apply damage
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(explosionPoint, aoeRadius);
         foreach (Collider2D hit in hitEnemies)
         {
@@ -121,6 +129,26 @@ public void SetProperties(Transform weaponTransform, int dmg, float rng, float a
             }
         }
     }
+
+    
+
+   void ShowAOEIndicator(Vector3 position)
+{
+    // Instantiate the AOE indicator prefab
+    GameObject aoeIndicator = Instantiate(aoeIndicatorPrefab, position, Quaternion.identity);
+
+    // Set the AOE radius for the indicator
+    AOEindicator indicatorScript = aoeIndicator.GetComponent<AOEindicator>();
+    if (indicatorScript != null)
+    {
+        indicatorScript.aoeRadius = aoeRadius;  // Pass the AOE radius to the prefab script
+    }
+}
+
+
+
+
+
 
     private void OnDrawGizmos()
     {

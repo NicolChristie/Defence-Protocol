@@ -132,11 +132,6 @@ public class Weaponprefab : MonoBehaviour
 
         validEnemies = validEnemies.Where(enemy => IsLineOfSightClear(enemy)).ToList();
         currentTarget = validEnemies.FirstOrDefault();
-
-        if (currentTarget != null)
-        {
-            Debug.DrawLine(transform.position, currentTarget.transform.position, Color.red, 0.1f);
-        }
     }
 
     bool IsLineOfSightClear(GameObject target)

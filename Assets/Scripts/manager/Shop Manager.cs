@@ -182,6 +182,7 @@ public class ShopManager : MonoBehaviour
         else if (itemToBuy.itemType == ShopItem.ItemType.PlayerUpgrade || itemToBuy.itemType == ShopItem.ItemType.ShipUpgrade)
         {
             PlayerShipUpgradeManager.Instance.ApplyUpgrade(itemToBuy);
+            GenerateShop(); // Regenerate shop after upgrade
         }
 
         // Optionally, delay re-enabling the button to avoid repeated clicks

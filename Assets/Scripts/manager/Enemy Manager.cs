@@ -25,7 +25,7 @@ public class EnemyManager : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         spawnPosition = transform.position;
-        currentHP = maxHP;
+        currentHP = (maxHP*4);
 
         if (healthBar != null)
         {
@@ -49,6 +49,7 @@ public class EnemyManager : MonoBehaviour
 
         // Register this enemy in the static list of all enemies
         allEnemies.Add(this);
+        //TakeDamage(0); // Initialize health bar display
     }
 
     void OnDestroy()
@@ -76,7 +77,7 @@ public class EnemyManager : MonoBehaviour
         if (player != null)
         {
             Vector2 direction = (player.transform.position - transform.position).normalized;
-            rb.linearVelocity = direction * speed;
+            rb.linearVelocity = direction * (speed*0.5f);
         }
     }
 
