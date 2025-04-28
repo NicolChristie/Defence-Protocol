@@ -114,13 +114,19 @@ public class ShipHealthBar : MonoBehaviour
     public void YouWin()
     {
         Time.timeScale = 0;
+        Debug.Log("You Win!");
         YouWinCanvas.SetActive(true);
+    }
+
+    public void HideYouWinPanel()
+    {
+        YouWinCanvas.SetActive(false);
     }
 
     public void RestartGame()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene("Start Menu");
+        SceneManager.LoadScene("Main Scene");
     }
 
     public void GoToMainMenu()

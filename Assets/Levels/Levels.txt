@@ -1,10 +1,8 @@
 Level 1:
-1G.L, 1G.R
-1G.D, 1G.L
+1G.L, 1D.D
 
 Level 2:
-1G.L, 1G.R
-1G.D, [1C.L, 1C.R]
+2G.L, 1G.D, [1C.L, 1C.R]
 
 Level 3:
 1G.L, 1G.R
@@ -79,3 +77,83 @@ Level 19:
 Level 20:
 [10A.L, 9B.R], [7C.U, 5F.D], [4E.L, 3F.R], [2D.L, 6F.U], [5B.L, 3D.U]
 9A.L, [8B.R, 6C.U], [5D.D, 5F.R], [4E.L, 4C.R], [3D.U, 3F.L]
+
+Level 21:
+[10A.L, 9C.R], [7B.U, 6F.D], 4E.L, [3F.R, 4D.L], 5C.U
+9B.R, [7C.U, 6D.D], [5F.L, 4E.R], [4D.U, 3C.L]
+
+Level 22:
+[11A.L, 10B.R], [8C.U, 7D.D], 5F.L, 4E.R, 5D.L
+10A.L, [8B.R, 7C.U], [6D.D, 5F.R], [5E.U, 4C.L]
+
+Level 23:
+[11A.L, 10C.R], [8B.U, 7F.D], [5E.L, 4D.R], 6C.U
+10B.R, [8C.U, 7D.D], [6F.L, 5E.R], 4D.U, 3C.L
+
+Level 24:
+[12A.L, 11B.R], [9C.U, 8D.D], [6F.L, 5E.R], 5D.U
+11A.L, [9B.R, 8C.U], [7D.D, 6F.R], 5E.L, 4C.U
+
+Level 25:
+[12A.L, 11C.R], [9B.U, 8F.D], [6E.L, 5D.R], 7C.U
+11B.R, [9C.U, 8D.D], [7F.L, 6E.R], 5D.U, 4C.L
+
+Level 26:
+[13A.L, 12B.R], [10C.U, 9D.D], [7F.L, 6E.R], 6D.U
+12A.L, [10B.R, 9C.U], [8D.D, 7F.R], 6E.L, 5C.U
+
+Level 27:
+[13A.L, 12C.R], [10B.U, 9F.D], [7E.L, 6D.R], 8C.U
+12B.R, [10C.U, 9D.D], [8F.L, 7E.R], 6D.U, 5C.L
+
+Level 28:
+[14A.L, 13B.R], [11C.U, 10D.D], [8F.L, 7E.R], 7D.U
+13A.L, [11B.R, 10C.U], [9D.D, 8F.R], 7E.L, 6C.U
+
+Level 29:
+[14A.L, 13C.R], [11B.U, 10F.D], [8E.L, 7D.R], 9C.U
+13B.R, [11C.U, 10D.D], [9F.L, 8E.R], 7D.U, 6C.L
+
+Level 30:
+[15A.L, 14B.R], [12C.U, 11D.D], [9F.L, 8E.R], 8D.U
+14A.L, [12B.R, 11C.U], [10D.D, 9F.R], 8E.L, 7C.U
+
+Level 31:
+[15A.L, 14C.R], [12B.U, 11F.D], [9E.L, 8D.R], 10C.U
+14B.R, [12C.U, 11D.D], [10F.L, 9E.R], 8D.U, 7C.L
+
+Level 32:
+[16A.L, 15B.R], [13C.U, 12D.D], [10F.L, 9E.R], 9D.U
+15A.L, [13B.R, 12C.U], [11D.D, 10F.R], 9E.L, 8C.U
+
+Level 33:
+[16A.L, 15C.R], [13B.U, 12F.D], [10E.L, 9D.R], 11C.U
+15B.R, [13C.U, 12D.D], [11F.L, 10E.R], 9D.U, 8C.L
+
+Level 34:
+[17A.L, 16B.R], [14C.U, 13D.D], [11F.L, 10E.R], 10D.U
+16A.L, [14B.R, 13C.U], [12D.D, 11F.R], 10E.L, 9C.U
+
+Level 35:
+[17A.L, 16C.R], [14B.U, 13F.D], [11E.L, 10D.R], 12C.U
+16B.R, [14C.U, 13D.D], [12F.L, 11E.R], 10D.U, 9C.L
+
+Level 36:
+[18A.L, 17B.R], [15C.U, 14D.D], [12F.L, 11E.R], 11D.U
+17A.L, [15B.R, 14C.U], [13D.D, 12F.R], 11E.L, 10C.U
+
+Level 37:
+[18A.L, 17C.R], [15B.U, 14F.D], [12E.L, 11D.R], 13C.U
+17B.R, [15C.U, 14D.D], [13F.L, 12E.R], 11D.U, 10C.L
+
+Level 38:
+[19A.L, 18B.R], [16C.U, 15D.D], [13F.L, 12E.R], 12D.U
+18A.L, [16B.R, 15C.U], [14D.D, 13F.R], 12E.L, 11C.U
+
+Level 39:
+[19A.L, 18C.R], [16B.U, 15F.D], [13E.L, 12D.R], 14C.U
+18B.R, [16C.U, 15D.D], [14F.L, 13E.R], 12D.U, 11C.L
+
+Level 40:
+[20A.L, 19B.R], [17C.U, 16D.D], [14F.L, 13E.R], 13D.U
+19A.L, [17B.R, 16C.U], [15D.D, 14F.R], 13E.L, 12C.U

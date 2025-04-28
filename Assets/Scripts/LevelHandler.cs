@@ -6,36 +6,68 @@ using System.IO;
 
 public class LevelHandler : MonoBehaviour
 {
-    public EnemySpawner enemySpawner; // Reference to EnemySpawner
-    public GameObject player; // Reference to the player
-    public GameObject nextLevelButton; // Reference to the Next Level Button
-    public EnemyType[] enemyTypes; // Reference to different enemy types
+
+    public EnemySpawner enemySpawner;
+    public GameObject player;
+    public GameObject nextLevelButton;
+    public EnemyType[] enemyTypes;
     private int levelIndex = 0;
 
+    public TextAsset levelFile;
+    private bool isLevelComplete = false;
+    private bool isGameStarted = false;
 
-    public TextAsset levelFile; // Drag your Levels.txt file here in the Inspector
-    private bool isLevelComplete = false; // Flag to check if level is complete
-    private bool isGameStarted = false; // Flag to track if the game has started
+    public static int finishedAmount = 0; // ✅ Tracks how many times the player finished the game
+
+    private int baseLevelCap = 2; // ✅ Start at 20 levels needed
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject); // ✅ Persist through scenes
+    }
 
     private void Start()
     {
-        // Show the next level button and shop at the start
-        nextLevelButton.SetActive(true); // Show the next level button
-        ShopManager.Instance.ShowShop(); // Show the shop at the start
+        nextLevelButton.SetActive(true);
+        ShopManager.Instance.ShowShop();
     }
 
-    // 🔄 Start the game when the user presses  "Start"
     public void StartLevel()
     {
         isGameStarted = true;
-
-        // Hide the next level button and the shop before starting the level
         nextLevelButton.SetActive(false);
         ShopManager.Instance.HideShop();
-
-        // Start the level with a delay
-        StartCoroutine(HandleLevelWithDelay(1)); // Start Level 1 with a delay
+        StartCoroutine(HandleLevelWithDelay(levelIndex));
+        ShipHealthBar.Instance.HideYouWinPanel();
     }
+
+    public void ProceedToNextLevel()
+    {
+        levelIndex++;
+        isLevelComplete = false;
+
+        Debug.Log($"Next level button pressed! Current level: {levelIndex}");
+
+        ShopManager.Instance.HideShop();
+
+        List<string> nextLevelData = LoadLevelFromFile(levelFile, levelIndex);
+
+        if (nextLevelData.Count > 0)
+        {
+            Debug.Log($"🚀 Moving to Level {levelIndex}");
+            nextLevelButton.SetActive(false);
+            StartCoroutine(StartLevelWithDelay(levelIndex));
+        }
+        else
+        {
+            Debug.Log("🎉 No more data for next levels, but based on finishedAmount, player can keep playing!");
+            ShipHealthBar.Instance.YouWin();
+
+            finishedAmount += 1;
+            Debug.Log($"🏆 New finishedAmount: {finishedAmount}. New level cap is {baseLevelCap + (finishedAmount * 5)}");
+        }
+    }
+
 
     // 🔄 Handle the level (spawns enemies) with a delay before the level starts
     public IEnumerator HandleLevelWithDelay(int levelIndex)
@@ -87,17 +119,28 @@ public class LevelHandler : MonoBehaviour
             Debug.Log("Player has placed the weapon down. Proceeding with level completion.");
         }
 
-        // Once all enemies are destroyed and the player isn't carrying a weapon, show the next level button and the shop
-        Debug.Log("🎉 Level Complete!");
-
-        // Add a check to ensure that the level hasn't already been completed
-        if (isLevelComplete) yield break; // Prevent duplicate execution
+       if (isLevelComplete) yield break; // Prevent duplicate execution
 
         isLevelComplete = true;
         CoinManager.Instance.AddCoins(5); // Reward for finishing the level
         ShopManager.Instance.GenerateShop();
-        nextLevelButton.SetActive(true); // Show the next level button
-        ShopManager.Instance.ShowShop(); // Show the shop after completing the level
+
+        // 🆕 Add this:
+        int currentLevelCap = baseLevelCap + (finishedAmount * 5);
+
+        if (levelIndex >= currentLevelCap - 1) // ⚡ -1 because levelIndex starts from 0
+        {
+            Debug.Log("🎉 All levels complete at level end!");
+            ShipHealthBar.Instance.YouWin();
+
+            finishedAmount += 1;
+            Debug.Log($"🏆 New finishedAmount: {finishedAmount}. New level cap is {baseLevelCap + (finishedAmount * 5)}");
+        }
+        else
+        {
+            nextLevelButton.SetActive(true); // Show the next level button
+            ShopManager.Instance.ShowShop(); // Show the shop ONLY if more levels exist
+        }
     }
 
     // Wait until the player places down the weapon
@@ -112,34 +155,7 @@ public class LevelHandler : MonoBehaviour
         Debug.Log("Weapon has been placed down.");
     }
 
-    public void ProceedToNextLevel()
-    {
-        levelIndex++; // Increment the level index
-        isLevelComplete = false; // Reset level complete flag before starting the next level
-
-        Debug.Log($"Next level button pressed! Current level: {levelIndex}");
-
-        // Generate a new shop before starting the next level
-        //ShopManager.Instance.GenerateShop();
-
-        // Hide the shop when proceeding to the next level
-        ShopManager.Instance.HideShop();
-
-        List<string> nextLevelData = LoadLevelFromFile(levelFile, levelIndex);
-
-        if (nextLevelData.Count > 0)
-        {
-            Debug.Log($"🚀 Moving to Level {levelIndex}");
-            nextLevelButton.SetActive(false); // Hide the next level button
-            StartCoroutine(StartLevelWithDelay(levelIndex));
-
-        }
-        else
-        {
-            Debug.Log("🎉 All levels complete!");
-            ShipHealthBar.Instance.YouWin();
-        }
-    }
+    
 
     // 🔄 Load a specific level from the file
     public List<string> LoadLevelFromFile(TextAsset levelTextAsset, int targetLevel)

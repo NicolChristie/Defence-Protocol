@@ -48,9 +48,12 @@ public class WeaponNode : MonoBehaviour
 
     void Update()
     {
-        // Prevent reset when shop is open
-        if (ShopManager.Instance != null && ShopManager.Instance.shopPanel.activeSelf)
+        if (ShopManager.Instance == null || ShopManager.Instance.shopPanel == null)
             return;
+
+        if (ShopManager.Instance.shopPanel.activeSelf)
+            return;
+
 
         if (isPlayerInside && Input.GetKeyDown(KeyCode.E))
         {
