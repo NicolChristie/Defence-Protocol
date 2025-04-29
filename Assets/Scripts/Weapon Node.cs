@@ -229,7 +229,6 @@ public class WeaponNode : MonoBehaviour
 
     private void SwapOrMergeWeapons(GameObject player)
     {
-        Debug.Log($"trying to swap or merge weapons... {playerWeaponPrefab} and {storedWeaponPrefab} with the original prefabs {playerWeaponPrefab.originalPrefab} and {storedWeaponPrefab.originalPrefab}");
         if (playerWeaponPrefab == null)
             playerWeaponPrefab = playerWeapon.GetComponent<Weaponprefab>();
         if (storedWeaponPrefab == null)

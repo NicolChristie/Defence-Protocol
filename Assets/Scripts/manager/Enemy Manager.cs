@@ -22,35 +22,33 @@ public class EnemyManager : MonoBehaviour
     private static List<EnemyManager> allEnemies = new List<EnemyManager>();
 
     void Start()
-    {
-        rb = GetComponent<Rigidbody2D>();
-        spawnPosition = transform.position;
-        currentHP = (maxHP*4);
+{
+    rb = GetComponent<Rigidbody2D>();
+    spawnPosition = transform.position;
+    currentHP = (maxHP * 4);
 
-        if (healthBar != null)
-        {
-            healthBar.UpdateHealthBar(currentHP, maxHP);
-        }
+    if (player == null)
+        player = GameObject.FindWithTag("Player");
 
-        if (player == null)
-        {
-            Debug.LogError("Player reference is not assigned in EnemyManager!");
-        }
+    if (ship == null)
+        ship = GameObject.FindWithTag("Ship");
 
-        if (ship == null)
-        {
-            Debug.LogError("Ship reference is not assigned in EnemyManager!");
-        }
+    if (shipHealthBar == null)
+        shipHealthBar = Object.FindFirstObjectByType<ShipHealthBar>();
 
-        if (shipHealthBar == null)
-        {
-            Debug.LogError("ShipHealthBar script is not assigned in EnemyManager!");
-        }
+    if (healthBar != null)
+        healthBar.UpdateHealthBar(currentHP, maxHP);
 
-        // Register this enemy in the static list of all enemies
-        allEnemies.Add(this);
-        //TakeDamage(0); // Initialize health bar display
-    }
+    if (player == null)
+        Debug.LogError("Player reference is not assigned in EnemyManager!");
+    if (ship == null)
+        Debug.LogError("Ship reference is not assigned in EnemyManager!");
+    if (shipHealthBar == null)
+        Debug.LogError("ShipHealthBar script is not assigned in EnemyManager!");
+
+    allEnemies.Add(this);
+}
+
 
     void OnDestroy()
     {

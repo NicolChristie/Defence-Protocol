@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Main Scene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
+    path: Assets/Scenes/YouWin.unity
+    guid: ef30331212629684b9bc9aba6229bacf
+  - enabled: 1
     path: Assets/Scenes/pauseSettings.unity
     guid: 1e594b193e9b50249ad7cccc2b80a296
   - enabled: 1

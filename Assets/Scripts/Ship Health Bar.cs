@@ -12,7 +12,6 @@ public class ShipHealthBar : MonoBehaviour
 
     // Game Over UI elements
     public GameObject gameOverCanvas;
-    public GameObject YouWinCanvas;
     public GameObject restartButton;
     public GameObject exitButton;
 
@@ -50,7 +49,6 @@ public class ShipHealthBar : MonoBehaviour
         }
 
         gameOverCanvas.SetActive(false);
-        YouWinCanvas.SetActive(false);
     }
 
     void Update()
@@ -102,26 +100,14 @@ public class ShipHealthBar : MonoBehaviour
         gameOverCanvas.SetActive(true);
     }
 
-    public void ExitGame()
-    {
-        Debug.Log("Exiting game...");
-        Application.Quit();
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#endif
-    }
+    
 
     public void YouWin()
     {
         Time.timeScale = 0;
-        Debug.Log("You Win!");
-        YouWinCanvas.SetActive(true);
+        SceneManager.LoadScene("YouWin");
     }
 
-    public void HideYouWinPanel()
-    {
-        YouWinCanvas.SetActive(false);
-    }
 
     public void RestartGame()
     {
@@ -133,5 +119,14 @@ public class ShipHealthBar : MonoBehaviour
     {
         Time.timeScale = 1;
         SceneManager.LoadScene("Start Menu");
+    }
+
+    public void ExitGame()
+    {
+        Debug.Log("Exiting game...");
+        Application.Quit();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
     }
 }

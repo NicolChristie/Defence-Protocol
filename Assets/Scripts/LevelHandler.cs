@@ -19,17 +19,20 @@ public class LevelHandler : MonoBehaviour
 
     public static int finishedAmount = 0; // ✅ Tracks how many times the player finished the game
 
-    private int baseLevelCap = 2; // ✅ Start at 20 levels needed
+    private int baseLevelCap = 20; // ✅ Start at 20 levels needed
+    private int baseUpgrade = 5; 
 
     private void Awake()
     {
-        DontDestroyOnLoad(this.gameObject); // ✅ Persist through scenes
+        finishedAmount = SaveManager.LoadFinishedAmount();
     }
+
 
     private void Start()
     {
         nextLevelButton.SetActive(true);
         ShopManager.Instance.ShowShop();
+        Debug.Log($"Current level cap: {baseLevelCap + (finishedAmount * baseUpgrade)}");
     }
 
     public void StartLevel()
@@ -38,7 +41,6 @@ public class LevelHandler : MonoBehaviour
         nextLevelButton.SetActive(false);
         ShopManager.Instance.HideShop();
         StartCoroutine(HandleLevelWithDelay(levelIndex));
-        ShipHealthBar.Instance.HideYouWinPanel();
     }
 
     public void ProceedToNextLevel()
@@ -64,7 +66,9 @@ public class LevelHandler : MonoBehaviour
             ShipHealthBar.Instance.YouWin();
 
             finishedAmount += 1;
-            Debug.Log($"🏆 New finishedAmount: {finishedAmount}. New level cap is {baseLevelCap + (finishedAmount * 5)}");
+            SaveManager.SaveFinishedAmount(finishedAmount);
+
+            Debug.Log($"🏆 New finishedAmount: {finishedAmount}. New level cap is {baseLevelCap + (finishedAmount * baseUpgrade)}");
         }
     }
 
@@ -126,15 +130,17 @@ public class LevelHandler : MonoBehaviour
         ShopManager.Instance.GenerateShop();
 
         // 🆕 Add this:
-        int currentLevelCap = baseLevelCap + (finishedAmount * 5);
-
+        int currentLevelCap = baseLevelCap + (finishedAmount * baseUpgrade);
+        Debug.Log($"Current level cap: {currentLevelCap}");
         if (levelIndex >= currentLevelCap - 1) // ⚡ -1 because levelIndex starts from 0
         {
             Debug.Log("🎉 All levels complete at level end!");
             ShipHealthBar.Instance.YouWin();
 
             finishedAmount += 1;
-            Debug.Log($"🏆 New finishedAmount: {finishedAmount}. New level cap is {baseLevelCap + (finishedAmount * 5)}");
+            SaveManager.SaveFinishedAmount(finishedAmount);
+
+            Debug.Log($"🏆 New finishedAmount: {finishedAmount}. New level cap is {baseLevelCap + (finishedAmount * baseUpgrade)}");
         }
         else
         {

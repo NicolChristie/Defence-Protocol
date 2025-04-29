@@ -48,7 +48,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 2008531635018228528, guid: 45b0220bb9b2e4f45a985b909945c176, type: 3}
   firePoint: {fileID: 8442141716312150843}
   fireRate: 1
-  projectileDamage: 10
+  projectileDamage: 7
   range: 12
   aoeRadius: 0
   aoeDamageMultiplier: 0.5
@@ -57,8 +57,7 @@ MonoBehaviour:
   rotationSpeed: 100
   homing: 0
   homingSpeed: 5
-  level: 1
-  levelSprites: []
+  wasPurchased: 0
   originalPrefab: {fileID: 541644480833380408}
 --- !u!212 &5901522733828913572
 SpriteRenderer:

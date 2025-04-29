@@ -1,8 +1,8 @@
 Level 1:
-1G.L, 1D.D
+1G.L, 1A.D
 
 Level 2:
-2G.L, 1G.D, [1C.L, 1C.R]
+2G.L, 1G.D, [1A.L, 1A.]
 
 Level 3:
 1G.L, 1G.R

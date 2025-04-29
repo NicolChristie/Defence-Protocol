@@ -12,6 +12,8 @@ public class ShopManager : MonoBehaviour
     private List<ShopItem> currentShopItems = new List<ShopItem>();
 
     public TextMeshProUGUI[] itemNameTexts;
+
+    public GameObject errorText;
     public TextMeshProUGUI[] itemPriceTexts;
     public TextMeshProUGUI[] itemDescriptionTexts;
     public RawImage[] itemImageSlots;
@@ -34,6 +36,7 @@ public class ShopManager : MonoBehaviour
     {
         GenerateShop();
         RemovePlayerWeapon(); // Call this to ensure the player starts without a weapon
+        errorText.gameObject.SetActive(true); // Hide the shop button at the start
     }
 
     public void RemovePlayerWeapon()
@@ -51,73 +54,71 @@ public class ShopManager : MonoBehaviour
     }
 
     public void GenerateShop()
+{
+    currentShopItems.Clear();
+
+    int finishedAmount = SaveManager.LoadFinishedAmount();
+
+    // Filter items based on unlock level
+    List<ShopItem> unlockedItems = availableItems.FindAll(item => item.unlockLevel <= finishedAmount);
+
+    if (unlockedItems.Count < 3)
     {
-        currentShopItems.Clear();
+        Debug.LogError("Not enough unlocked items to populate the shop!");
+        return;
+    }
 
-        if (availableItems.Count < 3)
+    HashSet<ShopItem> chosenItems = new HashSet<ShopItem>();
+    while (chosenItems.Count < 3)
+    {
+        ShopItem.Rarity rarity = GetRandomRarity();
+        List<ShopItem> itemsOfRarity = unlockedItems.FindAll(item => item.itemRarity == rarity);
+        
+        if (itemsOfRarity.Count > 0)
         {
-            Debug.LogError("Not enough items in the availableItems list!");
-            return;
-        }
-
-        HashSet<ShopItem> chosenItems = new HashSet<ShopItem>();
-        while (chosenItems.Count < 3)
-        {
-            ShopItem.Rarity rarity = GetRandomRarity();
-            List<ShopItem> itemsOfRarity = availableItems.FindAll(item => item.itemRarity == rarity);
-            if (itemsOfRarity.Count > 0)
+            ShopItem candidate = itemsOfRarity[Random.Range(0, itemsOfRarity.Count)];
+            if (!chosenItems.Contains(candidate))
             {
-                ShopItem candidate = itemsOfRarity[Random.Range(0, itemsOfRarity.Count)];
-                if (!chosenItems.Contains(candidate))
-                {
-                    chosenItems.Add(candidate);
-                    currentShopItems.Add(candidate);
-                }
+                chosenItems.Add(candidate);
+                currentShopItems.Add(candidate);
             }
-
-        }
-
-        for (int slot = 0; slot < 3; slot++)
-        {
-            ShopItem currentItem = currentShopItems[slot];
-
-            itemNameTexts[slot].text = currentItem.itemName;
-            itemPriceTexts[slot].text = "Price: " + currentItem.price;
-            itemDescriptionTexts[slot].text = currentItem.description;
-
-            // Change the name color based on rarity
-            switch (currentItem.itemRarity)
-            {
-                case ShopItem.Rarity.Common:
-                    itemNameTexts[slot].color = Color.black; // Black for common
-                    break;
-                case ShopItem.Rarity.Rare:
-                    itemNameTexts[slot].color = Color.green; // Green for rare
-                    break;
-                case ShopItem.Rarity.UltraRare:
-                    itemNameTexts[slot].color = Color.blue; // Blue for ultra rare
-                    break;
-                case ShopItem.Rarity.Legendary:
-                    itemNameTexts[slot].color = Color.red; // Red for legendary
-                    break;
-            }
-
-            if (currentItem.itemImage != null)
-            {
-                itemImageSlots[slot].texture = currentItem.itemImage;
-                itemImageSlots[slot].enabled = true;
-                AdjustRawImageAspect(itemImageSlots[slot], currentItem.itemImage); // 🔥 ADD THIS LINE
-            }
-            else
-            {
-                itemImageSlots[slot].enabled = false;
-            }
-
-            int slotNumber = slot;
-            buyButtons[slot].onClick.RemoveAllListeners();
-            buyButtons[slot].onClick.AddListener(() => BuyItem(slotNumber));
         }
     }
+
+    for (int slot = 0; slot < 3; slot++)
+    {
+        ShopItem currentItem = currentShopItems[slot];
+
+        itemNameTexts[slot].text = currentItem.itemName;
+        itemPriceTexts[slot].text = "Price: " + currentItem.price;
+        itemDescriptionTexts[slot].text = currentItem.description;
+
+        // Color text based on rarity
+        switch (currentItem.itemRarity)
+        {
+            case ShopItem.Rarity.Common: itemNameTexts[slot].color = Color.black; break;
+            case ShopItem.Rarity.Rare: itemNameTexts[slot].color = Color.green; break;
+            case ShopItem.Rarity.UltraRare: itemNameTexts[slot].color = Color.blue; break;
+            case ShopItem.Rarity.Legendary: itemNameTexts[slot].color = Color.red; break;
+        }
+
+        if (currentItem.itemImage != null)
+        {
+            itemImageSlots[slot].texture = currentItem.itemImage;
+            itemImageSlots[slot].enabled = true;
+            AdjustRawImageAspect(itemImageSlots[slot], currentItem.itemImage);
+        }
+        else
+        {
+            itemImageSlots[slot].enabled = false;
+        }
+
+        int slotNumber = slot;
+        buyButtons[slot].onClick.RemoveAllListeners();
+        buyButtons[slot].onClick.AddListener(() => BuyItem(slotNumber));
+    }
+}
+
 
     // Method to roll for a rarity
     private ShopItem.Rarity GetRandomRarity()
@@ -143,60 +144,59 @@ public class ShopManager : MonoBehaviour
     }
 
     public void BuyItem(int shopSlot)
-{
-    if (shopSlot < 0 || shopSlot >= currentShopItems.Count)
     {
-        Debug.LogError("Invalid shop slot selected!");
-        return;
-    }
-
-    if (isPurchasing)  // Prevent purchase if already in progress
-    {
-        Debug.LogWarning("Purchase already in progress, skipping this request.");
-        return;
-    }
-
-    isPurchasing = true;  // Set flag to true when purchase starts
-
-    ShopItem itemToBuy = currentShopItems[shopSlot];
-
-    // Disable the button to prevent double clicking
-    buyButtons[shopSlot].interactable = false;
-
-    if (CoinManager.Instance.SpendCoins(itemToBuy.price))
-    {
-        Debug.Log("Purchased: " + itemToBuy.itemName);
-
-        // Track and increase price if it's a weapon
-        if (itemToBuy.itemType == ShopItem.ItemType.Weapon)
+        if (shopSlot < 0 || shopSlot >= currentShopItems.Count)
         {
-            if (!weaponPurchaseCounts.ContainsKey(itemToBuy))
-                weaponPurchaseCounts[itemToBuy] = 1;
-            else
-                weaponPurchaseCounts[itemToBuy]++;
+            Debug.LogError("Invalid shop slot selected!");
+            return;
+        }
+
+        if (isPurchasing)  // Prevent purchase if already in progress
+        {
+            Debug.LogWarning("Purchase already in progress, skipping this request.");
+            return;
+        }
+
+        isPurchasing = true;  // Set flag to true when purchase starts
+
+        ShopItem itemToBuy = currentShopItems[shopSlot];
+
+        // Disable the button to prevent double clicking
+        buyButtons[shopSlot].interactable = false;
+
+        if (CoinManager.Instance.SpendCoins(itemToBuy.price))
+        {
+            Debug.Log("Purchased: " + itemToBuy.itemName);
+
+            // Track and increase price if it's a weapon
+            if (itemToBuy.itemType == ShopItem.ItemType.Weapon)
+            {
+                if (!weaponPurchaseCounts.ContainsKey(itemToBuy))
+                    weaponPurchaseCounts[itemToBuy] = 1;
+                else
+                    weaponPurchaseCounts[itemToBuy]++;
 
                 itemToBuy.price += 1;
                 EquipWeapon(itemToBuy);
                 HideShop();
+            }
+            else if (itemToBuy.itemType == ShopItem.ItemType.PlayerUpgrade || itemToBuy.itemType == ShopItem.ItemType.ShipUpgrade)
+            {
+                PlayerShipUpgradeManager.Instance.ApplyUpgrade(itemToBuy);
+                GenerateShop(); // Regenerate shop after upgrade
+            }
+
+            // Optionally, delay re-enabling the button to avoid repeated clicks
+            StartCoroutine(ReenableButtonAfterPurchase(shopSlot));
         }
-        else if (itemToBuy.itemType == ShopItem.ItemType.PlayerUpgrade || itemToBuy.itemType == ShopItem.ItemType.ShipUpgrade)
+        else
         {
-            PlayerShipUpgradeManager.Instance.ApplyUpgrade(itemToBuy);
-            GenerateShop(); // Regenerate shop after upgrade
+            Debug.Log("Not enough coins to buy: " + itemToBuy.itemName);
+            // Re-enable the button if purchase fails
+            buyButtons[shopSlot].interactable = true;
+            isPurchasing = false;  // Reset the flag if purchase fails
         }
-
-        // Optionally, delay re-enabling the button to avoid repeated clicks
-        StartCoroutine(ReenableButtonAfterPurchase(shopSlot));
     }
-    else
-    {
-        Debug.Log("Not enough coins to buy: " + itemToBuy.itemName);
-        // Re-enable the button if purchase fails
-        buyButtons[shopSlot].interactable = true;
-        isPurchasing = false;  // Reset the flag if purchase fails
-    }
-}
-
 
     private IEnumerator ReenableButtonAfterPurchase(int shopSlot)
     {
@@ -211,71 +211,70 @@ public class ShopManager : MonoBehaviour
     }
 
     public void EquipWeapon(ShopItem item)
-{
-    if (item.weaponPrefab == null)
     {
-        Debug.LogError("No weapon prefab assigned!");
-        return;
+        if (item.weaponPrefab == null)
+        {
+            Debug.LogError("No weapon prefab assigned!");
+            return;
+        }
+
+        if (WeaponNode.playerWeapon != null)
+        {
+            Debug.Log("Player is already holding a weapon. Cannot equip another.");
+            return;
+        }
+
+        // Instantiate and store the original prefab reference
+        GameObject weaponInstance = Instantiate(item.weaponPrefab);
+        Weaponprefab weaponScript = weaponInstance.GetComponent<Weaponprefab>();
+        if (weaponScript != null)
+        {
+            weaponScript.originalPrefab = item.weaponPrefab; // ✅ Set originalPrefab here
+        }
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player == null)
+        {
+            Debug.LogError("Player not found!");
+            Destroy(weaponInstance);
+            return;
+        }
+
+        Transform carryLocation = player.transform.Find("carryLocation");
+        if (carryLocation == null)
+        {
+            Debug.LogError("Carry Location not found on player!");
+            Destroy(weaponInstance);
+            return;
+        }
+
+        Debug.Log("Equipping weapon to player...");
+
+        weaponInstance.transform.SetParent(carryLocation);
+        weaponInstance.transform.localPosition = Vector3.zero;
+        weaponInstance.transform.localRotation = Quaternion.identity;
+        weaponInstance.transform.localScale = Vector3.one * 1f;
+
+        WeaponNode.playerWeapon = weaponInstance;  // Ensure this stays
+
+        WeaponNode weaponNode = weaponInstance.AddComponent<WeaponNode>();
+        Weaponprefab weaponPrefab = weaponInstance.GetComponent<Weaponprefab>();
+        if (weaponPrefab != null)
+        {
+            weaponPrefab.wasPurchased = true;
+            Debug.Log("Weapon purchased! Setting wasPurchased flag.");
+        }
+
+        // Check if the weapon was merged
+        if (weaponNode.mergedWeapon)
+        {
+            Debug.Log("Merged weapon detected. Handling merge...");
+            weaponNode.mergedWeapon = false; // Reset flag after handling the merged weapon
+            StartCoroutine(ShowShopWithDelay(0.5f)); // Open the shop after merge
+        }
+
+        Debug.Log("Weapon equipped: " + weaponInstance.name);
     }
-
-    if (WeaponNode.playerWeapon != null)
-    {
-        Debug.Log("Player is already holding a weapon. Cannot equip another.");
-        return;
-    }
-
-    // Instantiate and store the original prefab reference
-    GameObject weaponInstance = Instantiate(item.weaponPrefab);
-    Weaponprefab weaponScript = weaponInstance.GetComponent<Weaponprefab>();
-    if (weaponScript != null)
-    {
-        weaponScript.originalPrefab = item.weaponPrefab; // ✅ Set originalPrefab here
-    }
-
-    GameObject player = GameObject.FindGameObjectWithTag("Player");
-    if (player == null)
-    {
-        Debug.LogError("Player not found!");
-        Destroy(weaponInstance);
-        return;
-    }
-
-    Transform carryLocation = player.transform.Find("carryLocation");
-    if (carryLocation == null)
-    {
-        Debug.LogError("Carry Location not found on player!");
-        Destroy(weaponInstance);
-        return;
-    }
-
-    Debug.Log("Equipping weapon to player...");
-
-    weaponInstance.transform.SetParent(carryLocation);
-    weaponInstance.transform.localPosition = Vector3.zero;
-    weaponInstance.transform.localRotation = Quaternion.identity;
-    weaponInstance.transform.localScale = Vector3.one * 1f;
-
-    WeaponNode.playerWeapon = weaponInstance;  // Ensure this stays
-
-    WeaponNode weaponNode = weaponInstance.AddComponent<WeaponNode>();
-    Weaponprefab weaponPrefab = weaponInstance.GetComponent<Weaponprefab>();
-    if (weaponPrefab != null)
-    {
-        weaponPrefab.wasPurchased = true;
-        Debug.Log("Weapon purchased! Setting wasPurchased flag.");
-    }
-
-    // Check if the weapon was merged
-    if (weaponNode.mergedWeapon)
-    {
-        Debug.Log("Merged weapon detected. Handling merge...");
-        weaponNode.mergedWeapon = false; // Reset flag after handling the merged weapon
-        StartCoroutine(ShowShopWithDelay(0.5f)); // Open the shop after merge
-    }
-
-    Debug.Log("Weapon equipped: " + weaponInstance.name);
-}
-
 
     private void AdjustRawImageAspect(RawImage rawImage, Texture texture)
     {
@@ -293,49 +292,47 @@ public class ShopManager : MonoBehaviour
     }
 
     public void ReloadShop()
-{
-    for (int slot = 0; slot < currentShopItems.Count; slot++)
     {
-        ShopItem currentItem = currentShopItems[slot];
-
-        itemNameTexts[slot].text = currentItem.itemName;
-        itemPriceTexts[slot].text = "Price: " + currentItem.price;
-        itemDescriptionTexts[slot].text = currentItem.description;
-
-        switch (currentItem.itemRarity)
+        for (int slot = 0; slot < currentShopItems.Count; slot++)
         {
-            case ShopItem.Rarity.Common:
-                itemNameTexts[slot].color = Color.black;
-                break;
-            case ShopItem.Rarity.Rare:
-                itemNameTexts[slot].color = Color.green;
-                break;
-            case ShopItem.Rarity.UltraRare:
-                itemNameTexts[slot].color = Color.blue;
-                break;
-            case ShopItem.Rarity.Legendary:
-                itemNameTexts[slot].color = Color.red;
-                break;
-        }
+            ShopItem currentItem = currentShopItems[slot];
 
-        if (currentItem.itemImage != null)
-        {
-            itemImageSlots[slot].texture = currentItem.itemImage;
-            itemImageSlots[slot].enabled = true;
-            AdjustRawImageAspect(itemImageSlots[slot], currentItem.itemImage);
-        }
-        else
-        {
-            itemImageSlots[slot].enabled = false;
-        }
+            itemNameTexts[slot].text = currentItem.itemName;
+            itemPriceTexts[slot].text = "Price: " + currentItem.price;
+            itemDescriptionTexts[slot].text = currentItem.description;
 
-        int slotNumber = slot;
-        buyButtons[slot].onClick.RemoveAllListeners();
-        buyButtons[slot].onClick.AddListener(() => BuyItem(slotNumber));
+            switch (currentItem.itemRarity)
+            {
+                case ShopItem.Rarity.Common:
+                    itemNameTexts[slot].color = Color.black;
+                    break;
+                case ShopItem.Rarity.Rare:
+                    itemNameTexts[slot].color = Color.green;
+                    break;
+                case ShopItem.Rarity.UltraRare:
+                    itemNameTexts[slot].color = Color.blue;
+                    break;
+                case ShopItem.Rarity.Legendary:
+                    itemNameTexts[slot].color = Color.red;
+                    break;
+            }
+
+            if (currentItem.itemImage != null)
+            {
+                itemImageSlots[slot].texture = currentItem.itemImage;
+                itemImageSlots[slot].enabled = true;
+                AdjustRawImageAspect(itemImageSlots[slot], currentItem.itemImage);
+            }
+            else
+            {
+                itemImageSlots[slot].enabled = false;
+            }
+
+            int slotNumber = slot;
+            buyButtons[slot].onClick.RemoveAllListeners();
+            buyButtons[slot].onClick.AddListener(() => BuyItem(slotNumber));
+        }
     }
-}
-
-
 
     private IEnumerator ShowShopWithDelay(float delay)
     {
@@ -355,14 +352,15 @@ public class ShopManager : MonoBehaviour
         shopPanel.SetActive(false);
     }
 
-    public void ReturnToShip(){
+    public void ReturnToShip()
+    {
         Debug.Log("Returning to ship...");
         goToShop.gameObject.SetActive(true);
         shopPanel.SetActive(false);
-
     }
 
-    public void ReturnToShop(){
+    public void ReturnToShop()
+    {
         Debug.Log("Going to shop...");
         shopPanel.SetActive(true);
         goToShop.gameObject.SetActive(false);
