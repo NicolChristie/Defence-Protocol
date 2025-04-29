@@ -84,70 +84,74 @@ public class LevelHandler : MonoBehaviour
     }
 
     public IEnumerator HandleLevel(int levelIndex)
+{
+    if (!isGameStarted) yield break; // If the game hasn't started, do nothing
+
+    Debug.Log($"🚀 Loading Level {levelIndex}");
+
+    // Load level data from file
+    List<string> levelSetup = LoadLevelFromFile(levelFile, levelIndex);
+
+    // If no data found for this level, stop
+    if (levelSetup.Count == 0)
     {
-        if (!isGameStarted) yield break; // If the game hasn't started, do nothing
-
-        Debug.Log($"🚀 Loading Level {levelIndex}");
-
-        // Load level data from file
-        List<string> levelSetup = LoadLevelFromFile(levelFile, levelIndex);
-
-        // If no data found for this level, stop
-        if (levelSetup.Count == 0)
-        {
-            Debug.LogError($"❌ Level {levelIndex} is empty!");
-            yield break;
-        }
-
-        // Spawn enemies for each wave in the level
-        foreach (string wave in levelSetup)
-        {
-            SpawnEnemiesInWave(wave);
-            yield return new WaitForSeconds(3f); // Delay between waves
-        }
-
-        // Wait until all level-specific enemies are destroyed (only 3 persistent ones remain)
-        while (!AreOnlyPersistentEnemiesLeft)
-        {
-            yield return null; // Keep checking each frame
-        }
-
-        // Now check if the player is carrying a weapon
-        if (WeaponNode.playerWeapon != null)
-        {
-            Debug.Log("Player is still carrying a weapon. Cannot finish level yet.");
-
-            // Wait until the player places the weapon down before proceeding
-            yield return StartCoroutine(WaitForWeaponToBePlacedDown());
-
-            Debug.Log("Player has placed the weapon down. Proceeding with level completion.");
-        }
-
-       if (isLevelComplete) yield break; // Prevent duplicate execution
-
-        isLevelComplete = true;
-        CoinManager.Instance.AddCoins(5); // Reward for finishing the level
-        ShopManager.Instance.GenerateShop();
-
-        // 🆕 Add this:
-        int currentLevelCap = baseLevelCap + (finishedAmount * baseUpgrade);
-        Debug.Log($"Current level cap: {currentLevelCap}");
-        if (levelIndex >= currentLevelCap - 1) // ⚡ -1 because levelIndex starts from 0
-        {
-            Debug.Log("🎉 All levels complete at level end!");
-            ShipHealthBar.Instance.YouWin();
-
-            finishedAmount += 1;
-            SaveManager.SaveFinishedAmount(finishedAmount);
-
-            Debug.Log($"🏆 New finishedAmount: {finishedAmount}. New level cap is {baseLevelCap + (finishedAmount * baseUpgrade)}");
-        }
-        else
-        {
-            nextLevelButton.SetActive(true); // Show the next level button
-            ShopManager.Instance.ShowShop(); // Show the shop ONLY if more levels exist
-        }
+        Debug.LogError($"❌ Level {levelIndex} is empty!");
+        yield break;
     }
+
+    // Spawn enemies for each wave in the level
+    foreach (string wave in levelSetup)
+    {
+        SpawnEnemiesInWave(wave);
+        yield return new WaitForSeconds(3f); // Delay between waves
+    }
+
+    // Wait until all level-specific enemies are destroyed (only 3 persistent ones remain)
+    while (!AreOnlyPersistentEnemiesLeft)
+    {
+        yield return null; // Keep checking each frame
+    }
+
+    // Now check if the player is carrying a weapon
+    if (WeaponNode.playerWeapon != null)
+    {
+        Debug.Log("Player is still carrying a weapon. Cannot finish level yet.");
+
+        // Wait until the player places the weapon down before proceeding
+        yield return StartCoroutine(WaitForWeaponToBePlacedDown());
+
+        Debug.Log("Player has placed the weapon down. Proceeding with level completion.");
+    }
+
+    if (isLevelComplete) yield break; // Prevent duplicate execution
+
+    isLevelComplete = true;
+    CoinManager.Instance.AddCoins(5); // Reward for finishing the level
+    ShopManager.Instance.GenerateShop();
+
+    // 🆕 Add this:
+    int currentLevelCap = baseLevelCap + (finishedAmount * baseUpgrade);
+    Debug.Log($"Current level cap: {currentLevelCap}");
+    if (levelIndex >= currentLevelCap - 1) // ⚡ -1 because levelIndex starts from 0
+    {
+        Debug.Log("🎉 All levels complete at level end!");
+        ShipHealthBar.Instance.YouWin();
+
+        finishedAmount += 1;
+        SaveManager.SaveFinishedAmount(finishedAmount);
+
+        Debug.Log($"🏆 New finishedAmount: {finishedAmount}. New level cap is {baseLevelCap + (finishedAmount * baseUpgrade)}");
+    }
+    else
+    {
+        // Wait for a short delay before showing the next level button
+        yield return new WaitForSeconds(0.5f); // Short delay (1 second)
+
+        nextLevelButton.SetActive(true); // Show the next level button
+        ShopManager.Instance.ShowShop(); // Show the shop ONLY if more levels exist
+    }
+}
+
 
     // Wait until the player places down the weapon
     private IEnumerator WaitForWeaponToBePlacedDown()

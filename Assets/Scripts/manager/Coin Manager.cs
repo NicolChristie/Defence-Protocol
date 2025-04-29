@@ -24,7 +24,7 @@ public class CoinManager : MonoBehaviour
     {
         coinText.gameObject.SetActive(true);  // Ensure the coin text is active    
         UpdateCoinDisplay();  // Initialize the coin text when the game starts
-        setCoins(5); 
+        setCoins(50); 
     }
 
     public void setCoins(int amount)

@@ -2,7 +2,7 @@ Level 1:
 1G.L, 1A.D
 
 Level 2:
-2G.L, 1G.D, [1A.L, 1A.]
+2G.L, 1G.D, [1A.L, 1A.D]
 
 Level 3:
 1G.L, 1G.R

@@ -20,12 +20,14 @@ public class EnemyManager : MonoBehaviour
 
     // Static list of all enemies in the game
     private static List<EnemyManager> allEnemies = new List<EnemyManager>();
+    public DamageFlashEffect damageFlashEffect; // ✅ Reference to the red flash effect
+
 
     void Start()
 {
     rb = GetComponent<Rigidbody2D>();
     spawnPosition = transform.position;
-    currentHP = (maxHP * 4);
+    currentHP = (maxHP * 8);
 
     if (player == null)
         player = GameObject.FindWithTag("Player");
@@ -45,6 +47,10 @@ public class EnemyManager : MonoBehaviour
         Debug.LogError("Ship reference is not assigned in EnemyManager!");
     if (shipHealthBar == null)
         Debug.LogError("ShipHealthBar script is not assigned in EnemyManager!");
+    
+    if (damageFlashEffect == null)
+    damageFlashEffect = Object.FindFirstObjectByType<DamageFlashEffect>();
+
 
     allEnemies.Add(this);
 }
@@ -103,6 +109,10 @@ public class EnemyManager : MonoBehaviour
             if (shipHealthBar != null)
             {
                 shipHealthBar.TakeDamage(damage); // Damage the ship's health bar
+                if (damageFlashEffect != null)
+                    damageFlashEffect.TriggerFlash(); // ✅ This is correct
+
+
             }
             Destroy(gameObject); // Destroy enemy upon impact, also removes from allEnemies
         }

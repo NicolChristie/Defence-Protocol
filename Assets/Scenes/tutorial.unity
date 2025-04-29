@@ -970,6 +970,7 @@ MonoBehaviour:
     itemImage: {fileID: 2800000, guid: 714e69676a9d4df4a883439b7ed32962, type: 3}
     upgradeValue: 0
     itemRarity: 0
+    unlockLevel: 0
   - itemName: Sniper
     price: 3
     description: Long range, high damage, but slow reload
@@ -978,6 +979,7 @@ MonoBehaviour:
     itemImage: {fileID: 2800000, guid: 299e44f3f9f771f4b9b1d8344eea8c89, type: 3}
     upgradeValue: 0
     itemRarity: 0
+    unlockLevel: 0
   - itemName: Laser
     price: 3
     description: High pierce and fire rate
@@ -986,6 +988,7 @@ MonoBehaviour:
     itemImage: {fileID: 2800000, guid: 59006d2a04f99fa4a8d6646640f780c4, type: 3}
     upgradeValue: 0
     itemRarity: 0
+    unlockLevel: 0
   - itemName: Cluster
     price: 3
     description: mid range weapon known for its splash dmg
@@ -994,6 +997,7 @@ MonoBehaviour:
     itemImage: {fileID: 2800000, guid: 730a0be2937591949a9a9ce9f32e6a14, type: 3}
     upgradeValue: 0
     itemRarity: 0
+    unlockLevel: 0
   - itemName: Machine gun
     price: 4
     description: BRRRRR
@@ -1002,6 +1006,7 @@ MonoBehaviour:
     itemImage: {fileID: 2800000, guid: e36a1002897f60046827d443b16ce62b, type: 3}
     upgradeValue: 0
     itemRarity: 1
+    unlockLevel: 0
   - itemName: Flame thrower
     price: 4
     description: High fire rate, but low range and damage
@@ -1010,6 +1015,7 @@ MonoBehaviour:
     itemImage: {fileID: 2800000, guid: a768dcaa176ab1e45abe322e536f06d3, type: 3}
     upgradeValue: 0
     itemRarity: 1
+    unlockLevel: 0
   - itemName: Missile launcher
     price: 6
     description: launches missiles
@@ -1018,6 +1024,7 @@ MonoBehaviour:
     itemImage: {fileID: 2800000, guid: 02bb37dc82e77d446bf4ceb2fe3b88ac, type: 3}
     upgradeValue: 0
     itemRarity: 2
+    unlockLevel: 0
   - itemName: Speed Boost
     price: 4
     description: makes you go faster
@@ -1026,6 +1033,7 @@ MonoBehaviour:
     itemImage: {fileID: 2800000, guid: ea724a1138e04ad4b98b590e2127ebed, type: 3}
     upgradeValue: 2
     itemRarity: 1
+    unlockLevel: 0
   - itemName: Weapon Fire Rate
     price: 4
     description: increase the fire rate upgrade
@@ -1034,6 +1042,7 @@ MonoBehaviour:
     itemImage: {fileID: 2800000, guid: ea724a1138e04ad4b98b590e2127ebed, type: 3}
     upgradeValue: 2
     itemRarity: 1
+    unlockLevel: 0
   - itemName: Damage boost
     price: 4
     description: increases the dmage when standing on node
@@ -1042,6 +1051,7 @@ MonoBehaviour:
     itemImage: {fileID: 2800000, guid: ea724a1138e04ad4b98b590e2127ebed, type: 3}
     upgradeValue: 2
     itemRarity: 1
+    unlockLevel: 0
   - itemName: rotation boost
     price: 4
     description: makes the weapon rotate faster
@@ -1050,6 +1060,7 @@ MonoBehaviour:
     itemImage: {fileID: 2800000, guid: ea724a1138e04ad4b98b590e2127ebed, type: 3}
     upgradeValue: 2
     itemRarity: 1
+    unlockLevel: 0
   itemNameTexts:
   - {fileID: 271647692}
   - {fileID: 1206289235}
@@ -3329,7 +3340,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &786855153
 Transform:
   m_ObjectHideFlags: 0
@@ -3809,7 +3820,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &962308606
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4061,7 +4072,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1001754721
 Transform:
   m_ObjectHideFlags: 0
@@ -4925,7 +4936,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1127391727
 Transform:
   m_ObjectHideFlags: 0
@@ -5281,7 +5292,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1166688016
 Transform:
   m_ObjectHideFlags: 0
@@ -6565,7 +6576,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1574091245
 Transform:
   m_ObjectHideFlags: 0
@@ -7221,7 +7232,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1716704855
 Transform:
   m_ObjectHideFlags: 0
@@ -7444,7 +7455,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1730623818
 Transform:
   m_ObjectHideFlags: 0
@@ -7638,7 +7649,7 @@ MonoBehaviour:
     maxHP: 4
     damage: 2
     coinReward: 0
-    identifier: M
+    identifier: G
   - name: tank
     enemyPrefab: {fileID: 4504835502246946838, guid: 105951bac3b000b4f8e361a0a5d77b1e, type: 3}
     speed: 1

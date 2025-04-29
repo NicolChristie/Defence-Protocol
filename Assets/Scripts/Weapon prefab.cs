@@ -27,6 +27,8 @@ public class Weaponprefab : MonoBehaviour
     private float boostedFireRate;
     private int boostedDamage;
     private float boostedRotation;
+    private float originalRange;
+
 
     private float nextFireTime = 0f;
     private GameObject currentTarget;
@@ -34,20 +36,23 @@ public class Weaponprefab : MonoBehaviour
     public GameObject originalPrefab; // For prefab comparison in merge logic
     
 
-    void Start()
-    {
-        baseFireRate = fireRate;
-        baseDamage = projectileDamage;
-        baseRotation = rotationSpeed;
-        boostedFireRate = fireRate;
-        boostedDamage = projectileDamage;
-        boostedRotation = rotationSpeed;
+ void Start()
+{
+    baseFireRate = fireRate;
+    baseDamage = projectileDamage;
+    baseRotation = rotationSpeed;
+    boostedFireRate = fireRate;
+    boostedDamage = projectileDamage;
+    boostedRotation = rotationSpeed;
 
-        spriteRenderer = GetComponent<SpriteRenderer>();
-    
-        if (originalPrefab == null)
-            originalPrefab = gameObject; // fallback if not manually assigned
-    }
+    spriteRenderer = GetComponent<SpriteRenderer>();
+
+    originalRange = range; // Store the initial range
+
+    if (originalPrefab == null)
+        originalPrefab = gameObject; // fallback if not manually assigned
+}
+
 
     public void InitialiseBaseStats()
     {
@@ -181,4 +186,52 @@ public class Weaponprefab : MonoBehaviour
         Debug.LogWarning("checking if the weapon was purchased and that is" + wasPurchased);
         return wasPurchased;
     }
+
+    void OnDrawGizmosSelected()
+{
+    Gizmos.color = Color.red;
+    Gizmos.DrawWireSphere(transform.position, range);
+}
+    public void CalibrateRange()
+{
+    GameObject[] worldEdgeObjects = GameObject.FindGameObjectsWithTag("worldEdge");
+
+    if (worldEdgeObjects.Length == 0)
+    {
+        Debug.LogWarning("No world edges found for range calibration.");
+        return;
+    }
+
+    float minDistToEdge = float.MaxValue;
+    Debug.Log($"[Calibration] Found {worldEdgeObjects.Length} world edge objects.");
+
+    foreach (var edgeObject in worldEdgeObjects)
+    {
+        Debug.Log($"[Calibration] Checking world edge object: {edgeObject.name}.");
+        Collider2D edgeCollider = edgeObject.GetComponent<Collider2D>();
+        if (edgeCollider != null)
+        {
+            float distanceToEdge = Vector2.Distance(transform.position, edgeCollider.transform.position);
+            if (distanceToEdge < minDistToEdge)
+            {
+                minDistToEdge = distanceToEdge;
+                Debug.Log($"[Calibration] Closest edge found: {edgeObject.name} at distance {minDistToEdge}.");
+            }
+        }
+    }
+
+    if (minDistToEdge <= 0.01f)
+{
+    Debug.LogWarning("Weapon is too close to or outside world edges.");
+    return;
+}
+
+// Calculate new range as a percentage of minDistToEdge based on originalRange (0–10)
+range = (originalRange / 10f) * minDistToEdge;
+Debug.Log($"[Calibration] Weapon range updated to: {range} (originalRange: {originalRange}, closest edge: {minDistToEdge})");
+
+        
+}
+
+
 }

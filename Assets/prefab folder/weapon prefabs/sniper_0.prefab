@@ -48,8 +48,8 @@ MonoBehaviour:
   projectilePrefab: {fileID: 2008531635018228528, guid: 45b0220bb9b2e4f45a985b909945c176, type: 3}
   firePoint: {fileID: 8442141716312150843}
   fireRate: 1
-  projectileDamage: 7
-  range: 12
+  projectileDamage: 10
+  range: 10
   aoeRadius: 0
   aoeDamageMultiplier: 0.5
   pierceCount: 0

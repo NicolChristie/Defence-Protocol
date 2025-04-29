@@ -13,7 +13,6 @@ public class ShopManager : MonoBehaviour
 
     public TextMeshProUGUI[] itemNameTexts;
 
-    public GameObject errorText;
     public TextMeshProUGUI[] itemPriceTexts;
     public TextMeshProUGUI[] itemDescriptionTexts;
     public RawImage[] itemImageSlots;
@@ -36,7 +35,6 @@ public class ShopManager : MonoBehaviour
     {
         GenerateShop();
         RemovePlayerWeapon(); // Call this to ensure the player starts without a weapon
-        errorText.gameObject.SetActive(true); // Hide the shop button at the start
     }
 
     public void RemovePlayerWeapon()

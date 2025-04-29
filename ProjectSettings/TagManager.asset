@@ -7,6 +7,7 @@ TagManager:
   - Enemy
   - Weapon
   - Ship
+  - worldEdge
   layers:
   - Default
   - TransparentFX

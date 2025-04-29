@@ -212,6 +212,7 @@ public class WeaponNode : MonoBehaviour
         if (currentPlayer != null && storedWeaponPrefab != null)
         {
             storedWeaponPrefab.ResetToBaseStats();
+            storedWeaponPrefab.CalibrateRange();
         }
         boostApplied = false;
         // Check if weapon was purchased recently
@@ -284,6 +285,7 @@ public class WeaponNode : MonoBehaviour
     {
         storedWeaponPrefab.InitialiseBaseStats();
         storedWeaponPrefab.ResetToBaseStats();
+        storedWeaponPrefab.CalibrateRange();
         storedWeaponPrefab.transform.localScale = Vector3.one;
         boostApplied = false;
         mergedWeapon = true;

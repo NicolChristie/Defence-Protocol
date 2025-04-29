@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 3387474910527744241}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.12134347}
+  m_LocalPosition: {x: 0.09, y: 0, z: 0.12134347}
   m_LocalScale: {x: 0.21000001, y: 0.21000001, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -48,8 +48,8 @@ MonoBehaviour:
   projectilePrefab: {fileID: 5092683273390942982, guid: 3702c40dc8101da4ca85ff900a29952a, type: 3}
   firePoint: {fileID: 1077755328276533360}
   fireRate: 1.5
-  projectileDamage: 3
-  range: 7
+  projectileDamage: 6
+  range: 2.5
   aoeRadius: 0
   aoeDamageMultiplier: 0.5
   pierceCount: 2
