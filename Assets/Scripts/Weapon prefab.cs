@@ -27,7 +27,7 @@ public class Weaponprefab : MonoBehaviour
     private float boostedFireRate;
     private int boostedDamage;
     private float boostedRotation;
-    private float originalRange;
+    public float originalRange;
 
 
     private float nextFireTime = 0f;
@@ -47,8 +47,15 @@ public class Weaponprefab : MonoBehaviour
 
     spriteRenderer = GetComponent<SpriteRenderer>();
 
-    originalRange = range; // Store the initial range
-
+   if (originalRange <= 0f)
+{
+    originalRange = range;
+    Debug.Log($"[Init] originalRange set to {originalRange}");
+}
+else
+{
+    Debug.Log($"[Init] originalRange already set to {originalRange}, not overridden");
+}
     if (originalPrefab == null)
         originalPrefab = gameObject; // fallback if not manually assigned
 }
@@ -231,6 +238,17 @@ range = (originalRange / 10f) * minDistToEdge;
 Debug.Log($"[Calibration] Weapon range updated to: {range} (originalRange: {originalRange}, closest edge: {minDistToEdge})");
 
         
+}
+    public void ManualInit()
+{
+    Debug.Log("Manual Init called for weapon prefab.");
+    if (spriteRenderer == null)
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+    nextFireTime = Time.time + (1f / fireRate);
+    InitialiseBaseStats();
+    ResetToBaseStats();
+    CalibrateRange();
 }
 
 

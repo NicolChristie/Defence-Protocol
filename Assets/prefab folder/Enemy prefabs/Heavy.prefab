@@ -159,6 +159,7 @@ MonoBehaviour:
   coinAmount: 0
   stopDistance: 30
   destroyDistance: 20
+  damageFlashEffect: {fileID: 0}
 --- !u!50 &4431435805323228678
 Rigidbody2D:
   serializedVersion: 5

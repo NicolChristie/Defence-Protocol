@@ -49,7 +49,7 @@ MonoBehaviour:
   firePoint: {fileID: 3054906366151482721}
   fireRate: 2
   projectileDamage: 4
-  range: 7
+  range: 5
   aoeRadius: 0
   aoeDamageMultiplier: 0.5
   pierceCount: 3
