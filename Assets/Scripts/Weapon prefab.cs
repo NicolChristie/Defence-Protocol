@@ -33,7 +33,7 @@ public class Weaponprefab : MonoBehaviour
     private float nextFireTime = 0f;
     private GameObject currentTarget;
     private bool isRotated = false;
-    public GameObject originalPrefab; // For prefab comparison in merge logic
+    public GameObject originalPrefab; 
     
 
  void Start()
@@ -57,7 +57,7 @@ else
     Debug.Log($"[Init] originalRange already set to {originalRange}, not overridden");
 }
     if (originalPrefab == null)
-        originalPrefab = gameObject; // fallback if not manually assigned
+        originalPrefab = gameObject; 
 }
 
 
@@ -233,7 +233,6 @@ else
     return;
 }
 
-// Calculate new range as a percentage of minDistToEdge based on originalRange (0–10)
 range = (originalRange / 10f) * minDistToEdge;
 Debug.Log($"[Calibration] Weapon range updated to: {range} (originalRange: {originalRange}, closest edge: {minDistToEdge})");
 

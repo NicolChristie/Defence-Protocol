@@ -8,12 +8,11 @@ public class PauseSettings : MonoBehaviour
     public Button backButton;
     public Button exitButton;
     public Button settingsButton;
-    public Button goToMenuButton; // Button to go back to the main menu
-    public GameObject settingsUI;  // Reference to the settings menu UI (make sure it's not active at start)
+    public Button goToMenuButton; 
+    public GameObject settingsUI;  
 
     void Start()
     {
-        // Disable settings UI at the start
         if (settingsUI != null)
             settingsUI.SetActive(false);
 
@@ -36,7 +35,6 @@ public class PauseSettings : MonoBehaviour
     void OpenSettings()
     {
         Debug.Log("Settings would be opened.");
-        // Only open the settings when the button is pressed
         if (settingsUI != null)
             settingsUI.SetActive(true);
     }

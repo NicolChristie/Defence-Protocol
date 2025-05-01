@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro; // Don't forget this!
+using TMPro; 
 
 public class ShipHealthBar : MonoBehaviour
 {
@@ -10,12 +10,11 @@ public class ShipHealthBar : MonoBehaviour
     private Vector3 fullScale = new Vector3(13f, 0.2f, 1f);
     public static ShipHealthBar Instance;
 
-    // Game Over UI elements
+
     public GameObject gameOverCanvas;
     public GameObject restartButton;
     public GameObject exitButton;
 
-    // ➕ Add this: UI Text for showing HP
     public TextMeshProUGUI hpText;
 
     void Awake()
@@ -45,7 +44,7 @@ public class ShipHealthBar : MonoBehaviour
 
         if (hpText != null)
         {
-            UpdateHPText(); // Initialize the text
+            UpdateHPText();
         }
 
         gameOverCanvas.SetActive(false);
@@ -64,7 +63,7 @@ public class ShipHealthBar : MonoBehaviour
         currentHP = health;
         currentHP = Mathf.Clamp(currentHP, 0, maxHP);
         UpdateHealthBar();
-        UpdateHPText(); // 🔄 Update the text whenever HP changes
+        UpdateHPText(); 
     }
 
     public void TakeDamage(int damage)
@@ -72,7 +71,7 @@ public class ShipHealthBar : MonoBehaviour
         currentHP -= damage;
         currentHP = Mathf.Clamp(currentHP, 0, maxHP);
         UpdateHealthBar();
-        UpdateHPText(); // 🔄 Update the text whenever HP changes
+        UpdateHPText();
         Debug.Log("Ship took " + damage + " damage. Current HP: " + currentHP);
     }
 
@@ -85,7 +84,6 @@ public class ShipHealthBar : MonoBehaviour
         }
     }
 
-    // 🆕 This method updates the text
     private void UpdateHPText()
     {
         if (hpText != null)

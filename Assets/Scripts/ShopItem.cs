@@ -12,11 +12,9 @@ public class ShopItem
     public Texture2D itemImage;   
     public float upgradeValue;    
 
-    // New Rarity field
     public Rarity itemRarity;     
 
-    // Unlock level for the item
-    public int unlockLevel;       // NEW: level at which the item unlocks
+    public int unlockLevel;       
 
     public enum ItemType
     {
@@ -32,8 +30,7 @@ public class ShopItem
         UltraRare,
         Legendary
     }
-
-    // Constructor for Weapons  
+ 
     public ShopItem(string name, int cost, string desc, GameObject weapon, Texture2D image = null, int level = 0)
     {
         itemName = name;
@@ -43,11 +40,10 @@ public class ShopItem
         weaponPrefab = weapon;
         itemImage = image;
         upgradeValue = 0;  
-        itemRarity = Rarity.Common;  // Default rarity
-        unlockLevel = level;         // Set the unlock level
+        itemRarity = Rarity.Common;  
+        unlockLevel = level;         
     }
 
-    // Constructor for Upgrades  
     public ShopItem(string name, int cost, string desc, ItemType type, float value, Texture2D image = null, int level = 0)
     {
         itemName = name;
@@ -57,7 +53,7 @@ public class ShopItem
         upgradeValue = value;
         itemImage = image;
         weaponPrefab = null;  
-        itemRarity = Rarity.Common;  // Default rarity
-        unlockLevel = level;         // Set the unlock level
+        itemRarity = Rarity.Common;  
+        unlockLevel = level;         
     }
 }

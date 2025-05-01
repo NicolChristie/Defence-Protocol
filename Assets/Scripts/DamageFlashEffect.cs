@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.UI; // Required for Image
+using UnityEngine.UI; 
 
 public class DamageFlashEffect : MonoBehaviour
 {
-    public Image flashPanel; // The red panel you want to flash
+    public Image flashPanel;
     public float flashAlpha = 0.4f;
     public float fadeDuration = 0.3f;
 
@@ -38,8 +38,6 @@ void Start()
             flashPanel.color = color;
             yield return null;
         }
-
-        // Ensure it's fully transparent at the end
         color.a = 0f;
         flashPanel.color = color;
     }

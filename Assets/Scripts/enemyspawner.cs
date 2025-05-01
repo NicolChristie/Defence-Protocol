@@ -2,35 +2,30 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject enemyPrefab; // Default prefab, will be overridden by specific enemy types
+    public GameObject enemyPrefab;
     public float spawnInterval = 3f;
     public float mapWidth = 10f;
     public float mapHeight = 6f;
-    public float spawnBuffer = 1f; // Offset so enemies spawn slightly off-screen
-    public GameObject player; // Reference to the player
-    public GameObject ship; // Reference to the ship GameObject
-    public ShipHealthBar shipHealthBar; // Reference to the ship's health bar
+    public float spawnBuffer = 1f;
+    public GameObject player;
+    public GameObject ship;
+    public ShipHealthBar shipHealthBar;
 
-    // 🔄 Spawns an enemy at a specific location based on spawn direction
     public void SpawnEnemyAtSpecificLocation(EnemyType enemyType, string spawnDirection)
     {
         Vector2 spawnPos = GetPositionBasedOnDirection(spawnDirection);
         GameObject newEnemy = Instantiate(enemyType.enemyPrefab, spawnPos, Quaternion.identity);
 
-        // Assign the references dynamically after the enemy is instantiated
         EnemyManager enemyScript = newEnemy.GetComponent<EnemyManager>();
         if (enemyScript != null)
         {
-            // Assign the necessary references to the enemy
             enemyScript.player = player;
             enemyScript.ship = ship;
-            enemyScript.shipHealthBar = shipHealthBar; // Assign the ship's health bar
-
-            // Also assign specific enemy properties
+            enemyScript.shipHealthBar = shipHealthBar;
             enemyScript.speed = enemyType.speed;
             enemyScript.maxHP = enemyType.maxHP;
             enemyScript.damage = enemyType.damage;
-            enemyScript.coinAmount = enemyType.coinReward; // NEW: Assign coin reward
+            enemyScript.coinAmount = enemyType.coinReward;
         }
         else
         {
@@ -38,7 +33,6 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    // 🔄 Get position based on spawn direction
     Vector2 GetPositionBasedOnDirection(string direction)
     {
         float x = 0f;
@@ -47,23 +41,23 @@ public class EnemySpawner : MonoBehaviour
         switch (direction)
         {
             case "L":
-                x = -mapWidth - spawnBuffer; // Spawn on the left
+                x = -mapWidth - spawnBuffer;
                 y = Random.Range(-mapHeight, mapHeight);
                 break;
             case "R":
-                x = mapWidth + spawnBuffer; // Spawn on the right
+                x = mapWidth + spawnBuffer;
                 y = Random.Range(-mapHeight, mapHeight);
                 break;
             case "U":
                 x = Random.Range(-mapWidth, mapWidth);
-                y = mapHeight + spawnBuffer; // Spawn at the top
+                y = mapHeight + spawnBuffer;
                 break;
             case "D":
                 x = Random.Range(-mapWidth, mapWidth);
-                y = -mapHeight - spawnBuffer; // Spawn at the bottom
+                y = -mapHeight - spawnBuffer;
                 break;
             default:
-                Debug.LogError($"❌ Invalid direction: {direction}");
+                Debug.LogError($"Invalid direction: {direction}");
                 break;
         }
 

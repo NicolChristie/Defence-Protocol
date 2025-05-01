@@ -7,7 +7,7 @@ public class PauseMenu : MonoBehaviour
 {
 
     private bool isPaused = false;
-    private string pauseMenu = "PauseSettings"; // replace with your actual scene name
+    private string pauseMenu = "PauseSettings";
 
     
     void Update()

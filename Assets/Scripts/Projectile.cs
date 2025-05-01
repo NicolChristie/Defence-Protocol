@@ -15,7 +15,7 @@ public class Projectile : MonoBehaviour
     private GameObject target;
     private bool homing;
     private float homingSpeed;
-    public GameObject aoeIndicatorPrefab;  // Reference to the AOE prefab
+    public GameObject aoeIndicatorPrefab; 
 
     public float speed = 10f;
 
@@ -27,27 +27,25 @@ public class Projectile : MonoBehaviour
         aoeDamageMultiplier = aoeMultiplier;
         pierceCount = pierce;
         startPosition = transform.position;
-        stopDistance = stopDist;  // Save the stopDistance
+        stopDistance = stopDist;  
         this.homing = homing;
         this.homingSpeed = homingSpeed;
         this.target = target;
 
-        // Homing projectile follows the target
+
         if (homing && target != null)
         {
             direction = (target.transform.position - transform.position).normalized;
 
-            // Apply deviation to homing direction
             if (deviationAmount != 0f)
             {
-                // Randomly rotate the direction vector within the deviation angle range
+
                 float deviationAngle = Random.Range(-deviationAmount, deviationAmount);
                 direction = Quaternion.Euler(0, 0, deviationAngle) * direction;
             }
         }
         else
         {
-            // Non-homing projectiles inherit weapon rotation
             direction = transform.right.normalized;
         }
     }
@@ -56,27 +54,23 @@ public class Projectile : MonoBehaviour
     {
         float distanceTraveled = Vector3.Distance(transform.position, startPosition);
 
-        // Destroy if it exceeds range but hasn't hit stop distance
         if (distanceTraveled >= range * 1.2f && distanceTraveled < stopDistance)
         {
             Destroy(gameObject);
             return;
         }
 
-        // Stop if it reaches stop distance
         if (distanceTraveled >= stopDistance)
         {
             return;
         }
 
-        // Homing behavior: Adjust direction toward target
         if (homing && target != null)
         {
             Vector3 targetDirection = (target.transform.position - transform.position).normalized;
             direction = Vector3.Lerp(direction, targetDirection, homingSpeed * Time.deltaTime).normalized;
         }
 
-        // Move in the assigned direction
         transform.position += direction * speed * Time.deltaTime;
     }
 
@@ -90,7 +84,6 @@ public class Projectile : MonoBehaviour
                 enemy.TakeDamage(damage);
             }
 
-            // Apply AoE damage if applicable
             if (aoeRadius > 0)
             {
                 ApplyAOE(collision.transform.position);
@@ -111,10 +104,9 @@ public class Projectile : MonoBehaviour
     void ApplyAOE(Vector3 explosionPoint)
     {
         Debug.Log("Applying AOE damage...");
-        // 1. Visualize AOE
+
         ShowAOEIndicator(explosionPoint);
 
-        // 2. Apply damage
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(explosionPoint, aoeRadius);
         foreach (Collider2D hit in hitEnemies)
         {
@@ -134,22 +126,14 @@ public class Projectile : MonoBehaviour
 
    void ShowAOEIndicator(Vector3 position)
 {
-    // Instantiate the AOE indicator prefab
     GameObject aoeIndicator = Instantiate(aoeIndicatorPrefab, position, Quaternion.identity);
 
-    // Set the AOE radius for the indicator
     AOEindicator indicatorScript = aoeIndicator.GetComponent<AOEindicator>();
     if (indicatorScript != null)
     {
-        indicatorScript.aoeRadius = aoeRadius;  // Pass the AOE radius to the prefab script
+        indicatorScript.aoeRadius = aoeRadius;  
     }
 }
-
-
-
-
-
-
     private void OnDrawGizmos()
     {
         if (aoeRadius > 0)

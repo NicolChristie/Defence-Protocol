@@ -4,23 +4,22 @@ using System.Collections.Generic;
 public class EnemyManager : MonoBehaviour
 {
     public GameObject player;
-    public GameObject ship; // Reference to the ship GameObject
-    public ShipHealthBar shipHealthBar; // Reference to the health bar script
+    public GameObject ship; 
+    public ShipHealthBar shipHealthBar;
     public float speed = 1f;
     public int maxHP = 4;
     private int currentHP;
     private Rigidbody2D rb;
     public HealthBar healthBar;
-    public int damage = 10; // Damage enemy deals when colliding with the ship
+    public int damage = 10; 
     public int coinAmount = 0;
 
     private Vector3 spawnPosition;
     public float stopDistance = 200f;
     public float destroyDistance = 300f;
 
-    // Static list of all enemies in the game
     private static List<EnemyManager> allEnemies = new List<EnemyManager>();
-    public DamageFlashEffect damageFlashEffect; // ✅ Reference to the red flash effect
+    public DamageFlashEffect damageFlashEffect; 
 
 
     void Start()
@@ -58,7 +57,6 @@ public class EnemyManager : MonoBehaviour
 
     void OnDestroy()
     {
-        // Remove this enemy from the static list when it is destroyed
         allEnemies.Remove(this);
     }
 
@@ -98,29 +96,26 @@ public class EnemyManager : MonoBehaviour
         if (currentHP <= 0)
         {
             CoinManager.Instance.AddCoins(coinAmount);
-            Destroy(gameObject); // Calls OnDestroy and removes the enemy from the static list
+            Destroy(gameObject); 
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (ship != null && collision.gameObject == ship) // Check if collided with the ship
+        if (ship != null && collision.gameObject == ship) 
         {
             if (shipHealthBar != null)
             {
-                shipHealthBar.TakeDamage(damage); // Damage the ship's health bar
+                shipHealthBar.TakeDamage(damage); 
                 if (damageFlashEffect != null)
-                    damageFlashEffect.TriggerFlash(); // ✅ This is correct
-
-
+                    damageFlashEffect.TriggerFlash(); 
             }
-            Destroy(gameObject); // Destroy enemy upon impact, also removes from allEnemies
+            Destroy(gameObject); 
         }
     }
 
-    // Static method to get all active enemies
     public static List<EnemyManager> GetAllEnemies()
     {
-        return new List<EnemyManager>(allEnemies); // Return a copy of the list to avoid modification
+        return new List<EnemyManager>(allEnemies); 
     }
 }

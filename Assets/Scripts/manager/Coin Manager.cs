@@ -1,15 +1,14 @@
 using UnityEngine;
-using TMPro;  // Import the TextMeshPro namespace
+using TMPro;  
 
 public class CoinManager : MonoBehaviour
 {
-    public static CoinManager Instance;  // Singleton instance
-    private int coins = 0;  // Stores the current coin count
-    public TextMeshProUGUI coinText;  // Reference to the TMP Text that will display coins
+    public static CoinManager Instance;  
+    private int coins = 0; 
+    public TextMeshProUGUI coinText;  
 
     void Awake()
     {
-        // Set up Singleton pattern
         if (Instance == null)
         {
             Instance = this;
@@ -22,31 +21,29 @@ public class CoinManager : MonoBehaviour
 
     void Start()
     {
-        coinText.gameObject.SetActive(true);  // Ensure the coin text is active    
-        UpdateCoinDisplay();  // Initialize the coin text when the game starts
+        coinText.gameObject.SetActive(true);  
+        UpdateCoinDisplay();
         setCoins(5); 
     }
 
     public void setCoins(int amount)
     {
-        coins = amount;  // Set the coin count directly
-        UpdateCoinDisplay();  // Update the UI to reflect the new coin count
+        coins = amount;  
+        UpdateCoinDisplay();  
     }
 
-    // Method to add coins
     public void AddCoins(int amount)
     {
         coins += amount;
-        UpdateCoinDisplay();  // Update the UI whenever coins are added
+        UpdateCoinDisplay();  
     }
 
-    // Method to subtract coins (for purchases)
     public bool SpendCoins(int amount)
     {
         if (coins >= amount)
         {
             coins -= amount;
-            UpdateCoinDisplay();  // Update the UI whenever coins are spent
+            UpdateCoinDisplay(); 
             return true;
         }
         else
@@ -56,18 +53,16 @@ public class CoinManager : MonoBehaviour
         }
     }
 
-    // Method to get current coin count
     public int GetCoins()
     {
         return coins;
     }
 
-    // Method to update the coin text UI
     private void UpdateCoinDisplay()
     {
         if (coinText != null)
         {
-            coinText.text = "Coins: " + coins;  // Update the UI text to show the current coin count
+            coinText.text = "Coins: " + coins; 
         }
         else
         {

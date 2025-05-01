@@ -8,9 +8,9 @@ public class WeaponMergeManager : MonoBehaviour
     [System.Serializable]
     public class WeaponMergeEntry
     {
-        public Weaponprefab weaponA;  // Now referencing Weaponprefab, not GameObject
-        public Weaponprefab weaponB;  // Same here
-        public Weaponprefab result;   // The result after merge, also Weaponprefab
+        public Weaponprefab weaponA;
+        public Weaponprefab weaponB;  
+        public Weaponprefab result;  
     }
 
     public List<WeaponMergeEntry> mergeCombinations;
@@ -18,7 +18,6 @@ public class WeaponMergeManager : MonoBehaviour
     private void Awake()
     {
             Instance = this;
-        // Debug to list all potential merges on startup
     }
 
    public Weaponprefab GetMergeResult(Weaponprefab weapon1, Weaponprefab weapon2)

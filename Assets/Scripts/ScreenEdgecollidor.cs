@@ -7,7 +7,7 @@ public class ScreenEdgeBlockers : MonoBehaviour
     public BoxCollider2D leftCollider;
     public BoxCollider2D rightCollider;
 
-    public float colliderThickness = 1f; // Thickness of the border walls
+    public float colliderThickness = 1f; 
 
     void Start()
     {
@@ -28,7 +28,6 @@ public class ScreenEdgeBlockers : MonoBehaviour
 
     Vector3 camPos = cam.transform.position;
 
-    // Horizontal colliders
     topCollider.size = new Vector2(cameraWidth, colliderThickness);
     topCollider.offset = Vector2.zero;
     topCollider.transform.position = new Vector3(camPos.x, camPos.y + (cameraHeight / 2f) + (colliderThickness / 2f), 0f);
@@ -37,7 +36,6 @@ public class ScreenEdgeBlockers : MonoBehaviour
     bottomCollider.offset = Vector2.zero;
     bottomCollider.transform.position = new Vector3(camPos.x, camPos.y - (cameraHeight / 2f) - (colliderThickness / 2f), 0f);
 
-    // Vertical colliders
     leftCollider.size = new Vector2(colliderThickness, cameraHeight);
     leftCollider.offset = Vector2.zero;
     leftCollider.transform.position = new Vector3(camPos.x - (cameraWidth / 2f) - (colliderThickness / 2f), camPos.y, 0f);

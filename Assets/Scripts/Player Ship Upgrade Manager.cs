@@ -5,8 +5,6 @@ public class PlayerShipUpgradeManager : MonoBehaviour
     public static PlayerShipUpgradeManager Instance;
 
     private CharacterManager character;
-    // Placeholder for ShipManager (to be implemented later)
-    // private ShipManager ship;
 
     void Awake()
     {
@@ -24,7 +22,6 @@ public class PlayerShipUpgradeManager : MonoBehaviour
             Debug.LogError("CharacterManager not found!");
         }
 
-        // ship = FindFirstObjectByType<ShipManager>();  // Future ship manager reference
     }
 
     public void ApplyUpgrade(ShopItem upgrade)
@@ -48,8 +45,6 @@ public class PlayerShipUpgradeManager : MonoBehaviour
         }
 
         Debug.Log($"Applying {upgrade.itemName} with multiplier: {upgrade.upgradeValue}");
-
-        // Pass the upgrade to the CharacterManager with the appropriate parameters
         switch (upgrade.itemName)
         {
             case "Speed Boost":
@@ -73,13 +68,11 @@ public class PlayerShipUpgradeManager : MonoBehaviour
                 break;
         }
 
-        // Log the final values after applying the upgrade
         Debug.Log($"{upgrade.itemName} applied! New values: Speed={character.baseSpeed}, Fire Rate={character.weaponMultiplier}, Damage={character.damageMultiplier}");
     }
 
     private void ApplyShipUpgrade(ShopItem upgrade)
     {
-        // 🚀 Placeholder for ship upgrades (to be implemented when ShipManager is ready)
         Debug.Log("Ship Upgrade functionality not implemented yet: " + upgrade.itemName);
     }
 }

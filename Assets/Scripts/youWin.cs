@@ -10,7 +10,6 @@ public class youWin : MonoBehaviour
 
     void Start()
     {
-        // Set up button listeners
         Time.timeScale = 1f;
         if (restartButton != null)
             restartButton.onClick.AddListener(RestartGame);
@@ -23,7 +22,6 @@ public class youWin : MonoBehaviour
         
         Debug.Log("YouWin: Start method called. Buttons initialized.");
 
-        // Get reference to WeaponNode
         
     }
     void RestartGame()

@@ -3,8 +3,6 @@ using UnityEngine;
 public static class SaveManager
 {
     private static int finishedAmount = 0;
-
-    // Optional: call this at game startup
     public static void Initialize()
     {
         finishedAmount = 0;
