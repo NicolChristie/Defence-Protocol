@@ -48,6 +48,7 @@ public class ShopManager : MonoBehaviour
 
     public void GenerateShop()
     {
+                coverScript.allowMouseZoom = false;
         coverScript.ForceZoomIn();
         currentShopItems.Clear();
         int finishedAmount = SaveManager.LoadFinishedAmount();

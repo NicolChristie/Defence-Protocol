@@ -16,6 +16,7 @@ public class coverScript : MonoBehaviour
     public float cameraYOffsetOut = -0.5f;  // Y offset when zoomed out
 
     private bool isZoomedOut = true;
+    public bool allowMouseZoom = true;
 
     void Start()
     {
@@ -27,24 +28,34 @@ public class coverScript : MonoBehaviour
     }
 
     void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Q))
+{
+    
+    if (!allowMouseZoom) return;
+    if (Mouse.current.rightButton.isPressed)
         {
-            ToggleMode();
+            SetZoomedIn(true);
         }
-    }
+        else
+        {
+            SetZoomedIn(false);
+        }
+}
 
-    void ToggleMode()
+
+    void SetZoomedIn(bool zoomIn)
     {
-        isZoomedOut = !isZoomedOut;
+        if (isZoomedOut == !zoomIn) return; // already in desired state
+
+        isZoomedOut = !zoomIn;
 
         mainCamera.orthographicSize = isZoomedOut ? zoomedOutSize : zoomedInSize;
 
         characterManager.SetMovementEnabled(!isZoomedOut);
         shipCover.SetActive(isZoomedOut);
 
-        UpdateCameraPosition(); // Apply updated camera position
+        UpdateCameraPosition();
     }
+
 
     void UpdateCameraPosition()
     {
