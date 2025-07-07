@@ -19,6 +19,7 @@ public class ShopManager : MonoBehaviour
     public Button goToShip;
     public Button goToShop;
     public GameObject shopPanel;
+    public coverScript coverScript;
 
     private bool isPurchasing = false;
 
@@ -47,6 +48,7 @@ public class ShopManager : MonoBehaviour
 
     public void GenerateShop()
     {
+        coverScript.ForceZoomIn();
         currentShopItems.Clear();
         int finishedAmount = SaveManager.LoadFinishedAmount();
         List<ShopItem> unlockedItems = availableItems.FindAll(item => item.unlockLevel <= finishedAmount);

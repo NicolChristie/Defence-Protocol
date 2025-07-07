@@ -7,7 +7,7 @@ public class ShipHealthBar : MonoBehaviour
     public GameObject healthBar;
     public int maxHP = 2;
     private int currentHP;
-    private Vector3 fullScale = new Vector3(13f, 0.2f, 1f);
+    private Vector3 fullScale = new Vector3(1f, 1f, 1f);
     public static ShipHealthBar Instance;
 
 
@@ -32,6 +32,7 @@ public class ShipHealthBar : MonoBehaviour
     void Start()
     {
         currentHP = maxHP;
+        healthBar.gameObject.SetActive(true);
 
         if (healthBar != null)
         {

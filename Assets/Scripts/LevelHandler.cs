@@ -104,6 +104,7 @@ public class LevelHandler : MonoBehaviour
         if (isLevelComplete) yield break;
 
         isLevelComplete = true;
+
         CoinManager.Instance.AddCoins(5);
         ShopManager.Instance.GenerateShop();
 

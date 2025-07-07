@@ -56,6 +56,12 @@ public class CharacterManager : MonoBehaviour
     {
         return currentRotationMultiplier;
     }
+    private bool canMove = true; // Add this at the top
+
+    public void SetMovementEnabled(bool enabled)
+    {
+        canMove = enabled;
+    }
 
     public float GetSpeed()
     {
@@ -105,6 +111,7 @@ public class CharacterManager : MonoBehaviour
 
     void Update()
     {
+        if (!canMove) return; 
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveY = Input.GetAxisRaw("Vertical");
 

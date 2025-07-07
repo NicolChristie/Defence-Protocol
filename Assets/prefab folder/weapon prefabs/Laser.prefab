@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 3387474910527744241}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.09, y: 0, z: 0.12134347}
+  m_LocalPosition: {x: 0, y: 0, z: 0.12134347}
   m_LocalScale: {x: 0.21000001, y: 0.21000001, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -58,6 +58,7 @@ MonoBehaviour:
   homing: 0
   homingSpeed: 5
   wasPurchased: 0
+  originalRange: 0
   originalPrefab: {fileID: 3387474910527744241}
 --- !u!212 &8306805692423019340
 SpriteRenderer:
