@@ -80,8 +80,25 @@ public class ShopManager : MonoBehaviour
 
             itemNameTexts[slot].text = currentItem.itemName;
             itemPriceTexts[slot].text = "Price: " + currentItem.price;
-            itemDescriptionTexts[slot].text = currentItem.description;
-
+            if (currentItem.itemType == ShopItem.ItemType.Weapon && currentItem.weaponPrefab != null)
+            {
+                Weaponprefab weaponScript = currentItem.weaponPrefab.GetComponent<Weaponprefab>();
+                if (weaponScript != null)
+                {
+                    itemDescriptionTexts[slot].text =
+                        $"Fire Rate: {weaponScript.fireRate:F1}\n" +
+                        $"Damage: {weaponScript.projectileDamage}\n" +
+                        $"Range: {weaponScript.range}";
+                }
+                else
+                {
+                    itemDescriptionTexts[slot].text = "Weapon stats unavailable.";
+                }
+            }
+            else
+            {
+                itemDescriptionTexts[slot].text = currentItem.description;
+            }
             switch (currentItem.itemRarity)
             {
                 case ShopItem.Rarity.Common: itemNameTexts[slot].color = Color.black; break;
