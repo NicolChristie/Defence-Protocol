@@ -60,6 +60,7 @@ MonoBehaviour:
   wasPurchased: 0
   originalRange: 0
   originalPrefab: {fileID: 3387474910527744241}
+  firingSound: EnergyFiring
 --- !u!212 &8306805692423019340
 SpriteRenderer:
   m_ObjectHideFlags: 0

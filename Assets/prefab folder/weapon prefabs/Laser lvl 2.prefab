@@ -58,7 +58,9 @@ MonoBehaviour:
   homing: 0
   homingSpeed: 5
   wasPurchased: 0
+  originalRange: 0
   originalPrefab: {fileID: 6301127432753366280}
+  firingSound: EnergyFiring
 --- !u!212 &8865262346262746614
 SpriteRenderer:
   m_ObjectHideFlags: 0

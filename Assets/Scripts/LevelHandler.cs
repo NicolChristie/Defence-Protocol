@@ -17,9 +17,8 @@ public class LevelHandler : MonoBehaviour
     private bool isGameStarted = false;
 
     public static int finishedAmount = 0;
-    private int baseLevelCap = 20;
-    private int baseUpgrade = 5;
-     public coverScript coverScript;
+    public int baseLevelCap = 1;
+    public int baseUpgrade = 5;
 
     private void Awake()
     {
@@ -47,7 +46,6 @@ public class LevelHandler : MonoBehaviour
         isLevelComplete = false;
         Debug.Log($"Next level button pressed! Current level: {levelIndex}");
         ShopManager.Instance.HideShop();
-        coverScript.allowMouseZoom = true;
         Debug.Log("allowed to zoom in");
 
         List<string> nextLevelData = LoadLevelFromFile(levelFile, levelIndex);
@@ -107,9 +105,7 @@ public class LevelHandler : MonoBehaviour
         if (isLevelComplete) yield break;
 
         isLevelComplete = true;
-        coverScript.ForceZoomIn();
         CoinManager.Instance.AddCoins(5);
-        ShopManager.Instance.GenerateShop();
 
         int currentLevelCap = baseLevelCap + (finishedAmount * baseUpgrade);
         Debug.Log($"Current level cap: {currentLevelCap}");
@@ -124,6 +120,8 @@ public class LevelHandler : MonoBehaviour
         }
         else
         {
+            Debug.Log($"Level {levelIndex} complete. Preparing for next level.");
+            ShopManager.Instance.GenerateShop();
             yield return new WaitForSeconds(0.5f);
             nextLevelButton.SetActive(true);
             ShopManager.Instance.ShowShop();
@@ -285,4 +283,10 @@ public class LevelHandler : MonoBehaviour
     {
         return levelIndex;
     }
+
+    public int GetFinishedAmount()
+    {
+        return finishedAmount;
+    }
+    
 }

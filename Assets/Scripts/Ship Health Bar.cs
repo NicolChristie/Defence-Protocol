@@ -104,7 +104,7 @@ public class ShipHealthBar : MonoBehaviour
     public void YouWin()
     {
         Time.timeScale = 0;
-        SceneManager.LoadScene("YouWin");
+        SceneManager.LoadScene("YouWin", LoadSceneMode.Additive);
     }
 
 

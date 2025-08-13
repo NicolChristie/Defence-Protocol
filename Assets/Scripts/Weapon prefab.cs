@@ -4,6 +4,7 @@ using System.Linq;
 
 public class Weaponprefab : MonoBehaviour
 {
+    [Header("Projectile Settings")]
     public GameObject projectilePrefab;
     public Transform firePoint;
     public float fireRate = 1.5f;
@@ -33,7 +34,9 @@ public class Weaponprefab : MonoBehaviour
     private float nextFireTime = 0f;
     private GameObject currentTarget;
     private bool isRotated = false;
-    public GameObject originalPrefab; 
+    public GameObject originalPrefab;
+
+    public string firingSound;
     
 
  void Start()
@@ -186,8 +189,16 @@ else
 
         newProjectile.SetProperties(firePoint, projectileDamage, range, aoeRadius, aoeDamageMultiplier, pierceCount,
             stopDistance, homing, homingSpeed, currentTarget, deviation);
-    }
 
+        if (firingSound != null && firingSound != "")
+        {
+            SoundFxManager.Instance.PlaySound(firingSound, transform, 1f);
+        }
+        else
+        {
+            SoundFxManager.Instance.PlaySound("kineticFiring", transform, 1f);
+        }
+    }
     public bool getPurchased()
     {
         Debug.LogWarning("checking if the weapon was purchased and that is" + wasPurchased);

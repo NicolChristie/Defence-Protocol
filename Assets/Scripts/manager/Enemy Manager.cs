@@ -96,6 +96,7 @@ public class EnemyManager : MonoBehaviour
         if (currentHP <= 0)
         {
             CoinManager.Instance.AddCoins(coinAmount);
+            SoundFxManager.Instance.PlaySound("enemyDeath", transform, 1f);
             Destroy(gameObject); 
         }
     }
@@ -110,6 +111,7 @@ public class EnemyManager : MonoBehaviour
                 if (damageFlashEffect != null)
                     damageFlashEffect.TriggerFlash(); 
             }
+            SoundFxManager.Instance.PlaySound("enemyAttack", transform, 1f);
             Destroy(gameObject); 
         }
     }

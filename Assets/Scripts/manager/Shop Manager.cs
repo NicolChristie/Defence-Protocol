@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
+using UnityEditor.Purchasing;
 
 public class ShopManager : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class ShopManager : MonoBehaviour
     public Button goToShip;
     public Button goToShop;
     public GameObject shopPanel;
-    public coverScript coverScript;
+
 
     private bool isPurchasing = false;
 
@@ -48,8 +49,7 @@ public class ShopManager : MonoBehaviour
 
     public void GenerateShop()
     {
-                coverScript.allowMouseZoom = false;
-        coverScript.ForceZoomIn();
+        shopPanel.SetActive(true);
         currentShopItems.Clear();
         int finishedAmount = SaveManager.LoadFinishedAmount();
         List<ShopItem> unlockedItems = availableItems.FindAll(item => item.unlockLevel <= finishedAmount);
@@ -144,6 +144,7 @@ public class ShopManager : MonoBehaviour
 
         if (CoinManager.Instance.SpendCoins(itemToBuy.price))
         {
+            SoundFxManager.Instance.PlaySound("Purchase", transform, 1f);
             if (itemToBuy.itemType == ShopItem.ItemType.Weapon)
             {
                 itemToBuy.price += 1;
