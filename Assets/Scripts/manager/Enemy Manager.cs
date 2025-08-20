@@ -8,7 +8,7 @@ public class EnemyManager : MonoBehaviour
     public ShipHealthBar shipHealthBar;
     public float speed = 1f;
     public int maxHP = 4;
-    private int currentHP;
+    public int currentHP;
     private Rigidbody2D rb;
     public HealthBar healthBar;
     public int damage = 10; 
@@ -83,7 +83,7 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage,Weaponprefab sourceWeapon = null)
     {
         currentHP -= damage;
         currentHP = Mathf.Clamp(currentHP, 0, maxHP);
@@ -98,21 +98,29 @@ public class EnemyManager : MonoBehaviour
             CoinManager.Instance.AddCoins(coinAmount);
             SoundFxManager.Instance.PlaySound("enemyDeath", transform, 1f);
             Destroy(gameObject); 
+            Die(sourceWeapon);
         }
     }
+    void Die(Weaponprefab sourceWeapon)
+{
+    if (sourceWeapon != null)
+        sourceWeapon.RegisterKill();
+
+    Destroy(gameObject);
+}
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (ship != null && collision.gameObject == ship) 
+        if (ship != null && collision.gameObject == ship)
         {
             if (shipHealthBar != null)
             {
-                shipHealthBar.TakeDamage(damage); 
+                shipHealthBar.TakeDamage(damage);
                 if (damageFlashEffect != null)
-                    damageFlashEffect.TriggerFlash(); 
+                    damageFlashEffect.TriggerFlash();
             }
             SoundFxManager.Instance.PlaySound("enemyAttack", transform, 1f);
-            Destroy(gameObject); 
+            Destroy(gameObject);
         }
     }
 

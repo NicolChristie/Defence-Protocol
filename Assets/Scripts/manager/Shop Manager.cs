@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
-using UnityEditor.Purchasing;
 
 public class ShopManager : MonoBehaviour
 {

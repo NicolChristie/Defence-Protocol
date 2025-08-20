@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 561842335104464707}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.6, z: 0}
+  m_LocalPosition: {x: 0, y: -0.96, z: 0}
   m_LocalScale: {x: 1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -159,6 +159,7 @@ MonoBehaviour:
   coinAmount: 0
   stopDistance: 30
   destroyDistance: 20
+  damageFlashEffect: {fileID: 0}
 --- !u!50 &1577703525959275916
 Rigidbody2D:
   serializedVersion: 5
@@ -266,8 +267,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: b5f01cbfeea6d6342846f85cb69be7c4, type: 3}
-  m_Color: {r: 0.38430038, g: 0.54560345, b: 0.9622642, a: 1}
+  m_Sprite: {fileID: 3069981200037696008, guid: 328dc9a5c2c3700429e443e293b39a55, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

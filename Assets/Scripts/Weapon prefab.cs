@@ -19,6 +19,7 @@ public class Weaponprefab : MonoBehaviour
     public bool homing = false;
     public float homingSpeed = 5f;
     public bool wasPurchased = false;
+    public int enemiesKilled = 0;
 
     private SpriteRenderer spriteRenderer;
 
@@ -30,6 +31,8 @@ public class Weaponprefab : MonoBehaviour
     private float boostedRotation;
     public float originalRange;
 
+    public string[] targetOptions = { "Closest", "Strongest", "Farthest" };
+
 
     private float nextFireTime = 0f;
     private GameObject currentTarget;
@@ -37,31 +40,31 @@ public class Weaponprefab : MonoBehaviour
     public GameObject originalPrefab;
 
     public string firingSound;
-    
+    [SerializeField] private float targetSwitchBuffer = 0.5f;
 
- void Start()
-{
-    baseFireRate = fireRate;
-    baseDamage = projectileDamage;
-    baseRotation = rotationSpeed;
-    boostedFireRate = fireRate;
-    boostedDamage = projectileDamage;
-    boostedRotation = rotationSpeed;
+    void Start()
+    {
+        baseFireRate = fireRate;
+        baseDamage = projectileDamage;
+        baseRotation = rotationSpeed;
+        boostedFireRate = fireRate;
+        boostedDamage = projectileDamage;
+        boostedRotation = rotationSpeed;
 
-    spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
-   if (originalRange <= 0f)
-{
-    originalRange = range;
-    Debug.Log($"[Init] originalRange set to {originalRange}");
-}
-else
-{
-    Debug.Log($"[Init] originalRange already set to {originalRange}, not overridden");
-}
-    if (originalPrefab == null)
-        originalPrefab = gameObject; 
-}
+        if (originalRange <= 0f)
+        {
+            originalRange = range;
+            Debug.Log($"[Init] originalRange set to {originalRange}");
+        }
+        else
+        {
+            Debug.Log($"[Init] originalRange already set to {originalRange}, not overridden");
+        }
+        if (originalPrefab == null)
+            originalPrefab = gameObject;
+    }
 
 
     public void InitialiseBaseStats()
@@ -75,7 +78,7 @@ else
         boostedRotation = rotationSpeed;
     }
 
-    public void ApplyBoost(float speedMultiplier, float damageMultiplier,float rotationMultiplier, bool isFirstTime)
+    public void ApplyBoost(float speedMultiplier, float damageMultiplier, float rotationMultiplier, bool isFirstTime)
     {
         if (isFirstTime)
         {
@@ -101,7 +104,7 @@ else
         UpdateStats();
     }
 
-    public void RemoveBoost(float speedMultiplier, float damageMultiplier,float rotationMultiplier)
+    public void RemoveBoost(float speedMultiplier, float damageMultiplier, float rotationMultiplier)
     {
         boostedFireRate /= speedMultiplier;
         boostedDamage = Mathf.RoundToInt(boostedDamage / damageMultiplier);
@@ -134,6 +137,7 @@ else
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         Vector3 weaponForward = Quaternion.Euler(0, 0, baseRotation) * Vector3.right;
 
+        // Filter enemies in range and line of sight
         List<GameObject> validEnemies = enemies
             .Where(enemy =>
             {
@@ -142,25 +146,79 @@ else
                 return angleToEnemy >= -180f && angleToEnemy <= 180f;
             })
             .Where(enemy => Vector3.Distance(transform.position, enemy.transform.position) <= range)
-            .OrderBy(enemy => Vector3.Distance(transform.position, enemy.transform.position))
+            .Where(enemy => IsLineOfSightClear(enemy))
             .ToList();
 
-        validEnemies = validEnemies.Where(enemy => IsLineOfSightClear(enemy)).ToList();
-        currentTarget = validEnemies.FirstOrDefault();
+        if (validEnemies.Count == 0)
+        {
+            currentTarget = null;
+            return;
+        }
+
+        string targetMode = (targetOptions != null && targetOptions.Length > 0) ? targetOptions[0] : "Strongest";
+
+        GameObject newTarget = null;
+
+        switch (targetMode)
+        {
+            case "Strongest":
+                newTarget = validEnemies
+                    .OrderByDescending(enemy =>
+                    {
+                        var enemyManager = enemy.GetComponent<EnemyManager>();
+                        return enemyManager != null ? enemyManager.currentHP : 0;
+                    })
+                    .FirstOrDefault();
+                break;
+
+            case "Farthest":
+                newTarget = validEnemies
+                    .OrderByDescending(enemy => Vector3.Distance(transform.position, enemy.transform.position))
+                    .FirstOrDefault();
+
+                if (currentTarget != null && validEnemies.Contains(currentTarget))
+                {
+                    float currentDist = Vector3.Distance(transform.position, currentTarget.transform.position);
+                    float newDist = Vector3.Distance(transform.position, newTarget.transform.position);
+
+                    // Only switch if it's clearly farther
+                    if (newDist < currentDist + targetSwitchBuffer)
+                        newTarget = currentTarget;
+                }
+                break;
+
+            case "Closest":
+            default:
+                newTarget = validEnemies
+                    .OrderBy(enemy => Vector3.Distance(transform.position, enemy.transform.position))
+                    .FirstOrDefault();
+
+                if (currentTarget != null && validEnemies.Contains(currentTarget))
+                {
+                    float currentDist = Vector3.Distance(transform.position, currentTarget.transform.position);
+                    float newDist = Vector3.Distance(transform.position, newTarget.transform.position);
+
+                    // Only switch if it's clearly closer
+                    if (newDist > currentDist - targetSwitchBuffer)
+                        newTarget = currentTarget;
+                }
+                break;
+        }
+
+        currentTarget = newTarget;
     }
+
+
 
     bool IsLineOfSightClear(GameObject target)
     {
         Vector2 direction = (target.transform.position - transform.position).normalized;
         float distance = Vector2.Distance(transform.position, target.transform.position);
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, distance);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, distance, LayerMask.GetMask("Ship"));
 
-        if (hit.collider != null && !hit.collider.CompareTag("Enemy") && hit.collider.gameObject != target)
-        {
-            return false;
-        }
-        return true;
+        // Only blocked if it hits something
+        return hit.collider == null;
     }
 
     void RotateTowardsTarget()
@@ -188,7 +246,7 @@ else
         Projectile newProjectile = projectileInstance.GetComponent<Projectile>();
 
         newProjectile.SetProperties(firePoint, projectileDamage, range, aoeRadius, aoeDamageMultiplier, pierceCount,
-            stopDistance, homing, homingSpeed, currentTarget, deviation);
+            stopDistance, homing, homingSpeed, currentTarget, deviation,this);
 
         if (firingSound != null && firingSound != "")
         {
@@ -206,60 +264,64 @@ else
     }
 
     void OnDrawGizmosSelected()
-{
-    Gizmos.color = Color.red;
-    Gizmos.DrawWireSphere(transform.position, range);
-}
-    public void CalibrateRange()
-{
-    GameObject[] worldEdgeObjects = GameObject.FindGameObjectsWithTag("worldEdge");
-
-    if (worldEdgeObjects.Length == 0)
     {
-        Debug.LogWarning("No world edges found for range calibration.");
-        return;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, range);
     }
-
-    float minDistToEdge = float.MaxValue;
-    Debug.Log($"[Calibration] Found {worldEdgeObjects.Length} world edge objects.");
-
-    foreach (var edgeObject in worldEdgeObjects)
+    public void CalibrateRange()
     {
-        Debug.Log($"[Calibration] Checking world edge object: {edgeObject.name}.");
-        Collider2D edgeCollider = edgeObject.GetComponent<Collider2D>();
-        if (edgeCollider != null)
+        GameObject[] worldEdgeObjects = GameObject.FindGameObjectsWithTag("worldEdge");
+
+        if (worldEdgeObjects.Length == 0)
         {
-            float distanceToEdge = Vector2.Distance(transform.position, edgeCollider.transform.position);
-            if (distanceToEdge < minDistToEdge)
+            Debug.LogWarning("No world edges found for range calibration.");
+            return;
+        }
+
+        float minDistToEdge = float.MaxValue;
+        Debug.Log($"[Calibration] Found {worldEdgeObjects.Length} world edge objects.");
+
+        foreach (var edgeObject in worldEdgeObjects)
+        {
+            Debug.Log($"[Calibration] Checking world edge object: {edgeObject.name}.");
+            Collider2D edgeCollider = edgeObject.GetComponent<Collider2D>();
+            if (edgeCollider != null)
             {
-                minDistToEdge = distanceToEdge;
-                Debug.Log($"[Calibration] Closest edge found: {edgeObject.name} at distance {minDistToEdge}.");
+                float distanceToEdge = Vector2.Distance(transform.position, edgeCollider.transform.position);
+                if (distanceToEdge < minDistToEdge)
+                {
+                    minDistToEdge = distanceToEdge;
+                    Debug.Log($"[Calibration] Closest edge found: {edgeObject.name} at distance {minDistToEdge}.");
+                }
             }
         }
+
+        if (minDistToEdge <= 0.01f)
+        {
+            Debug.LogWarning("Weapon is too close to or outside world edges.");
+            return;
+        }
+
+        range = (originalRange / 10f) * minDistToEdge;
+        Debug.Log($"[Calibration] Weapon range updated to: {range} (originalRange: {originalRange}, closest edge: {minDistToEdge})");
+
+
+    }
+    public void ManualInit()
+    {
+        Debug.Log("Manual Init called for weapon prefab.");
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
+
+        nextFireTime = Time.time + (1f / fireRate);
+        InitialiseBaseStats();
+        ResetToBaseStats();
+        CalibrateRange();
     }
 
-    if (minDistToEdge <= 0.01f)
+public void RegisterKill()
 {
-    Debug.LogWarning("Weapon is too close to or outside world edges.");
-    return;
+    enemiesKilled++;
+    Debug.Log($"{gameObject.name} has killed {enemiesKilled} enemies.");
 }
-
-range = (originalRange / 10f) * minDistToEdge;
-Debug.Log($"[Calibration] Weapon range updated to: {range} (originalRange: {originalRange}, closest edge: {minDistToEdge})");
-
-        
-}
-    public void ManualInit()
-{
-    Debug.Log("Manual Init called for weapon prefab.");
-    if (spriteRenderer == null)
-        spriteRenderer = GetComponent<SpriteRenderer>();
-
-    nextFireTime = Time.time + (1f / fireRate);
-    InitialiseBaseStats();
-    ResetToBaseStats();
-    CalibrateRange();
-}
-
-
 }

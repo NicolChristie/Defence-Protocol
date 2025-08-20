@@ -122,6 +122,7 @@ public class LevelHandler : MonoBehaviour
         {
             Debug.Log($"Level {levelIndex} complete. Preparing for next level.");
             ShopManager.Instance.GenerateShop();
+            WeaponInfoPanel.Instance.HideInfo();
             yield return new WaitForSeconds(0.5f);
             nextLevelButton.SetActive(true);
             ShopManager.Instance.ShowShop();
