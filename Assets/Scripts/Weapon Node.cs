@@ -240,7 +240,7 @@ storedWeaponPrefab.ManualInit();
 
         storedWeaponPrefab.ManualInit();
         storedWeaponPrefab.originalPrefab = result.originalPrefab != null ? result.originalPrefab : result.gameObject;
-
+        SoundFxManager.Instance.PlaySound("Merge", transform, 1f);
         if (playerWeaponPrefab.wasPurchased)
         {
             storedWeaponPrefab.wasPurchased = true;

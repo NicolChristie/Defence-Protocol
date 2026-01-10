@@ -20,6 +20,7 @@ public class ShopManager : MonoBehaviour
     public Button goToShop;
     public GameObject shopPanel;
 
+
     private bool isPurchasing = false;
 
     void Awake()
@@ -47,6 +48,7 @@ public class ShopManager : MonoBehaviour
 
     public void GenerateShop()
     {
+        shopPanel.SetActive(true);
         currentShopItems.Clear();
         int finishedAmount = SaveManager.LoadFinishedAmount();
         List<ShopItem> unlockedItems = availableItems.FindAll(item => item.unlockLevel <= finishedAmount);
@@ -77,8 +79,25 @@ public class ShopManager : MonoBehaviour
 
             itemNameTexts[slot].text = currentItem.itemName;
             itemPriceTexts[slot].text = "Price: " + currentItem.price;
-            itemDescriptionTexts[slot].text = currentItem.description;
-
+            if (currentItem.itemType == ShopItem.ItemType.Weapon && currentItem.weaponPrefab != null)
+            {
+                Weaponprefab weaponScript = currentItem.weaponPrefab.GetComponent<Weaponprefab>();
+                if (weaponScript != null)
+                {
+                    itemDescriptionTexts[slot].text =
+                        $"Fire Rate: {weaponScript.fireRate:F1}\n" +
+                        $"Damage: {weaponScript.projectileDamage}\n" +
+                        $"Range: {weaponScript.range}";
+                }
+                else
+                {
+                    itemDescriptionTexts[slot].text = "Weapon stats unavailable.";
+                }
+            }
+            else
+            {
+                itemDescriptionTexts[slot].text = currentItem.description;
+            }
             switch (currentItem.itemRarity)
             {
                 case ShopItem.Rarity.Common: itemNameTexts[slot].color = Color.black; break;
@@ -124,6 +143,7 @@ public class ShopManager : MonoBehaviour
 
         if (CoinManager.Instance.SpendCoins(itemToBuy.price))
         {
+            SoundFxManager.Instance.PlaySound("Purchase", transform, 1f);
             if (itemToBuy.itemType == ShopItem.ItemType.Weapon)
             {
                 itemToBuy.price += 1;

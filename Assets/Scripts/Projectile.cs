@@ -18,8 +18,9 @@ public class Projectile : MonoBehaviour
     public GameObject aoeIndicatorPrefab; 
 
     public float speed = 10f;
+    private Weaponprefab sourceWeapon;
 
-    public void SetProperties(Transform weaponTransform, int dmg, float rng, float aoe, float aoeMultiplier, int pierce, float stopDist, bool homing, float homingSpeed, GameObject target, float deviationAmount = 0f)
+    public void SetProperties(Transform weaponTransform, int dmg, float rng, float aoe, float aoeMultiplier, int pierce, float stopDist, bool homing, float homingSpeed, GameObject target, float deviationAmount = 0f,Weaponprefab sourceWeapon = null)
     {
         damage = dmg;
         range = rng;
@@ -27,10 +28,11 @@ public class Projectile : MonoBehaviour
         aoeDamageMultiplier = aoeMultiplier;
         pierceCount = pierce;
         startPosition = transform.position;
-        stopDistance = stopDist;  
+        stopDistance = stopDist;
         this.homing = homing;
         this.homingSpeed = homingSpeed;
         this.target = target;
+        this.sourceWeapon = sourceWeapon;
 
 
         if (homing && target != null)
@@ -81,7 +83,8 @@ public class Projectile : MonoBehaviour
             EnemyManager enemy = collision.GetComponent<EnemyManager>();
             if (enemy != null)
             {
-                enemy.TakeDamage(damage);
+                enemy.TakeDamage(damage, sourceWeapon);
+                Debug.Log($"Hit enemy: {enemy.name} with damage: {damage}, source: {sourceWeapon?.originalPrefab.name ?? "None"}");
             }
 
             if (aoeRadius > 0)

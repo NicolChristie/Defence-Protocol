@@ -3,7 +3,7 @@ Level 1:
 1G.D
 
 Level 2:
-[2G.D,1S.D]
+4G.D
 10G.D
 
 Level 3:

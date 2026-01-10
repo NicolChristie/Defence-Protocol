@@ -19,6 +19,7 @@ void Start()
 }
     public void TriggerFlash()
     {
+        flashPanel.gameObject.SetActive(true);
         if (flashRoutine != null)
             StopCoroutine(flashRoutine);
         flashRoutine = StartCoroutine(Flash());
@@ -40,5 +41,6 @@ void Start()
         }
         color.a = 0f;
         flashPanel.color = color;
+        flashPanel.gameObject.SetActive(false);
     }
 }
