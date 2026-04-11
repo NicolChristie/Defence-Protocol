@@ -35,7 +35,7 @@ public class EnemyManager : MonoBehaviour
         ship = GameObject.FindWithTag("Ship");
 
     if (shipHealthBar == null)
-        shipHealthBar = Object.FindFirstObjectByType<ShipHealthBar>();
+        shipHealthBar = Object.FindAnyObjectByType<ShipHealthBar>();
 
     if (healthBar != null)
         healthBar.UpdateHealthBar(currentHP, maxHP);
@@ -48,7 +48,7 @@ public class EnemyManager : MonoBehaviour
         Debug.LogError("ShipHealthBar script is not assigned in EnemyManager!");
     
     if (damageFlashEffect == null)
-    damageFlashEffect = Object.FindFirstObjectByType<DamageFlashEffect>();
+    damageFlashEffect = Object.FindAnyObjectByType<DamageFlashEffect>();
 
 
     allEnemies.Add(this);

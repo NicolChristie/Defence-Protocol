@@ -16,7 +16,7 @@ public class PlayerShipUpgradeManager : MonoBehaviour
 
     void Start()
     {
-        character = FindFirstObjectByType<CharacterManager>(); // ✅ Updated method
+        character = FindAnyObjectByType<CharacterManager>(); 
         if (character == null)
         {
             Debug.LogError("CharacterManager not found!");

@@ -66,7 +66,7 @@ public class PauseSettings : MonoBehaviour
         }
         else
         {
-            var pauseManager = Object.FindFirstObjectByType<PauseMenu>();
+            var pauseManager = Object.FindAnyObjectByType<PauseMenu>();
             pauseManager.ResumeGame();
         }
     }
