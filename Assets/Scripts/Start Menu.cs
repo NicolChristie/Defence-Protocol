@@ -11,8 +11,8 @@ public class StartMenu : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioMixer audioMixer; // Drag your AudioMixer here
 
-    private string mainSceneName = "Main Scene"; 
-    private string tutorialSceneName = "Tutorial";
+    [SerializeField] private int mainSceneName = 1; 
+    [SerializeField] private int tutorialSceneName = 4;
 
     // Same keys used in SoundMixerManager
     private const string MasterKey = "MasterVolume";
