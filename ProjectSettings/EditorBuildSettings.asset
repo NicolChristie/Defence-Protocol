@@ -6,19 +6,19 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Start Menu.unity
+    path: Assets/Level/Scenes/Start Menu.unity
     guid: 5920f3385ea191f4b84749d44a8cd40a
   - enabled: 1
-    path: Assets/Scenes/Main Scene.unity
+    path: Assets/Level/Scenes/Main Scene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
-    path: Assets/Scenes/YouWin.unity
+    path: Assets/Level/Scenes/YouWin.unity
     guid: ef30331212629684b9bc9aba6229bacf
   - enabled: 1
-    path: Assets/Scenes/pauseSettings.unity
+    path: Assets/Level/Scenes/pauseSettings.unity
     guid: 1e594b193e9b50249ad7cccc2b80a296
   - enabled: 1
-    path: Assets/Scenes/tutorial.unity
+    path: Assets/Level/Scenes/tutorial.unity
     guid: 1ef4d1c34fdd9d74e81f26ebd38744b9
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
