@@ -169,7 +169,7 @@ public class WeaponNode : MonoBehaviour
         playerWeapon.transform.SetParent(player.transform);
         playerWeapon.transform.position = carryLocation.position;
         playerWeapon.transform.localRotation = Quaternion.identity;
-        playerWeapon.transform.localScale = Vector3.one * 0.5f;
+        playerWeapon.transform.localScale = Vector3.one * 0.4f;
     }
 
     private void DropWeapon(GameObject player)
