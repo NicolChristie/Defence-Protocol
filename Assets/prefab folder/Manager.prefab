@@ -627,7 +627,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6339799149844779821}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.29869765, y: 0.5015242, z: 0.05154949}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -724,7 +724,7 @@ MonoBehaviour:
     coinReward: 0
     identifier: S
   levelFile: {fileID: 4900000, guid: 92e8f702fa9398140b406fade7f31d3e, type: 3}
-  baseLevelCap: 20
+  baseLevelCap: 4
   baseUpgrade: 5
 --- !u!114 &8639693832684690950
 MonoBehaviour:
