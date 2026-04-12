@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.IO;
 
@@ -59,7 +60,7 @@ public class LevelHandler : MonoBehaviour
         else
         {
             Debug.Log("No more data for next levels.");
-            ShipHealthBar.Instance.YouWin();
+            YouWin();
             finishedAmount += 1;
             SaveManager.SaveFinishedAmount(finishedAmount);
             Debug.Log($"New finishedAmount: {finishedAmount}. New level cap is {baseLevelCap + (finishedAmount * baseUpgrade)}");
@@ -113,7 +114,7 @@ public class LevelHandler : MonoBehaviour
         if (levelIndex >= currentLevelCap - 1)
         {
             Debug.Log("All levels complete.");
-            ShipHealthBar.Instance.YouWin();
+            YouWin();
             finishedAmount += 1;
             SaveManager.SaveFinishedAmount(finishedAmount);
             Debug.Log($"New finishedAmount: {finishedAmount}. New level cap is {baseLevelCap + (finishedAmount * baseUpgrade)}");
@@ -288,6 +289,11 @@ public class LevelHandler : MonoBehaviour
     public int GetFinishedAmount()
     {
         return finishedAmount;
+    }
+     public void YouWin()
+    {
+        Time.timeScale = 0;
+        SceneManager.LoadScene("winScreen", LoadSceneMode.Additive);
     }
     
 }
