@@ -2237,6 +2237,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 445020033}
     - target: {fileID: 4628817257363186900, guid: ab5d298aeaed116f39235b6c79d7069f, type: 3}
+      propertyPath: levelFile
+      value: 
+      objectReference: {fileID: 4900000, guid: 92e8f702fa9398140b406fade7f31d3e, type: 3}
+    - target: {fileID: 4628817257363186900, guid: ab5d298aeaed116f39235b6c79d7069f, type: 3}
+      propertyPath: baseLevelCap
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628817257363186900, guid: ab5d298aeaed116f39235b6c79d7069f, type: 3}
       propertyPath: nextLevelButton
       value: 
       objectReference: {fileID: 796433304}
