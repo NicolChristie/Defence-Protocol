@@ -420,7 +420,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'stable ver confirmed
+  m_text: 'unstable so far
 
     0.1.11.5 by Emir'
   m_isRightToLeft: 0
