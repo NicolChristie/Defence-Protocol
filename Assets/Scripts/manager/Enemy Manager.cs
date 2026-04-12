@@ -79,7 +79,7 @@ public class EnemyManager : MonoBehaviour
         if (player != null)
         {
             Vector2 direction = (player.transform.position - transform.position).normalized;
-            rb.linearVelocity = direction * (speed*0.5f);
+            rb.linearVelocity = direction * (speed*0.05f);
         }
     }
 

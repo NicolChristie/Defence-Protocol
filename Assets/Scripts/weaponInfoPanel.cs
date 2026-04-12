@@ -129,13 +129,14 @@ public class WeaponInfoPanel : MonoBehaviour
         // Start open animation
         if (currentAnimation != null) StopCoroutine(currentAnimation);
         currentAnimation = StartCoroutine(AnimatePanel(startPos, endPos));
+        DrawRangeCircle(weapon);
         currentWeapon = weapon;
 }
 
 public void HideInfo()
 {
     if (panel == null) return;
-
+    HideRangeCircle();
     currentWeapon = null; // clear the reference
     if (currentAnimation != null) StopCoroutine(currentAnimation);
     currentAnimation = StartCoroutine(ClosePanel());
@@ -160,4 +161,46 @@ IEnumerator ClosePanel()
     panel.SetActive(false);
 }
 
+[Header("Range Circle")]
+public LineRenderer rangeCircle;   // assign a LineRenderer on the panel's GameObject (or a child)
+public int circleSegments = 64;
+public Color circleColor = new Color(0f, 0f, 0f, 1f);
+public float circleLineWidth = 0.05f;
+
+void DrawRangeCircle(Weaponprefab weapon)
+{
+    if (rangeCircle == null) return;
+    Debug.Log($"[RangeCircle] Drawing circle for '{weapon.name}' at {weapon.transform.position} with range {weapon.range:F2} ({circleSegments} segments)");
+    rangeCircle.material = new Material(Shader.Find("Sprites/Default"));
+    rangeCircle.useWorldSpace = true;
+    rangeCircle.loop = true;
+    rangeCircle.positionCount = circleSegments;
+    rangeCircle.startWidth = circleLineWidth;
+    rangeCircle.endWidth   = circleLineWidth;
+    rangeCircle.startColor = circleColor;
+    rangeCircle.endColor   = circleColor;
+    rangeCircle.sortingOrder = 5;
+
+    Vector3 center = weapon.transform.position;
+    float radius = weapon.range;
+
+    for (int i = 0; i < circleSegments; i++)
+    {
+        float angle = (float)i / circleSegments * Mathf.PI * 2f;
+        float x = center.x + Mathf.Cos(angle) * radius;
+        float y = center.y + Mathf.Sin(angle) * radius;
+        rangeCircle.SetPosition(i, new Vector3(x, y, center.z));
+    }
+
+    rangeCircle.enabled = true;
+
 }
+
+void HideRangeCircle()
+{
+    if (rangeCircle != null)
+        rangeCircle.enabled = false;
+}
+}
+
+

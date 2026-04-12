@@ -173,47 +173,57 @@ public class ShopManager : MonoBehaviour
     }
 
     public void EquipWeapon(ShopItem item)
+{
+    if (item.weaponPrefab == null || WeaponNode.playerWeapon != null)
     {
-        if (item.weaponPrefab == null || WeaponNode.playerWeapon != null)
-            return;
-
-        GameObject weaponInstance = Instantiate(item.weaponPrefab);
-        Weaponprefab weaponScript = weaponInstance.GetComponent<Weaponprefab>();
-        if (weaponScript != null)
-            weaponScript.originalPrefab = item.weaponPrefab;
-
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player == null)
-        {
-            Destroy(weaponInstance);
-            return;
-        }
-
-        Transform carryLocation = player.transform.Find("carryLocation");
-        if (carryLocation == null)
-        {
-            Destroy(weaponInstance);
-            return;
-        }
-
-        weaponInstance.transform.SetParent(carryLocation);
-        weaponInstance.transform.localPosition = Vector3.zero;
-        weaponInstance.transform.localRotation = Quaternion.identity;
-        weaponInstance.transform.localScale = Vector3.one;
-
-        WeaponNode.playerWeapon = weaponInstance;
-
-        WeaponNode weaponNode = weaponInstance.AddComponent<WeaponNode>();
-        Weaponprefab weaponPrefab = weaponInstance.GetComponent<Weaponprefab>();
-        if (weaponPrefab != null)
-            weaponPrefab.wasPurchased = true;
-
-        if (weaponNode.mergedWeapon)
-        {
-            weaponNode.mergedWeapon = false;
-            StartCoroutine(ShowShopWithDelay(0.5f));
-        }
+        Debug.Log($"[EquipWeapon] Aborted — weaponPrefab null: {item.weaponPrefab == null}, playerWeapon already exists: {WeaponNode.playerWeapon != null}");
+        return;
     }
+
+    GameObject weaponInstance = Instantiate(item.weaponPrefab);
+    Debug.Log($"[EquipWeapon] Instantiated: {weaponInstance.name}");
+
+    Weaponprefab weaponScript = weaponInstance.GetComponent<Weaponprefab>();
+    if (weaponScript != null)
+    {
+        weaponScript.originalPrefab = item.weaponPrefab;
+        weaponScript.wasPurchased = true;
+    }
+
+    GameObject player = GameObject.FindGameObjectWithTag("Player");
+    if (player == null)
+    {
+        Debug.Log("[EquipWeapon] Aborted — no Player found");
+        Destroy(weaponInstance);
+        return;
+    }
+
+    Transform carryLocation = player.transform.Find("carryLocation");
+    if (carryLocation == null)
+    {
+        Debug.Log("[EquipWeapon] Aborted — carryLocation not found on Player");
+        Destroy(weaponInstance);
+        return;
+    }
+
+    weaponInstance.transform.SetParent(carryLocation);
+    weaponInstance.transform.localPosition = Vector3.zero;
+    weaponInstance.transform.localRotation = Quaternion.identity;
+    weaponInstance.transform.localScale = Vector3.one;
+
+    WeaponNode weaponNode = weaponInstance.GetComponent<WeaponNode>() ?? weaponInstance.AddComponent<WeaponNode>();
+    weaponNode.carryLocation = carryLocation;
+
+    WeaponNode.playerWeapon = weaponInstance;
+    WeaponNode.playerWeaponPrefab = weaponScript;
+    Debug.Log($"[EquipWeapon] Success — {weaponInstance.name} equipped, parented to {carryLocation.name}");
+
+    if (weaponNode.mergedWeapon)
+    {
+        weaponNode.mergedWeapon = false;
+        StartCoroutine(ShowShopWithDelay(0.5f));
+    }
+}
 
     private void AdjustRawImageAspect(RawImage rawImage, Texture texture)
     {

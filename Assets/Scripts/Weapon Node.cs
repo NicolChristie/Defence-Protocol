@@ -9,7 +9,7 @@ public class WeaponNode : MonoBehaviour
 
     public Weaponprefab storedWeaponPrefab;
     public GameObject Outline;
-    private static Weaponprefab playerWeaponPrefab;
+    public static Weaponprefab playerWeaponPrefab;
 
     private bool isPlayerInside = false;
     public bool mergedWeapon = false;
@@ -141,6 +141,7 @@ public class WeaponNode : MonoBehaviour
         if (playerWeapon == null && storedWeapon != null)
         {
             PickupWeapon(player);
+            WeaponInfoPanel.Instance.HideInfo();
             return;
         }
         else if (playerWeapon != null && storedWeapon == null)
@@ -185,6 +186,7 @@ public class WeaponNode : MonoBehaviour
         storedWeapon.transform.localScale = Vector3.one;
 
         CharacterManager currentPlayer = player.GetComponent<CharacterManager>();
+        Debug.Log("current stored weapon is:" + storedWeaponPrefab.name);
         if (currentPlayer != null && storedWeaponPrefab != null)
         {
             storedWeaponPrefab.ResetToBaseStats();

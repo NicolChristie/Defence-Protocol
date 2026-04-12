@@ -73,7 +73,7 @@ public class PauseSettings : MonoBehaviour
 
     void exitToMenu()
     {
-        SceneManager.LoadScene("Start Menu");
+        SceneManager.LoadScene("mainMenu");
 
     }
 }
