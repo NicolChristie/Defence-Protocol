@@ -3,16 +3,14 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Audio; // Needed for AudioMixer
 
-public class StartMenu : MonoBehaviour
+public class mainMenuManager : MonoBehaviour
 {
     public Button startButton;
-    public Button tutorialButton;
 
     [Header("Audio")]
     [SerializeField] private AudioMixer audioMixer; // Drag your AudioMixer here
 
-    [SerializeField] private int mainSceneName = 5; 
-    [SerializeField] private int tutorialSceneName = 4;
+    [SerializeField] private int mainSceneName = 1; 
 
     // Same keys used in SoundMixerManager
     private const string MasterKey = "MasterVolume";
@@ -29,8 +27,6 @@ public class StartMenu : MonoBehaviour
         if (startButton != null)
             startButton.onClick.AddListener(StartGame);
 
-        if (tutorialButton != null)
-            tutorialButton.onClick.AddListener(ShowTutorial);
     }
 
     private void ApplySavedAudioSettings()
@@ -52,8 +48,4 @@ public class StartMenu : MonoBehaviour
         SceneManager.LoadScene(mainSceneName); 
     }
 
-    void ShowTutorial()
-    {
-        SceneManager.LoadScene(tutorialSceneName);
-    }
 }
