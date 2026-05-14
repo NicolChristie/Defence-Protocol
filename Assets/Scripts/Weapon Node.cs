@@ -15,6 +15,10 @@ public class WeaponNode : MonoBehaviour
     public bool mergedWeapon = false;
     private bool boostApplied = false;
 
+    private bool Cooldown = false;
+
+    private float CooldownAmount = 0.5f;
+
     void Start()
     {
         if (carryLocation == null)
@@ -27,10 +31,6 @@ public class WeaponNode : MonoBehaviour
                 {
                     Debug.LogError("Carry location not found on the player!");
                 }
-            }
-            else
-            {
-                Debug.LogError("Player object not found!");
             }
         }
 
@@ -121,6 +121,11 @@ public class WeaponNode : MonoBehaviour
 
     private void HandleWeaponPickupOrDrop()
     {
+        if (Cooldown == true)
+        {
+            Debug.Log("cannot pickup or drop due to cooldown");
+            return;
+        }
         if (ShopManager.Instance != null && ShopManager.Instance.shopPanel.activeSelf)
             return;
 
@@ -142,22 +147,27 @@ public class WeaponNode : MonoBehaviour
         {
             PickupWeapon(player);
             WeaponInfoPanel.Instance.HideInfo();
+            StartCoroutine(weaponCooldown(CooldownAmount));
             return;
         }
         else if (playerWeapon != null && storedWeapon == null)
         {
             DropWeapon(player);
+            StartCoroutine(weaponCooldown(CooldownAmount));
             return;
         }
         else if (playerWeapon != null && storedWeapon != null)
         {
             SwapOrMergeWeapons(player);
+            StartCoroutine(weaponCooldown(CooldownAmount));
             return;
         }
         else
         {
+            StartCoroutine(weaponCooldown(CooldownAmount));
             return;
         }
+
     }
 
     private void PickupWeapon(GameObject player)
@@ -171,6 +181,7 @@ public class WeaponNode : MonoBehaviour
         playerWeapon.transform.position = carryLocation.position;
         playerWeapon.transform.localRotation = Quaternion.identity;
         playerWeapon.transform.localScale = Vector3.one * 0.3f;
+        Debug.Log("current stored weapon is:" + playerWeaponPrefab.name);
     }
 
     private void DropWeapon(GameObject player)
@@ -304,5 +315,12 @@ storedWeaponPrefab.ManualInit();
     {
         yield return new WaitForSeconds(delay);
         ShopManager.Instance.ShowShop();
+    }
+
+    private IEnumerator weaponCooldown(float cooldownAmount)
+    {
+        Cooldown = true;
+        yield return new WaitForSeconds(cooldownAmount);
+        Cooldown = false;
     }
 }

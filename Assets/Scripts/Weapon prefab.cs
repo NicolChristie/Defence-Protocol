@@ -58,10 +58,6 @@ public class Weaponprefab : MonoBehaviour
             originalRange = range;
             Debug.Log($"[Init] originalRange set to {originalRange}");
         }
-        else
-        {
-            Debug.Log($"[Init] originalRange already set to {originalRange}, not overridden");
-        }
         if (originalPrefab == null)
             originalPrefab = gameObject;
     }
@@ -279,11 +275,9 @@ public class Weaponprefab : MonoBehaviour
         }
 
         float minDistToEdge = float.MaxValue;
-        Debug.Log($"[Calibration] Found {worldEdgeObjects.Length} world edge objects.");
 
         foreach (var edgeObject in worldEdgeObjects)
         {
-            Debug.Log($"[Calibration] Checking world edge object: {edgeObject.name}.");
             Collider2D edgeCollider = edgeObject.GetComponent<Collider2D>();
             if (edgeCollider != null)
             {
@@ -291,7 +285,6 @@ public class Weaponprefab : MonoBehaviour
                 if (distanceToEdge < minDistToEdge)
                 {
                     minDistToEdge = distanceToEdge;
-                    Debug.Log($"[Calibration] Closest edge found: {edgeObject.name} at distance {minDistToEdge}.");
                 }
             }
         }
@@ -303,13 +296,11 @@ public class Weaponprefab : MonoBehaviour
         }
 
         range = (originalRange / 10f) * minDistToEdge;
-        Debug.Log($"[Calibration] Weapon range updated to: {range} (originalRange: {originalRange}, closest edge: {minDistToEdge})");
 
 
     }
     public void ManualInit()
     {
-        Debug.Log("Manual Init called for weapon prefab.");
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
 

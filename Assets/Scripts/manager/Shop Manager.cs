@@ -137,6 +137,9 @@ public class ShopManager : MonoBehaviour
         if (shopSlot < 0 || shopSlot >= currentShopItems.Count || isPurchasing)
             return;
 
+        
+        
+
         isPurchasing = true;
         ShopItem itemToBuy = currentShopItems[shopSlot];
         buyButtons[shopSlot].interactable = false;
@@ -301,6 +304,11 @@ public class ShopManager : MonoBehaviour
 
     public void ReturnToShop()
     {
+        if (WeaponNode.playerWeapon != null)
+        {
+            Debug.Log("player holding weapon");
+            return;
+        }
         shopPanel.SetActive(true);
         goToShop.gameObject.SetActive(false);
     }

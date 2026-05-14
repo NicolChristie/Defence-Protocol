@@ -4,8 +4,10 @@ public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemyPrefab;
     public float spawnInterval = 3f;
-    public float mapWidth = 10f;
-    public float mapHeight = 6f;
+    public GameObject leftCollider;
+    public GameObject rightCollider;
+    public GameObject topCollider;
+    public GameObject bottomCollider;
     public float spawnBuffer = 1f;
     public GameObject player;
     public GameObject ship;
@@ -41,20 +43,20 @@ public class EnemySpawner : MonoBehaviour
         switch (direction)
         {
             case "L":
-                x = -mapWidth - spawnBuffer;
-                y = Random.Range(-mapHeight, mapHeight);
+                x = leftCollider.transform.position.x;
+                y = Random.Range(bottomCollider.transform.position.y, topCollider.transform.position.y);
                 break;
             case "R":
-                x = mapWidth + spawnBuffer;
-                y = Random.Range(-mapHeight, mapHeight);
+                x = rightCollider.transform.position.x;
+                y = Random.Range(bottomCollider.transform.position.y, topCollider.transform.position.y);
                 break;
             case "U":
-                x = Random.Range(-mapWidth, mapWidth);
-                y = mapHeight + spawnBuffer;
+                x = Random.Range(leftCollider.transform.position.x, rightCollider.transform.position.x);
+                y = topCollider.transform.position.y;
                 break;
             case "D":
-                x = Random.Range(-mapWidth, mapWidth);
-                y = -mapHeight - spawnBuffer;
+                x = Random.Range(leftCollider.transform.position.x, rightCollider.transform.position.x);
+                y = bottomCollider.transform.position.y;
                 break;
             default:
                 Debug.LogError($"Invalid direction: {direction}");
