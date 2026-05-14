@@ -521,7 +521,7 @@ PrefabInstance:
       objectReference: {fileID: 442189491}
     - target: {fileID: 8796026776055464319, guid: 3ba48b979d9bc69b7a0b25ed0cbf3b45, type: 3}
       propertyPath: m_text
-      value: "0.1.12.2 \nenemy spawn and purchasing bugs "
+      value: "0.1.12.2 \nspawning and shop fixes "
       objectReference: {fileID: 0}
     - target: {fileID: 8796237567643590581, guid: 3ba48b979d9bc69b7a0b25ed0cbf3b45, type: 3}
       propertyPath: m_SizeDelta.x
